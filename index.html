@@ -780,7 +780,16 @@ async function loadData() {
         }
       }
     } catch(_) {}
-    setSt('live', 'As of ' + cetLabel);
+    // Market open/closed indicator (NYSE: Mon-Fri 09:30-16:00 ET)
+    const now = new Date();
+    const etStr = now.toLocaleString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', hour12: false, weekday: 'short' });
+    const [etWeekday, etTime] = etStr.split(', ');
+    const [etH, etM] = etTime.split(':').map(Number);
+    const etMins = etH * 60 + etM;
+    const isWeekday = !['Sat','Sun'].includes(etWeekday);
+    const marketOpen = isWeekday && etMins >= 9*60+30 && etMins < 16*60;
+    const marketLabel = marketOpen ? ' · 🟢 Market open' : ' · 🔴 Market closed';
+    setSt('live', 'As of ' + cetLabel + marketLabel);
     const ftEl = document.getElementById('ft-ts');
     if (ftEl) ftEl.textContent = 'Updated: ' + cetLabel;
   } catch (e) {
