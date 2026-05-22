@@ -104,7 +104,11 @@ html, body {
   display: flex; flex-direction: column;
   min-height: 100dvh;
   padding-top: var(--sat);
-  padding-bottom: calc(var(--sab) + 72px); /* space for tab bar */
+  overflow: hidden;
+}
+/* Each pane scrolls independently, bottom padding for tab bar */
+.pane {
+  padding-bottom: calc(var(--sab) + 80px);
 }
 
 /* ── NAV BAR ── */
@@ -191,8 +195,22 @@ html, body {
 .tab-label { font-size: 11px; font-weight: 700; }
 
 /* ── PANES ── */
-.pane { display: none; }
-.pane.on { display: block; animation: slideUp .28s cubic-bezier(.34,1.2,.64,1); }
+/* ── SLIDING PANE LAYOUT ── */
+#pane-wrap {
+  display: flex;
+  width: 300vw;
+  will-change: transform;
+  transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  flex: 1;
+}
+#pane-wrap.dragging { transition: none; }
+.pane {
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
+}
 @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 /* ── SCROLL CONTENT ── */
@@ -454,8 +472,10 @@ html, body {
   <!-- ERROR BANNER -->
   <div id="err-banner"></div>
 
+  <div id="pane-wrap">
+
   <!-- ══ OVERVIEW ══ -->
-  <div class="pane on" id="pov">
+  <div class="pane" id="pov">
     <div class="scroll-content">
 
       <div class="hero-grid">
@@ -655,6 +675,8 @@ html, body {
       </div>
     </div>
   </div>
+
+  </div><!-- /pane-wrap -->
 
 </div><!-- /app -->
 
@@ -1021,38 +1043,61 @@ function renderList(id, items) {
   el.innerHTML = items.map(c => `<li>${esc(c)}</li>`).join('');
 }
 
-/* ── TABS ── */
-function switchTab(p) {
+/* ── TABS + iOS SWIPE ── */
+const TABS = ['ov', 'apf', 'prf'];
+let _tabIdx = 0;
+const wrap = document.getElementById('pane-wrap');
+
+function switchTab(p, animate = true) {
+  const idx = TABS.indexOf(p);
+  if (idx < 0) return;
+  _tabIdx = idx;
+  if (!animate) wrap.classList.add('dragging');
+  wrap.style.transform = `translateX(-${idx * 100}vw)`;
+  if (!animate) requestAnimationFrame(() => wrap.classList.remove('dragging'));
   document.querySelectorAll('.tab-pill').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.pane').forEach(x => x.classList.remove('on'));
-  const t = document.querySelector(`.tab-pill[data-p="${p}"]`);
-  if (t) t.classList.add('on');
+  const pill = document.querySelector(`.tab-pill[data-p="${p}"]`);
+  if (pill) pill.classList.add('on');
+  // Scroll active pane to top
   const pane = document.getElementById('p' + p);
-  if (pane) { pane.classList.add('on'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  if (pane) pane.scrollTop = 0;
 }
 document.querySelectorAll('.tab-pill').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.p)));
 
-/* ── SWIPE TO SWITCH TABS ── */
-const TABS = ['ov', 'apf', 'prf'];
-function currentTab() {
-  const on = document.querySelector('.tab-pill.on');
-  return on ? on.dataset.p : 'ov';
-}
-let _tx = null, _ty = null;
-document.getElementById('app').addEventListener('touchstart', e => {
+// Live-follow finger during swipe
+let _tx = null, _ty = null, _locked = null, _baseX = 0;
+wrap.addEventListener('touchstart', e => {
   _tx = e.touches[0].clientX;
   _ty = e.touches[0].clientY;
+  _locked = null;
+  _baseX = _tabIdx * window.innerWidth;
+  wrap.classList.add('dragging');
 }, { passive: true });
-document.getElementById('app').addEventListener('touchend', e => {
+
+wrap.addEventListener('touchmove', e => {
   if (_tx === null) return;
+  const dx = e.touches[0].clientX - _tx;
+  const dy = e.touches[0].clientY - _ty;
+  if (_locked === null) {
+    if (Math.abs(dx) > Math.abs(dy) + 4) _locked = 'h';
+    else if (Math.abs(dy) > Math.abs(dx) + 4) _locked = 'v';
+  }
+  if (_locked !== 'h') return;
+  // Clamp so you can't drag past first or last pane
+  const newX = Math.max(0, Math.min((_baseX - dx), (TABS.length - 1) * window.innerWidth));
+  wrap.style.transform = `translateX(-${newX}px)`;
+}, { passive: true });
+
+wrap.addEventListener('touchend', e => {
+  if (_tx === null || _locked !== 'h') { wrap.classList.remove('dragging'); _tx = null; return; }
   const dx = e.changedTouches[0].clientX - _tx;
-  const dy = e.changedTouches[0].clientY - _ty;
-  _tx = null; _ty = null;
-  // Only trigger on clear horizontal swipe (>50px horizontal, less than 80px vertical)
-  if (Math.abs(dx) < 50 || Math.abs(dy) > 80) return;
-  const idx = TABS.indexOf(currentTab());
-  if (dx < 0 && idx < TABS.length - 1) switchTab(TABS[idx + 1]); // swipe left → next
-  if (dx > 0 && idx > 0) switchTab(TABS[idx - 1]);               // swipe right → prev
+  _tx = null;
+  wrap.classList.remove('dragging');
+  // Snap: >40px drag or >0.3 velocity triggers tab change
+  let target = _tabIdx;
+  if (dx < -40 && _tabIdx < TABS.length - 1) target = _tabIdx + 1;
+  else if (dx > 40 && _tabIdx > 0) target = _tabIdx - 1;
+  switchTab(TABS[target]);
 }, { passive: true });
 
 /* ── SPIN KEYFRAME ── */
