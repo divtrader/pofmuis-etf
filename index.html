@@ -5,588 +5,908 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="theme-color" content="#0a0f1c"/>
+<meta name="theme-color" content="#000000"/>
 <title>Pofmuis Portfolio Managers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-:root{
-  --bg:#0a0f1c;--bg2:#0f1626;--panel:#141d31;--panel2:#1a2440;
-  --border:#243150;--text:#e8edf7;--dim:#8896b3;--soft:#b8c4dd;
-  --green:#28d391;--red:#ff5d6c;--amber:#ffb547;
-  --prf:#5ee8c1;--apf:#ffb547;--blue:#3a93d3;
+/* ═══════════════════════ iOS 26 LIQUID GLASS TOKENS ═══════════════════════ */
+:root {
+  /* Base */
+  --base: #000;
+  --base-1: #0a0a0a;
+  --base-2: #111;
+  --base-3: #161616;
+
+  /* Glass layers */
+  --glass-0: rgba(255,255,255,0.03);
+  --glass-1: rgba(255,255,255,0.06);
+  --glass-2: rgba(255,255,255,0.09);
+  --glass-3: rgba(255,255,255,0.13);
+  --glass-border: rgba(255,255,255,0.10);
+  --glass-border-hi: rgba(255,255,255,0.18);
+
+  /* Text */
+  --t1: rgba(255,255,255,1);
+  --t2: rgba(255,255,255,0.75);
+  --t3: rgba(255,255,255,0.45);
+  --t4: rgba(255,255,255,0.28);
+
+  /* System colors */
+  --green:  #30d158;
+  --red:    #ff453a;
+  --amber:  #ffd60a;
+  --blue:   #0a84ff;
+  --indigo: #5e5ce6;
+  --teal:   #5ac8fa;
+  --pink:   #ff375f;
+
+  /* Fund accents */
+  --apf: #ffd60a;
+  --apf-dim: rgba(255,214,10,0.15);
+  --apf-border: rgba(255,214,10,0.25);
+  --prf: #30d158;
+  --prf-dim: rgba(48,209,88,0.12);
+  --prf-border: rgba(48,209,88,0.22);
+
+  /* Blur */
+  --blur-sm: blur(12px) saturate(1.6);
+  --blur-md: blur(24px) saturate(1.8);
+  --blur-lg: blur(40px) saturate(2.0);
+
+  /* Radii */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+
+  /* Safe areas */
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
-  font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;
-  overscroll-behavior:none}
-.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
-.pos{color:var(--green)}.neg{color:var(--red)}.zero{color:var(--soft)}
 
-/* APP */
-#app{display:flex;flex-direction:column;min-height:100dvh;
-  padding-top:env(safe-area-inset-top,0px)}
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-/* TOP BAR */
-#topbar{
-  position:sticky;top:0;z-index:100;
-  background:rgba(10,15,28,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);padding:10px 16px 9px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:36px;height:36px;border-radius:9px;flex-shrink:0;
-  background:linear-gradient(135deg,#1f6feb 0%,#5ee8c1 100%);
-  display:flex;align-items:center;justify-content:center;font-size:19px}
-.brand-text h1{margin:0;font-size:10.5px;font-weight:600;letter-spacing:.28em;
-  text-transform:uppercase;color:var(--dim);line-height:1}
-.brand-text h2{margin:2px 0 0;font-size:15px;font-weight:700;line-height:1.15}
-.topbar-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
-#refresh-btn{background:rgba(58,147,211,.13);border:1px solid rgba(58,147,211,.28);
-  color:var(--blue);border-radius:7px;padding:5px 11px;font-size:11px;
-  font-family:'JetBrains Mono',monospace;cursor:pointer;font-weight:700}
-#refresh-btn:active{opacity:.6}
-#status-line{font-size:10px;color:var(--dim);display:flex;align-items:center;gap:5px}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;
-  animation:pulse 2s infinite}
-.dot.loading{background:var(--amber)!important;animation:none}
-.dot.err{background:var(--red)!important;animation:none}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(40,211,145,.5)}
-  70%{box-shadow:0 0 0 6px rgba(40,211,145,0)}100%{box-shadow:0 0 0 0 rgba(40,211,145,0)}}
+html, body {
+  margin: 0; padding: 0;
+  background: var(--base);
+  color: var(--t1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  min-height: 100dvh;
+}
 
-/* TABS */
-#tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
-  position:sticky;top:57px;z-index:99}
-.tab{flex:1;padding:11px 4px 10px;text-align:center;font-size:12px;font-weight:600;
-  letter-spacing:.05em;color:var(--dim);cursor:pointer;
-  border-bottom:2px solid transparent;transition:all .18s;user-select:none}
-.tab[data-p="apf"].on{color:var(--apf);border-bottom-color:var(--apf)}
-.tab[data-p="prf"].on{color:var(--prf);border-bottom-color:var(--prf)}
-.tab[data-p="ov"].on{color:var(--text);border-bottom-color:var(--blue)}
+.mono { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+.zero { color: var(--t3); }
 
-/* PANES */
-.pane{display:none;padding:14px 14px 60px}
-.pane.on{display:block;animation:fadeUp .17s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* ── BACKGROUND GLOW ── */
+#bg-glow {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.glow-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); opacity: 0.12;
+}
+.glow-apf { width: 400px; height: 400px; background: var(--apf); top: -100px; left: -50px; }
+.glow-prf { width: 350px; height: 350px; background: var(--prf); top: 200px; right: -80px; }
+.glow-blue { width: 300px; height: 300px; background: var(--blue); bottom: 100px; left: 50%; transform: translateX(-50%); }
 
-/* ── FUND HERO CARDS ── */
-.ov-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.fc{border-radius:13px;padding:15px 14px;position:relative;overflow:hidden;cursor:pointer}
-.fc-apf{background:linear-gradient(145deg,#261a03 0%,#16110a 100%);border:1px solid rgba(255,181,71,.22)}
-.fc-prf{background:linear-gradient(145deg,#08261a 0%,#081510 100%);border:1px solid rgba(94,232,193,.22)}
-.fc-bar{position:absolute;top:0;left:0;right:0;height:2.5px}
-.fc-apf .fc-bar{background:linear-gradient(90deg,var(--apf) 60%,transparent)}
-.fc-prf .fc-bar{background:linear-gradient(90deg,var(--prf) 60%,transparent)}
-.fc-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
-.fc-ticker{font-size:13px;font-weight:800;letter-spacing:.06em}
-.fc-apf .fc-ticker{color:var(--apf)} .fc-prf .fc-ticker{color:var(--prf)}
-.fc-subtitle{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
-.fc-nav{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1;
-  font-family:'JetBrains Mono',monospace}
-.fc-usd{font-size:10px;color:var(--dim);font-weight:500;margin-left:3px;vertical-align:middle}
-.fc-ret{font-size:14px;font-weight:700;margin-top:5px;font-family:'JetBrains Mono',monospace}
-.fc-rows{margin-top:9px;display:flex;flex-direction:column;gap:4px}
-.fc-row{display:flex;justify-content:space-between;font-size:11px}
-.fc-row .l{color:var(--dim)} .fc-row .v{font-family:'JetBrains Mono',monospace;font-weight:600}
-.fc-days{font-size:10px;color:var(--dim);margin-top:7px}
+/* ── APP SHELL ── */
+#app {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  min-height: 100dvh;
+  padding-top: var(--sat);
+  padding-bottom: calc(var(--sab) + 72px); /* space for tab bar */
+}
 
-/* ── BENCHMARK STRIP ── */
-.bench{background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:13px 14px;margin-bottom:12px}
-.bench h3{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);
-  font-weight:600;margin:0 0 10px}
-.bench-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;
-  border-bottom:1px solid rgba(255,255,255,.05)}
-.bench-row:last-child{border:none}
-.bench-fund{font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
-.b-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-.bench-nums{display:flex;align-items:center;gap:10px}
-.bench-ret{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
-.achip{font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:700;
-  padding:2px 7px;border-radius:4px}
-.achip.pos{background:rgba(40,211,145,.13);color:var(--green)}
-.achip.neg{background:rgba(255,93,108,.13);color:var(--red)}
-.achip.zero{background:rgba(255,255,255,.06);color:var(--soft)}
+/* ── NAV BAR ── */
+#navbar {
+  position: sticky; top: 0; z-index: 200;
+  padding: calc(var(--sat) + 12px) 20px 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand { display: flex; align-items: center; gap: 12px; }
+.nav-logo {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(145deg, #1a6ef5 0%, #5ee8c1 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 2px 12px rgba(94,232,193,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.nav-title { line-height: 1; }
+.nav-sup { font-size: 10px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--t3); }
+.nav-main { font-size: 17px; font-weight: 700; color: var(--t1); margin-top: 1px; }
+.nav-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+#refresh-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border-hi);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  color: var(--blue);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: all .2s cubic-bezier(.34,1.56,.64,1);
+  -webkit-transition: all .2s cubic-bezier(.34,1.56,.64,1);
+}
+#refresh-btn:active { transform: scale(0.93); opacity: .7; }
+#status-row { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--t3); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: pulse 2.4s ease-in-out infinite; }
+.status-dot.loading { background: var(--amber); animation: none; }
+.status-dot.err { background: var(--red); animation: none; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(48,209,88,0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(48,209,88,0); }
+}
 
-/* ── SECTION HEADS ── */
-.sh{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);
-  font-weight:600;margin:18px 0 9px;display:flex;align-items:center;gap:8px}
-.sh-bar{width:14px;height:2px;border-radius:1px;flex-shrink:0}
+/* ── BOTTOM TAB BAR ── */
+#tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  padding: 10px 20px calc(var(--sab) + 10px);
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  border-top: 1px solid var(--glass-border);
+  display: flex; gap: 8px;
+}
+.tab-pill {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 8px;
+  border-radius: 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 12px; font-weight: 600;
+  color: var(--t3);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  -webkit-transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  user-select: none;
+}
+.tab-pill.on {
+  background: var(--glass-2);
+  border-color: var(--glass-border-hi);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  color: var(--t1);
+}
+.tab-pill[data-p="apf"].on { color: var(--apf); border-color: var(--apf-border); background: var(--apf-dim); }
+.tab-pill[data-p="prf"].on { color: var(--prf); border-color: var(--prf-border); background: var(--prf-dim); }
+.tab-pill:active { transform: scale(0.95); }
+.tab-icon { font-size: 16px; line-height: 1; }
+.tab-label { font-size: 11px; font-weight: 700; }
+
+/* ── PANES ── */
+.pane { display: none; }
+.pane.on { display: block; animation: slideUp .28s cubic-bezier(.34,1.2,.64,1); }
+@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ── SCROLL CONTENT ── */
+.scroll-content { padding: 16px 16px 24px; }
+
+/* ── GLASS CARD ── */
+.glass-card {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  overflow: hidden;
+  position: relative;
+}
+.glass-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── FUND HERO CARDS (Overview) ── */
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.hero-card {
+  border-radius: var(--r-xl);
+  padding: 18px 16px 16px;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+  -webkit-transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.hero-card:active { transform: scale(0.97); }
+.hero-apf {
+  background: linear-gradient(145deg, rgba(255,214,10,0.15) 0%, rgba(255,214,10,0.05) 100%);
+  border: 1px solid var(--apf-border);
+  box-shadow: 0 0 40px rgba(255,214,10,0.08), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.hero-prf {
+  background: linear-gradient(145deg, rgba(48,209,88,0.13) 0%, rgba(48,209,88,0.04) 100%);
+  border: 1px solid var(--prf-border);
+  box-shadow: 0 0 40px rgba(48,209,88,0.07), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.hero-topbar { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.hero-ticker { font-size: 14px; font-weight: 800; letter-spacing: .04em; }
+.hero-apf .hero-ticker { color: var(--apf); }
+.hero-prf .hero-ticker { color: var(--prf); }
+.hero-subtitle { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--t3); font-weight: 600; }
+.hero-nav {
+  font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1;
+  font-family: -apple-system, 'SF Pro Display', 'Inter', monospace;
+}
+.hero-nav .currency { font-size: 13px; font-weight: 600; color: var(--t3); vertical-align: super; margin-right: 2px; }
+.hero-ret { font-size: 15px; font-weight: 700; margin-top: 5px; font-family: 'JetBrains Mono', monospace; }
+.hero-rows { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.hero-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+.hero-row .rl { color: var(--t3); }
+.hero-row .rv { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 11px; }
+.hero-days { font-size: 10px; color: var(--t4); margin-top: 8px; }
+.hero-card-shine {
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+}
+
+/* ── BENCHMARK CARD ── */
+.bench-card { margin-bottom: 14px; }
+.bench-head { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); padding: 14px 16px 10px; }
+.bench-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid var(--glass-border); }
+.bench-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+.bench-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; }
+.bench-right { display: flex; align-items: center; gap: 8px; }
+.bench-ret { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
+.alpha-chip {
+  font-size: 10px; font-weight: 800;
+  padding: 3px 8px; border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.alpha-chip.pos { background: rgba(48,209,88,0.15); color: var(--green); border: 1px solid rgba(48,209,88,0.25); }
+.alpha-chip.neg { background: rgba(255,69,58,0.15); color: var(--red); border: 1px solid rgba(255,69,58,0.25); }
+.alpha-chip.zero { background: var(--glass-1); color: var(--t3); border: 1px solid var(--glass-border); }
+
+/* ── SECTION HEADER ── */
+.sec-head {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--t3); margin: 22px 0 10px; padding: 0 2px;
+}
+.sec-accent { width: 16px; height: 2px; border-radius: 1px; flex-shrink: 0; }
 
 /* ── KPI GRID ── */
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
-.kpi{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:13px 14px}
-.kpi .kl{font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);font-weight:600}
-.kpi .kv{font-size:20px;font-weight:800;margin-top:6px;font-family:'JetBrains Mono',monospace;
-  letter-spacing:-.01em;line-height:1}
-.kpi .ku{font-size:9.5px;color:var(--dim);font-weight:500;margin-left:2px}
-.kpi .ks{font-size:10px;color:var(--dim);margin-top:3px}
-.kpi.full{grid-column:span 2;background:linear-gradient(135deg,var(--panel),var(--bg2));
-  border-color:rgba(58,147,211,.2)}
-.kpi.full .kv{font-size:28px}
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.kpi-card { border-radius: var(--r-md); padding: 14px 15px; }
+.kpi-card.kpi-hero { grid-column: span 2; }
+.kpi-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--t3); }
+.kpi-val {
+  font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1;
+  margin-top: 6px;
+  font-family: -apple-system, 'SF Pro Display', 'Inter', monospace;
+}
+.kpi-hero .kpi-val { font-size: 34px; }
+.kpi-currency { font-size: 12px; font-weight: 600; color: var(--t3); vertical-align: super; margin-right: 2px; }
+.kpi-sub { font-size: 10px; color: var(--t4); margin-top: 4px; }
 
-/* ── HOLDINGS ── */
-.hl{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.hi{display:grid;grid-template-columns:44px 1fr 40px 56px;align-items:center;gap:9px;
-  padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.04)}
-.hi:last-child{border:none}
-.hi-tk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
-.hi-px{font-size:10px;color:var(--dim);margin-top:1px}
-.hi-name{font-size:12px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hi-bk{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin-top:1px}
-.hi-wb{height:3px;border-radius:2px;margin-top:3px;background:rgba(255,255,255,.08)}
-.hi-wf{height:3px;border-radius:2px}
-.hi-wt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-align:right}
-.hi-ret{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-align:right}
+/* ── HOLDINGS LIST ── */
+.hold-list { border-radius: var(--r-lg); overflow: hidden; }
+.hold-item {
+  display: grid;
+  grid-template-columns: 46px 1fr 42px 56px;
+  align-items: center; gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--glass-0);
+  transition: background .15s;
+}
+.hold-item:last-child { border-bottom: none; }
+.hold-item:active { background: var(--glass-2); }
+.h-tk { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; color: var(--t1); }
+.h-price { font-size: 10px; color: var(--t4); margin-top: 1px; font-family: 'JetBrains Mono', monospace; }
+.h-name { font-size: 12px; color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-bk { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--t4); margin-top: 1px; }
+.h-wbar { height: 3px; border-radius: 2px; margin-top: 4px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.h-wfill { height: 3px; border-radius: 2px; }
+.h-wt { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; text-align: right; color: var(--t2); }
+.h-ret { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-align: right; }
 
 /* ── CONTRIBUTORS ── */
-.cl{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.ci{display:flex;justify-content:space-between;align-items:center;
-  padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.04)}
-.ci:last-child{border:none}
-.ci-l{display:flex;align-items:center;gap:9px}
-.ci-ind{width:3px;height:28px;border-radius:2px;flex-shrink:0}
-.ci-tk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
-.ci-nm{font-size:11px;color:var(--dim)}
-.ci-v{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.contrib-list { border-radius: var(--r-lg); overflow: hidden; }
+.contrib-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--glass-0);
+}
+.contrib-item:last-child { border-bottom: none; }
+.ci-left { display: flex; align-items: center; gap: 10px; }
+.ci-bar { width: 3px; height: 30px; border-radius: 2px; flex-shrink: 0; }
+.ci-tk { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; }
+.ci-name { font-size: 11px; color: var(--t3); margin-top: 1px; }
+.ci-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
 
-/* ── SECTOR ── */
-.sector-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px}
-.chart-h{height:200px;margin-bottom:12px}
-.sleg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.sli{display:flex;align-items:center;gap:6px;font-size:11px}
-.sld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-.sln{flex:1;color:var(--soft)}
-.slw{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+/* ── SECTOR CHART ── */
+.sector-wrap { border-radius: var(--r-lg); overflow: hidden; }
+.chart-box { padding: 16px; }
+.chart-canvas-wrap { height: 190px; margin-bottom: 14px; }
+.sleg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sleg-item { display: flex; align-items: center; gap: 7px; font-size: 11px; }
+.sleg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.sleg-name { flex: 1; color: var(--t2); }
+.sleg-w { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--t3); }
 
 /* ── NEWS ── */
-.nl{display:flex;flex-direction:column;gap:10px}
-.nc{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--blue);
-  border-radius:12px;padding:13px 14px}
-.nc.positive{border-left-color:var(--green)}.nc.negative{border-left-color:var(--red)}.nc.mixed{border-left-color:var(--amber)}
-.nct{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
-.nc-tk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px}
-.nc-dt{font-size:10px;color:var(--dim)}
-.nc-hl{font-size:13px;font-weight:600;line-height:1.35;margin-bottom:5px}
-.nc-bd{font-size:12px;color:var(--soft);line-height:1.5}
+.news-stack { display: flex; flex-direction: column; gap: 10px; }
+.news-card {
+  border-radius: var(--r-md); padding: 14px 16px;
+  border-left: 3px solid var(--blue);
+}
+.news-card.positive { border-left-color: var(--green); }
+.news-card.negative { border-left-color: var(--red); }
+.news-card.mixed { border-left-color: var(--amber); }
+.nc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.nc-tk { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; color: var(--t1); }
+.nc-date { font-size: 10px; color: var(--t3); }
+.nc-hl { font-size: 13px; font-weight: 700; line-height: 1.35; margin-bottom: 6px; color: var(--t1); }
+.nc-body { font-size: 12px; color: var(--t2); line-height: 1.55; }
 
 /* ── THESIS ── */
-.thesis{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;
-  font-size:12px;color:var(--soft);line-height:1.65;margin-top:14px}
-.thesis h4{font-size:9.5px;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);
-  font-weight:600;margin:0 0 8px}
-.thesis ul{margin:6px 0 0;padding-left:16px}.thesis li{margin-bottom:4px}
+.thesis-card { border-radius: var(--r-md); padding: 16px; margin-top: 10px; }
+.thesis-card h4 { font-size: 10px; text-transform: uppercase; letter-spacing: .15em; color: var(--t3); font-weight: 700; margin: 0 0 10px; }
+.thesis-card p { font-size: 12px; color: var(--t2); line-height: 1.6; margin: 0 0 10px; }
+.thesis-card ul { margin: 0; padding-left: 16px; }
+.thesis-card li { font-size: 12px; color: var(--t2); line-height: 1.55; margin-bottom: 5px; }
+
+/* ── ERROR BANNER ── */
+#err-banner {
+  display: none;
+  margin: 12px 16px 0;
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  background: rgba(255,69,58,0.12);
+  border: 1px solid rgba(255,69,58,0.25);
+  font-size: 12px; color: var(--red); line-height: 1.5;
+}
+#err-banner.show { display: block; }
 
 /* ── FOOTER ── */
-.footer{text-align:center;font-size:10px;color:var(--dim);
-  padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);
-  border-top:1px solid var(--border);line-height:1.7}
+.footer-note {
+  text-align: center;
+  padding: 20px 20px 8px;
+  font-size: 10px; color: var(--t4); line-height: 1.7;
+}
 
 /* ── DESKTOP ── */
-@media(min-width:600px){
-  .pane{padding:18px 24px 70px;max-width:960px;margin:0 auto}
-  .kpis{grid-template-columns:repeat(3,1fr)}
-  .kpi.full{grid-column:span 1}
-  #tabs .tab{font-size:13px;padding:12px 8px 11px}
+@media (min-width: 600px) {
+  .scroll-content { padding: 20px 24px 32px; max-width: 960px; margin: 0 auto; }
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .kpi-card.kpi-hero { grid-column: span 1; }
+  .kpi-hero .kpi-val { font-size: 28px; }
+  #tabbar { padding: 12px 24px calc(var(--sab) + 12px); max-width: 600px; margin: 0 auto; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
 }
-@media(min-width:960px){
-  .pane{max-width:1200px;padding:24px 36px 80px}
-  .kpis{grid-template-columns:repeat(6,1fr)}
-  .kpi.full{grid-column:span 1}
-  .hl{display:grid;grid-template-columns:1fr 1fr}
-  .hi{border-right:1px solid rgba(255,255,255,.04)}
+@media (min-width: 960px) {
+  .scroll-content { max-width: 1200px; padding: 24px 36px 40px; }
+  .kpi-grid { grid-template-columns: repeat(6, 1fr); }
+  .kpi-card.kpi-hero { grid-column: span 1; }
+  .hero-grid { grid-template-columns: repeat(2, 1fr); max-width: 800px; }
+  .hold-list { display: grid; grid-template-columns: 1fr 1fr; }
+  .hold-item { border-right: 1px solid var(--glass-border); }
 }
 </style>
 </head>
 <body>
+
+<div id="bg-glow">
+  <div class="glow-orb glow-apf"></div>
+  <div class="glow-orb glow-prf"></div>
+  <div class="glow-orb glow-blue"></div>
+</div>
+
 <div id="app">
 
-<!-- TOP BAR -->
-<div id="topbar">
-  <div class="brand">
-    <div class="logo">🍑</div>
-    <div class="brand-text">
-      <h1>Pofmuis Portfolio Managers</h1>
-      <h2>Fund Dashboard</h2>
-    </div>
-  </div>
-  <div class="topbar-right">
-    <button id="refresh-btn" onclick="load()">↻ Refresh</button>
-    <div id="status-line"><span class="dot" id="sdot"></span><span id="stxt">Loading…</span></div>
-  </div>
-</div>
-
-<!-- TABS -->
-<div id="tabs">
-  <div class="tab on"  data-p="ov">Overview</div>
-  <div class="tab"     data-p="apf">⚡ APF</div>
-  <div class="tab"     data-p="prf">🤖 PRF</div>
-</div>
-
-<!-- ══ OVERVIEW ══ -->
-<div class="pane on" id="pov">
-  <div class="ov-cards">
-    <div class="fc fc-apf" onclick="switchTab('apf')">
-      <div class="fc-bar"></div>
-      <div class="fc-header">
-        <span class="fc-ticker">APF</span>
-        <span class="fc-subtitle">AI Power ETF</span>
-      </div>
-      <div><span class="fc-nav mono" id="ov-apf-nav">—</span><span class="fc-usd">USD</span></div>
-      <div class="fc-ret" id="ov-apf-ret">—</div>
-      <div class="fc-rows">
-        <div class="fc-row"><span class="l">Day</span><span class="v" id="ov-apf-day">—</span></div>
-        <div class="fc-row"><span class="l">S&amp;P 500</span><span class="v" id="ov-apf-spy">—</span></div>
-        <div class="fc-row"><span class="l">Alpha</span><span class="v" id="ov-apf-alpha">—</span></div>
-      </div>
-      <div class="fc-days" id="ov-apf-days"></div>
-    </div>
-    <div class="fc fc-prf" onclick="switchTab('prf')">
-      <div class="fc-bar"></div>
-      <div class="fc-header">
-        <span class="fc-ticker">PRF</span>
-        <span class="fc-subtitle">Robotics Fund</span>
-      </div>
-      <div><span class="fc-nav mono" id="ov-prf-nav">—</span><span class="fc-usd">USD</span></div>
-      <div class="fc-ret" id="ov-prf-ret">—</div>
-      <div class="fc-rows">
-        <div class="fc-row"><span class="l">Day</span><span class="v" id="ov-prf-day">—</span></div>
-        <div class="fc-row"><span class="l">S&amp;P 500</span><span class="v" id="ov-prf-spy">—</span></div>
-        <div class="fc-row"><span class="l">Alpha</span><span class="v" id="ov-prf-alpha">—</span></div>
-      </div>
-      <div class="fc-days" id="ov-prf-days"></div>
-    </div>
-  </div>
-
-  <div class="bench">
-    <h3>Performance vs S&amp;P 500 · Since Each Inception</h3>
-    <div class="bench-row">
-      <span class="bench-fund"><span class="b-dot" style="background:var(--apf)"></span>AI Power ETF · APF</span>
-      <div class="bench-nums">
-        <span class="bench-ret" id="bm-apf">—</span>
-        <span class="achip" id="bm-apf-a">α —</span>
+  <!-- NAV BAR -->
+  <div id="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo">🍑</div>
+      <div class="nav-title">
+        <div class="nav-sup">Pofmuis Portfolio Managers</div>
+        <div class="nav-main">Fund Dashboard</div>
       </div>
     </div>
-    <div class="bench-row">
-      <span class="bench-fund"><span class="b-dot" style="background:var(--prf)"></span>Pofmuis Robotics · PRF</span>
-      <div class="bench-nums">
-        <span class="bench-ret" id="bm-prf">—</span>
-        <span class="achip" id="bm-prf-a">α —</span>
+    <div class="nav-right">
+      <button id="refresh-btn" onclick="loadData()">
+        <span id="refresh-icon">↻</span> Refresh
+      </button>
+      <div id="status-row">
+        <span class="status-dot" id="sdot"></span>
+        <span id="stxt">Loading…</span>
       </div>
     </div>
-    <div class="bench-row">
-      <span class="bench-fund"><span class="b-dot" style="background:var(--dim)"></span>S&amp;P 500 · SPY</span>
-      <div class="bench-nums"><span class="bench-ret" id="bm-spy">—</span></div>
+  </div>
+
+  <!-- ERROR BANNER -->
+  <div id="err-banner"></div>
+
+  <!-- ══ OVERVIEW ══ -->
+  <div class="pane on" id="pov">
+    <div class="scroll-content">
+
+      <div class="hero-grid">
+        <!-- APF Hero -->
+        <div class="hero-card hero-apf" onclick="switchTab('apf')">
+          <div class="hero-card-shine"></div>
+          <div class="hero-topbar">
+            <span class="hero-ticker">APF</span>
+            <span class="hero-subtitle">AI Power ETF</span>
+          </div>
+          <div class="hero-nav"><span class="currency">USD</span><span id="ov-apf-nav">—</span></div>
+          <div class="hero-ret" id="ov-apf-ret">—</div>
+          <div class="hero-rows">
+            <div class="hero-row"><span class="rl">Day</span><span class="rv" id="ov-apf-day">—</span></div>
+            <div class="hero-row"><span class="rl">S&amp;P 500</span><span class="rv" id="ov-apf-spy">—</span></div>
+            <div class="hero-row"><span class="rl">Alpha</span><span class="rv" id="ov-apf-alpha">—</span></div>
+          </div>
+          <div class="hero-days" id="ov-apf-days"></div>
+        </div>
+        <!-- PRF Hero -->
+        <div class="hero-card hero-prf" onclick="switchTab('prf')">
+          <div class="hero-card-shine"></div>
+          <div class="hero-topbar">
+            <span class="hero-ticker">PRF</span>
+            <span class="hero-subtitle">Robotics Fund</span>
+          </div>
+          <div class="hero-nav"><span class="currency">USD</span><span id="ov-prf-nav">—</span></div>
+          <div class="hero-ret" id="ov-prf-ret">—</div>
+          <div class="hero-rows">
+            <div class="hero-row"><span class="rl">Day</span><span class="rv" id="ov-prf-day">—</span></div>
+            <div class="hero-row"><span class="rl">S&amp;P 500</span><span class="rv" id="ov-prf-spy">—</span></div>
+            <div class="hero-row"><span class="rl">Alpha</span><span class="rv" id="ov-prf-alpha">—</span></div>
+          </div>
+          <div class="hero-days" id="ov-prf-days"></div>
+        </div>
+      </div>
+
+      <!-- Benchmark -->
+      <div class="glass-card bench-card">
+        <div class="bench-head">Performance vs S&amp;P 500 · Since Each Inception</div>
+        <div class="bench-row">
+          <div class="bench-left"><span class="bench-dot" style="background:var(--apf)"></span>AI Power ETF · APF</div>
+          <div class="bench-right"><span class="bench-ret" id="bm-apf">—</span><span class="alpha-chip" id="bm-apf-a">α —</span></div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-left"><span class="bench-dot" style="background:var(--prf)"></span>Pofmuis Robotics · PRF</div>
+          <div class="bench-right"><span class="bench-ret" id="bm-prf">—</span><span class="alpha-chip" id="bm-prf-a">α —</span></div>
+        </div>
+        <div class="bench-row">
+          <div class="bench-left"><span class="bench-dot" style="background:var(--t4)"></span>S&amp;P 500 · SPY</div>
+          <div class="bench-right"><span class="bench-ret" id="bm-spy">—</span></div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>APF · Holdings</div>
+      <div class="hold-list glass-card" id="ov-apf-hl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>PRF · Top 10</div>
+      <div class="hold-list glass-card" id="ov-prf-hl"></div>
+
+      <div class="footer-note">Prices updated every 30 min · <span id="ft-ts">—</span><br>
+        Illustrative only · Not a registered fund · Not investment advice</div>
     </div>
   </div>
 
-  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>APF · Holdings</div>
-  <div class="hl" id="ov-apf-hl"></div>
-  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>PRF · Top 10 Holdings</div>
-  <div class="hl" id="ov-prf-hl"></div>
-</div>
+  <!-- ══ APF ══ -->
+  <div class="pane" id="papf">
+    <div class="scroll-content">
+      <div class="kpi-grid">
+        <div class="glass-card kpi-card kpi-hero">
+          <div class="kpi-label">Net Asset Value</div>
+          <div class="kpi-val"><span class="kpi-currency">USD</span><span id="apf-nav">—</span></div>
+          <div class="kpi-sub">Base 100.00 · Inception 2026-05-22</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Since Inception</div>
+          <div class="kpi-val" id="apf-since">—</div>
+          <div class="kpi-sub" id="apf-days">—</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">S&amp;P 500</div>
+          <div class="kpi-val" id="apf-spy">—</div>
+          <div class="kpi-sub">SPY same period</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Alpha vs S&amp;P</div>
+          <div class="kpi-val" id="apf-alpha">—</div>
+          <div class="kpi-sub">APF − SPY</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Day Change</div>
+          <div class="kpi-val" id="apf-day">—</div>
+          <div class="kpi-sub">vs. prior close</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Holdings</div>
+          <div class="kpi-val">5</div>
+          <div class="kpi-sub">5 buckets</div>
+        </div>
+      </div>
 
-<!-- ══ APF ══ -->
-<div class="pane" id="papf">
-  <div class="kpis">
-    <div class="kpi full">
-      <div class="kl">Net Asset Value</div>
-      <div><span class="kv" id="apf-nav">—</span><span class="ku">USD</span></div>
-      <div class="ks">Base 100.00 · inception 2026-05-22</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Since Inception</div>
-      <div class="kv" id="apf-since">—</div>
-      <div class="ks" id="apf-days">—</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">S&amp;P 500</div>
-      <div class="kv" id="apf-spy">—</div>
-      <div class="ks">SPY same period</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Alpha vs S&amp;P</div>
-      <div class="kv" id="apf-alpha">—</div>
-      <div class="ks">APF − SPY</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Day Change</div>
-      <div class="kv" id="apf-day">—</div>
-      <div class="ks">vs. prior close</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Holdings</div>
-      <div class="kv">5</div>
-      <div class="ks">5 buckets</div>
-    </div>
-  </div>
-  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>Holdings</div>
-  <div class="hl" id="apf-hl"></div>
-  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>Contributors &amp; Detractors</div>
-  <div class="cl" id="apf-cl"></div>
-  <div class="sector-box">
-    <div class="sh" style="margin:0 0 10px"><span class="sh-bar" style="background:var(--apf)"></span>Sector Allocation</div>
-    <div class="chart-h"><canvas id="apfChart"></canvas></div>
-    <div class="sleg" id="apf-sleg"></div>
-  </div>
-  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>Market Intelligence</div>
-  <div class="nl" id="apf-nl"></div>
-  <div class="thesis">
-    <h4>Investment Thesis</h4>
-    <p>Power is the new bottleneck. AI data-centre demand is driving an unprecedented electricity supercycle — nuclear renaissance, grid buildout and clean firm capacity are the structural beneficiaries.</p>
-    <ul id="apf-chg"></ul>
-  </div>
-</div>
+      <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>Holdings</div>
+      <div class="hold-list glass-card" id="apf-hl"></div>
 
-<!-- ══ PRF ══ -->
-<div class="pane" id="pprf">
-  <div class="kpis">
-    <div class="kpi full">
-      <div class="kl">Net Asset Value</div>
-      <div><span class="kv" id="prf-nav">—</span><span class="ku">USD</span></div>
-      <div class="ks">Base 100.00 · inception 2026-05-12</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Since Inception</div>
-      <div class="kv" id="prf-since">—</div>
-      <div class="ks" id="prf-days">—</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">S&amp;P 500</div>
-      <div class="kv" id="prf-spy">—</div>
-      <div class="ks">SPY same period</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Alpha vs S&amp;P</div>
-      <div class="kv" id="prf-alpha">—</div>
-      <div class="ks">PRF − SPY</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Day Change</div>
-      <div class="kv" id="prf-day">—</div>
-      <div class="ks">vs. prior close</div>
-    </div>
-    <div class="kpi">
-      <div class="kl">Holdings</div>
-      <div class="kv">38</div>
-      <div class="ks">9 buckets</div>
-    </div>
-  </div>
-  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>All Holdings</div>
-  <div class="hl" id="prf-hl"></div>
-  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>Contributors &amp; Detractors</div>
-  <div class="cl" id="prf-cl"></div>
-  <div class="sector-box">
-    <div class="sh" style="margin:0 0 10px"><span class="sh-bar" style="background:var(--prf)"></span>Sector Allocation</div>
-    <div class="chart-h"><canvas id="prfChart"></canvas></div>
-    <div class="sleg" id="prf-sleg"></div>
-  </div>
-  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>Market Intelligence</div>
-  <div class="nl" id="prf-nl"></div>
-  <div class="thesis">
-    <h4>Methodology &amp; Active Calls</h4>
-    <ul id="prf-chg"></ul>
-  </div>
-</div>
+      <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>Contributors &amp; Detractors</div>
+      <div class="contrib-list glass-card" id="apf-cl"></div>
 
-<div class="footer">
-  Pofmuis Portfolio Managers · E. Carstens &amp; B. de Clerk<br>
-  Prices updated every 30 min via GitHub Actions · <span id="ft-time">—</span><br>
-  <span style="color:#4e5a72">Illustrative only · Not a registered fund · Not investment advice</span>
-</div>
+      <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>Sector Allocation</div>
+      <div class="sector-wrap glass-card">
+        <div class="chart-box">
+          <div class="chart-canvas-wrap"><canvas id="apfChart"></canvas></div>
+          <div class="sleg" id="apf-sleg"></div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>Market Intelligence</div>
+      <div class="news-stack" id="apf-nl"></div>
+
+      <div class="glass-card thesis-card" style="margin-top:14px">
+        <h4>Investment Thesis</h4>
+        <p>Power is the new bottleneck. AI data-centre demand is driving an unprecedented electricity supercycle — nuclear renaissance, grid buildout and clean firm capacity are the structural beneficiaries.</p>
+        <ul id="apf-chg"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PRF ══ -->
+  <div class="pane" id="pprf">
+    <div class="scroll-content">
+      <div class="kpi-grid">
+        <div class="glass-card kpi-card kpi-hero">
+          <div class="kpi-label">Net Asset Value</div>
+          <div class="kpi-val"><span class="kpi-currency">USD</span><span id="prf-nav">—</span></div>
+          <div class="kpi-sub">Base 100.00 · Inception 2026-05-12</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Since Inception</div>
+          <div class="kpi-val" id="prf-since">—</div>
+          <div class="kpi-sub" id="prf-days">—</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">S&amp;P 500</div>
+          <div class="kpi-val" id="prf-spy">—</div>
+          <div class="kpi-sub">SPY same period</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Alpha vs S&amp;P</div>
+          <div class="kpi-val" id="prf-alpha">—</div>
+          <div class="kpi-sub">PRF − SPY</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Day Change</div>
+          <div class="kpi-val" id="prf-day">—</div>
+          <div class="kpi-sub">vs. prior close</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Holdings</div>
+          <div class="kpi-val">38</div>
+          <div class="kpi-sub">9 buckets</div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>All Holdings</div>
+      <div class="hold-list glass-card" id="prf-hl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>Contributors &amp; Detractors</div>
+      <div class="contrib-list glass-card" id="prf-cl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>Sector Allocation</div>
+      <div class="sector-wrap glass-card">
+        <div class="chart-box">
+          <div class="chart-canvas-wrap"><canvas id="prfChart"></canvas></div>
+          <div class="sleg" id="prf-sleg"></div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>Market Intelligence</div>
+      <div class="news-stack" id="prf-nl"></div>
+
+      <div class="glass-card thesis-card" style="margin-top:14px">
+        <h4>Methodology &amp; Active Calls</h4>
+        <ul id="prf-chg"></ul>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /app -->
 
+<!-- BOTTOM TAB BAR -->
+<div id="tabbar">
+  <div class="tab-pill on" data-p="ov"><span class="tab-icon">📊</span><span class="tab-label">Overview</span></div>
+  <div class="tab-pill" data-p="apf"><span class="tab-icon">⚡</span><span class="tab-label">APF</span></div>
+  <div class="tab-pill" data-p="prf"><span class="tab-icon">🤖</span><span class="tab-label">PRF</span></div>
+</div>
+
 <script>
-const SC={
-  'Medical':'#28d391','Industrial':'#ffb547','Automation':'#3a93d3',
-  'Software/AI':'#a78bfa','Software':'#a78bfa','Logistics':'#5ee8c1',
-  'Defense':'#ff5d6c','Professional':'#b4b4c8','Service':'#ec4899',
-  'Nuclear & Gas':'#ffe080','Nuclear Fleet':'#5ee8c1','Nucl. Colocation':'#7fbfe3',
-  'Renewables':'#5ee8b6','Grid Infra':'#ff8b96'
+/* ── SECTOR COLOURS ── */
+const SC = {
+  'Medical':'#30d158','Industrial':'#ffd60a','Automation':'#0a84ff',
+  'Software/AI':'#bf5af2','Software':'#bf5af2','Logistics':'#5ac8fa',
+  'Defense':'#ff453a','Professional':'#98989d','Service':'#ff375f',
+  'Nuclear & Gas':'#ffd60a','Nuclear Fleet':'#5ac8fa','Nucl. Colocation':'#0a84ff',
+  'Renewables':'#30d158','Grid Infra':'#ff6961'
 };
 
-const NEWS={
-  apf:[
-    {ticker:'VST', headline:'Vistra Posts Record Q1 2026 EBITDA; PJM Capacity +1,038%',summary:'Record adjusted EBITDA driven by surging PJM capacity prices. FY2026 guidance raised, citing AI data-centre load growth as a structural tailwind.',sentiment:'positive',date:'2026-05-15'},
-    {ticker:'CEG', headline:'Constellation Signs Second Hyperscaler Nuclear PPA',summary:'Long-term PPA with a major hyperscaler for dedicated nuclear baseload supply, following the landmark Microsoft Three Mile Island deal.',sentiment:'positive',date:'2026-05-10'},
-    {ticker:'TLN', headline:'Talen Cumulus Campus Reaches 200MW; Amazon Anchor Tenant',summary:'Nuclear-adjacent Cumulus data-centre campus hit 200MW operational. Management indicated >1GW pipeline at Susquehanna site.',sentiment:'positive',date:'2026-05-08'},
-    {ticker:'NEE', headline:'NextEra + Dominion Merger Approved — Southeast Grid Expansion',summary:'Federal regulators conditionally approved the merger, creating the nation\'s largest regulated utility with a 30GW renewable pipeline.',sentiment:'positive',date:'2026-05-18'},
-    {ticker:'GEV', headline:'GE Vernova Transformer Backlog Hits $28B — 3-Year Delivery Wait',summary:'AI data-centre grid demand pushed GEV backlog to $28B with lead times extending to 3 years. Strong pricing power.',sentiment:'positive',date:'2026-05-20'},
+/* ── STATIC CONTENT ── */
+const NEWS = {
+  apf: [
+    {ticker:'VST', headline:'Vistra Posts Record Q1 2026 EBITDA; PJM Capacity +1,038%', summary:'Record adjusted EBITDA driven by surging PJM capacity prices. FY2026 guidance raised, citing AI data-centre load growth as a structural tailwind.', sentiment:'positive', date:'2026-05-15'},
+    {ticker:'CEG', headline:'Constellation Signs Second Hyperscaler Nuclear PPA', summary:'Long-term PPA with a major hyperscaler for dedicated nuclear baseload supply, following the landmark Microsoft Three Mile Island deal.', sentiment:'positive', date:'2026-05-10'},
+    {ticker:'TLN', headline:'Talen Cumulus Campus Reaches 200MW; Amazon Anchor Tenant', summary:'Nuclear-adjacent Cumulus data-centre campus hit 200MW operational. Management indicated >1GW pipeline at Susquehanna site.', sentiment:'positive', date:'2026-05-08'},
+    {ticker:'NEE', headline:'NextEra + Dominion Merger Approved — Southeast Grid Expansion', summary:'Federal regulators conditionally approved the merger, creating the nation\'s largest regulated utility with a 30GW renewable pipeline.', sentiment:'positive', date:'2026-05-18'},
+    {ticker:'GEV', headline:'GE Vernova Transformer Backlog Hits $28B — 3-Year Delivery Wait', summary:'AI data-centre grid demand pushed GEV backlog to $28B with lead times extending to 3 years. Strong pricing power.', sentiment:'positive', date:'2026-05-20'},
   ],
-  prf:[
-    {ticker:'ABBNY',headline:'SoftBank Acquires ABB Robotics for ~$5.3B',summary:'ABB agreed to divest its Robotics division to SoftBank. Reduces pure-play exposure. ABBNY downgraded 6%→3%.',sentiment:'mixed',date:'2026-03-15'},
-    {ticker:'ROK',  headline:'Rockwell Automation Q2 FY26 Beat & Raise',summary:'Q2 revenue and EPS beat consensus. Management raised FY26 guidance on reshoring demand and AI data-centre automation buildout.',sentiment:'positive',date:'2026-05-07'},
-    {ticker:'AVAV', headline:'AeroVironment Wins $90M LASSO Contract Extension',summary:'US Army extended AVAV\'s LASSO loitering munition contract for $90M. Switchblade 600 gaining traction in allied military procurement.',sentiment:'positive',date:'2026-05-12'},
-    {ticker:'ISRG', headline:'Intuitive Q1 Beat; Minor FDA Recall on Ion Accessories',summary:'Intuitive beat Q1 estimates. Minor voluntary recall on certain Ion accessories; corrective action complete, no material impact.',sentiment:'mixed',date:'2026-04-22'},
-    {ticker:'NVDA', headline:'NVIDIA Unveils GR00T N1 Humanoid Foundation Model',summary:'NVIDIA launched GR00T N1 at GTC — a general-purpose humanoid foundation model trained on human motion data.',sentiment:'positive',date:'2026-03-18'},
-    {ticker:'SYM',  headline:'Symbotic Expands Walmart Deal — 42 RDCs, $5B+ Backlog',summary:'Symbotic secured expanded deployment across all 42 Walmart regional distribution centres. Backlog uplift exceeds $5B.',sentiment:'positive',date:'2026-04-10'},
-    {ticker:'TER',  headline:'Teradyne Opens Michigan Cobot Hub with NVIDIA AI',summary:'New Universal Robots AI training hub in Michigan. Cognitive Cobot platform powered by NVIDIA runs natural-language task programming.',sentiment:'positive',date:'2026-05-05'},
-    {ticker:'TSLA', headline:'Optimus Production Delayed to Q4 2026',summary:'Tesla pushed Optimus mass production targets to Q4 2026, citing actuator supply constraints.',sentiment:'negative',date:'2026-05-01'},
+  prf: [
+    {ticker:'ABBNY', headline:'SoftBank Acquires ABB Robotics for ~$5.3B', summary:'ABB agreed to divest its Robotics division to SoftBank. Reduces pure-play exposure. ABBNY downgraded 6%→3%.', sentiment:'mixed', date:'2026-03-15'},
+    {ticker:'ROK',   headline:'Rockwell Automation Q2 FY26 Beat & Raise', summary:'Q2 revenue and EPS beat consensus. Management raised FY26 guidance on reshoring demand and AI data-centre automation buildout.', sentiment:'positive', date:'2026-05-07'},
+    {ticker:'AVAV',  headline:'AeroVironment Wins $90M LASSO Contract Extension', summary:'US Army extended AVAV\'s LASSO loitering munition contract for $90M. Switchblade 600 gaining traction in allied military procurement.', sentiment:'positive', date:'2026-05-12'},
+    {ticker:'ISRG',  headline:'Intuitive Q1 Beat; Minor FDA Recall on Ion Accessories', summary:'Intuitive beat Q1 estimates. Minor voluntary recall on certain Ion accessories; corrective action complete, no material impact.', sentiment:'mixed', date:'2026-04-22'},
+    {ticker:'NVDA',  headline:'NVIDIA Unveils GR00T N1 Humanoid Foundation Model', summary:'NVIDIA launched GR00T N1 at GTC — a general-purpose humanoid foundation model trained on human motion data.', sentiment:'positive', date:'2026-03-18'},
+    {ticker:'SYM',   headline:'Symbotic Expands Walmart Deal — 42 RDCs, $5B+ Backlog', summary:'Symbotic secured expanded deployment across all 42 Walmart regional distribution centres. Backlog uplift exceeds $5B.', sentiment:'positive', date:'2026-04-10'},
+    {ticker:'TER',   headline:'Teradyne Opens Michigan Cobot Hub with NVIDIA AI', summary:'New Universal Robots AI training hub in Michigan. Cognitive Cobot platform powered by NVIDIA runs natural-language task programming.', sentiment:'positive', date:'2026-05-05'},
+    {ticker:'TSLA',  headline:'Optimus Production Delayed to Q4 2026', summary:'Tesla pushed Optimus mass production targets to Q4 2026, citing actuator supply constraints.', sentiment:'negative', date:'2026-05-01'},
   ]
 };
-
-const CHANGES={
-  apf:['VST 30%: PEG 0.36x deeply underpriced relative to earnings growth.','TLN 20%: High conviction but levered — capped to manage leverage risk.','GEV 10%: Grid infrastructure pure-play but expensive (FWD P/E 55-69x, priced in).','NEE 15%: Premium valuation (PEG 3.10x) limits upside vs. other positions.'],
-  prf:['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.']
+const CHANGES = {
+  apf: ['VST 30%: PEG 0.36x deeply underpriced relative to earnings growth.','TLN 20%: High conviction but levered — capped to manage leverage risk.','GEV 10%: Grid infrastructure pure-play but expensive (FWD P/E 55-69x, priced in).','NEE 15%: Premium valuation (PEG 3.10x) limits upside vs. other positions.'],
+  prf: ['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.']
 };
 
 /* ── HELPERS ── */
-function ps(v,d=2){return v==null||isNaN(v)?'—':((v>=0?'+':'')+v.toFixed(d)+'%')}
-function cls(v){return v==null||isNaN(v)?'zero':v>0.001?'pos':v<-0.001?'neg':'zero'}
-function esc(s){return s==null?'':String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]||m))}
-function set(id,txt,c){const e=document.getElementById(id);if(!e)return;e.textContent=txt;if(c!==undefined)e.className=e.className.replace(/\b(pos|neg|zero)\b/g,'')+' '+c;}
-function days(d){return Math.max(0,Math.floor((Date.now()-new Date(d))/86400000))}
+function ps(v, d=2) { return (v == null || isNaN(v)) ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(d) + '%'; }
+function cls(v) { return (v == null || isNaN(v)) ? 'zero' : v > 0.001 ? 'pos' : v < -0.001 ? 'neg' : 'zero'; }
+function esc(s) { return s == null ? '' : String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m] || m)); }
+function set(id, txt, c) {
+  const e = document.getElementById(id);
+  if (!e) return;
+  e.textContent = txt;
+  if (c !== undefined) {
+    e.className = e.className.replace(/\b(pos|neg|zero)\b/g, '').trim() + ' ' + c;
+  }
+}
+function days(d) { return Math.max(0, Math.floor((Date.now() - new Date(d)) / 86400000)); }
+function num(v) { return typeof v === 'number' ? v : parseFloat(v) || 0; }
 
-/* ── LOAD DATA.JSON ── */
-async function load(){
-  setSt('loading','Loading…');
-  try{
-    const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const D=await r.json();
-    render(D);
-    setSt('live','As of '+D.as_of+(D.generated?' · built '+D.generated:''));
-    document.getElementById('ft-time').textContent='Last updated: '+D.generated;
-  }catch(e){
-    setSt('err','Failed to load — '+e.message);
+/* ── STATUS ── */
+function setSt(s, m) {
+  const dot = document.getElementById('sdot');
+  const txt = document.getElementById('stxt');
+  if (dot) dot.className = 'status-dot' + (s === 'loading' ? ' loading' : s === 'err' ? ' err' : '');
+  if (txt) txt.textContent = m;
+  const banner = document.getElementById('err-banner');
+  if (banner) {
+    if (s === 'err') { banner.textContent = '⚠ ' + m + ' — Check your connection or try refreshing.'; banner.classList.add('show'); }
+    else banner.classList.remove('show');
   }
 }
 
-function setSt(s,m){
-  document.getElementById('sdot').className='dot'+(s==='loading'?' loading':s==='err'?' err':'');
-  document.getElementById('stxt').textContent=m;
+/* ── LOAD data.json ── */
+async function loadData() {
+  setSt('loading', 'Loading…');
+  const icon = document.getElementById('refresh-icon');
+  if (icon) icon.style.animation = 'spin 1s linear infinite';
+
+  // Try two URL forms: relative (works on GitHub Pages) and absolute fallback
+  const urls = [
+    'data.json?t=' + Date.now(),
+    'https://divtrader.github.io/pofmuis-etf/data.json?t=' + Date.now()
+  ];
+
+  let D = null, lastErr = '';
+  for (const url of urls) {
+    try {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' at ' + url);
+      const text = await r.text();
+      D = JSON.parse(text);
+      break;
+    } catch (e) {
+      lastErr = e.message;
+    }
+  }
+
+  if (icon) icon.style.animation = '';
+
+  if (!D) {
+    setSt('err', 'Failed: ' + lastErr);
+    return;
+  }
+
+  try {
+    render(D);
+    const ts = D.generated || D.as_of || '—';
+    setSt('live', 'As of ' + (D.as_of || '—'));
+    const ftEl = document.getElementById('ft-ts');
+    if (ftEl) ftEl.textContent = 'Updated: ' + ts;
+  } catch (e) {
+    setSt('err', 'Render error: ' + e.message);
+    console.error('render crash:', e);
+  }
 }
 
 /* ── RENDER ── */
-let chartsBuilt={apf:false,prf:false},staticBuilt={apf:false,prf:false};
+let chartsBuilt = { apf: false, prf: false };
+let staticBuilt = { apf: false, prf: false };
 
-function render(D){
-  const A=D.apf, P=D.prf;
+function render(D) {
+  const A = D.apf;
+  const P = D.prf;
+  if (!A || !P) throw new Error('data.json missing apf/prf keys');
 
-  /* OVERVIEW CARDS */
-  const dA=days('2026-05-22'), dP=days('2026-05-12');
-  set('ov-apf-nav', A.nav.toFixed(4));
+  const dA = days('2026-05-22'), dP = days('2026-05-12');
+
+  /* OVERVIEW HEROES */
+  set('ov-apf-nav', num(A.nav).toFixed(4));
   set('ov-apf-ret', ps(A.nav_change), cls(A.nav_change));
   set('ov-apf-day', ps(A.day_change), cls(A.day_change));
-  set('ov-apf-spy', A.spy_ret!=null?ps(A.spy_ret):'—', cls(A.spy_ret));
-  set('ov-apf-alpha', A.alpha!=null?ps(A.alpha):'—', cls(A.alpha));
-  document.getElementById('ov-apf-days').textContent=dA+' day'+(dA!==1?'s':'')+' live';
+  set('ov-apf-spy', A.spy_ret != null ? ps(A.spy_ret) : '—', cls(A.spy_ret));
+  set('ov-apf-alpha', A.alpha != null ? ps(A.alpha) : '—', cls(A.alpha));
+  const apfDEl = document.getElementById('ov-apf-days');
+  if (apfDEl) apfDEl.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live';
 
-  set('ov-prf-nav', P.nav.toFixed(4));
+  set('ov-prf-nav', num(P.nav).toFixed(4));
   set('ov-prf-ret', ps(P.nav_change), cls(P.nav_change));
   set('ov-prf-day', ps(P.day_change), cls(P.day_change));
-  set('ov-prf-spy', P.spy_ret!=null?ps(P.spy_ret):'—', cls(P.spy_ret));
-  set('ov-prf-alpha', P.alpha!=null?ps(P.alpha):'—', cls(P.alpha));
-  document.getElementById('ov-prf-days').textContent=dP+' day'+(dP!==1?'s':'')+' live';
+  set('ov-prf-spy', P.spy_ret != null ? ps(P.spy_ret) : '—', cls(P.spy_ret));
+  set('ov-prf-alpha', P.alpha != null ? ps(P.alpha) : '—', cls(P.alpha));
+  const prfDEl = document.getElementById('ov-prf-days');
+  if (prfDEl) prfDEl.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live';
 
   /* BENCHMARK STRIP */
   set('bm-apf', ps(A.nav_change), cls(A.nav_change));
   set('bm-prf', ps(P.nav_change), cls(P.nav_change));
-  const spyV=A.spy_ret??P.spy_ret;
-  set('bm-spy', spyV!=null?ps(spyV):'—', cls(spyV));
-  const aChip=(v,id)=>{const e=document.getElementById(id);if(!e||v==null)return;e.textContent='α '+ps(v);e.className='achip '+(v>0?'pos':v<0?'neg':'zero');};
-  aChip(A.alpha,'bm-apf-a'); aChip(P.alpha,'bm-prf-a');
+  const spyV = A.spy_ret != null ? A.spy_ret : P.spy_ret;
+  set('bm-spy', spyV != null ? ps(spyV) : '—', cls(spyV));
+  setAlphaChip('bm-apf-a', A.alpha);
+  setAlphaChip('bm-prf-a', P.alpha);
 
-  /* OVERVIEW HOLD LISTS */
-  rHolds('ov-apf-hl', A.rows, true, 'apf');
-  rHolds('ov-prf-hl', [...P.rows].sort((a,b)=>b.weight-a.weight).slice(0,10), true, 'prf');
+  /* OV HOLD LISTS */
+  renderHolds('ov-apf-hl', A.rows || [], true, 'apf');
+  renderHolds('ov-prf-hl', [...(P.rows || [])].sort((a,b) => b.weight - a.weight).slice(0, 10), true, 'prf');
 
-  /* APF PANE */
-  set('apf-nav', A.nav.toFixed(4));
+  /* APF PANE KPIs */
+  set('apf-nav', num(A.nav).toFixed(4));
   set('apf-since', ps(A.nav_change), cls(A.nav_change));
-  document.getElementById('apf-days').textContent=dA+' day'+(dA!==1?'s':'')+' live';
-  set('apf-spy', A.spy_ret!=null?ps(A.spy_ret):'—', cls(A.spy_ret));
-  set('apf-alpha', A.alpha!=null?ps(A.alpha):'—', cls(A.alpha));
+  const apfDays = document.getElementById('apf-days');
+  if (apfDays) apfDays.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live';
+  set('apf-spy', A.spy_ret != null ? ps(A.spy_ret) : '—', cls(A.spy_ret));
+  set('apf-alpha', A.alpha != null ? ps(A.alpha) : '—', cls(A.alpha));
   set('apf-day', ps(A.day_change), cls(A.day_change));
-  rHolds('apf-hl', A.rows, false, 'apf');
-  rContribs('apf-cl', A.rows);
-  if(!chartsBuilt.apf){buildChart('apfChart','apf-sleg',A.rows);chartsBuilt.apf=true;}
-  if(!staticBuilt.apf){rNews('apf-nl',NEWS.apf);rChg('apf-chg',CHANGES.apf);staticBuilt.apf=true;}
+  renderHolds('apf-hl', A.rows || [], false, 'apf');
+  renderContribs('apf-cl', A.rows || []);
+  if (!chartsBuilt.apf) { buildChart('apfChart', 'apf-sleg', A.rows || []); chartsBuilt.apf = true; }
+  if (!staticBuilt.apf) { renderNews('apf-nl', NEWS.apf); renderList('apf-chg', CHANGES.apf); staticBuilt.apf = true; }
 
-  /* PRF PANE */
-  set('prf-nav', P.nav.toFixed(4));
+  /* PRF PANE KPIs */
+  set('prf-nav', num(P.nav).toFixed(4));
   set('prf-since', ps(P.nav_change), cls(P.nav_change));
-  document.getElementById('prf-days').textContent=dP+' day'+(dP!==1?'s':'')+' live';
-  set('prf-spy', P.spy_ret!=null?ps(P.spy_ret):'—', cls(P.spy_ret));
-  set('prf-alpha', P.alpha!=null?ps(P.alpha):'—', cls(P.alpha));
+  const prfDays = document.getElementById('prf-days');
+  if (prfDays) prfDays.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live';
+  set('prf-spy', P.spy_ret != null ? ps(P.spy_ret) : '—', cls(P.spy_ret));
+  set('prf-alpha', P.alpha != null ? ps(P.alpha) : '—', cls(P.alpha));
   set('prf-day', ps(P.day_change), cls(P.day_change));
-  rHolds('prf-hl', [...P.rows].sort((a,b)=>b.weight-a.weight), false, 'prf');
-  rContribs('prf-cl', P.rows);
-  if(!chartsBuilt.prf){buildChart('prfChart','prf-sleg',P.rows);chartsBuilt.prf=true;}
-  if(!staticBuilt.prf){rNews('prf-nl',NEWS.prf);rChg('prf-chg',CHANGES.prf);staticBuilt.prf=true;}
+  renderHolds('prf-hl', [...(P.rows || [])].sort((a,b) => b.weight - a.weight), false, 'prf');
+  renderContribs('prf-cl', P.rows || []);
+  if (!chartsBuilt.prf) { buildChart('prfChart', 'prf-sleg', P.rows || []); chartsBuilt.prf = true; }
+  if (!staticBuilt.prf) { renderNews('prf-nl', NEWS.prf); renderList('prf-chg', CHANGES.prf); staticBuilt.prf = true; }
 }
 
-function rHolds(id,rows,compact,fund){
-  const el=document.getElementById(id);if(!el)return;
-  const g=fund==='apf'?'#c07010,#ffb547':'#2a7ab5,#5ee8c1';
-  const mx=Math.max(...rows.map(r=>r.weight));
-  el.innerHTML=rows.map(r=>{
-    const px=compact?'':'<div class="hi-px">'+(r.cur?'$'+r.cur.toFixed(2):'—')+'</div>';
-    const bk=compact?'':'<div class="hi-bk">'+esc(r.bucket)+'</div>';
-    return`<div class="hi">
-      <div><div class="hi-tk">${esc(r.ticker)}</div>${px}</div>
+function setAlphaChip(id, v) {
+  const e = document.getElementById(id);
+  if (!e) return;
+  if (v == null || isNaN(v)) { e.textContent = 'α —'; e.className = 'alpha-chip zero'; return; }
+  e.textContent = 'α ' + ps(v);
+  e.className = 'alpha-chip ' + (v > 0 ? 'pos' : v < 0 ? 'neg' : 'zero');
+}
+
+function renderHolds(id, rows, compact, fund) {
+  const el = document.getElementById(id);
+  if (!el || !rows.length) return;
+  const g = fund === 'apf' ? '#c08000,#ffd60a' : '#1a7a30,#30d158';
+  const mx = Math.max(...rows.map(r => num(r.weight)));
+  el.innerHTML = rows.map(r => {
+    const price = r.cur ? '$' + num(r.cur).toFixed(2) : '—';
+    const priceHtml = compact ? '' : '<div class="h-price">' + price + '</div>';
+    const bucketHtml = compact ? '' : '<div class="h-bk">' + esc(r.bucket) + '</div>';
+    const fillW = mx > 0 ? (num(r.weight) / mx * 100).toFixed(0) : 0;
+    return `<div class="hold-item">
+      <div><div class="h-tk">${esc(r.ticker)}</div>${priceHtml}</div>
       <div style="min-width:0">
-        <div class="hi-name">${esc(r.name)}</div>${bk}
-        <div class="hi-wb"><div class="hi-wf" style="width:${(r.weight/mx*100).toFixed(0)}%;background:linear-gradient(90deg,${g})"></div></div>
+        <div class="h-name">${esc(r.name)}</div>${bucketHtml}
+        <div class="h-wbar"><div class="h-wfill" style="width:${fillW}%;background:linear-gradient(90deg,${g})"></div></div>
       </div>
-      <div class="hi-wt">${r.weight.toFixed(1)}%</div>
-      <div class="hi-ret ${cls(r.ret)}">${ps(r.ret)}</div>
+      <div class="h-wt">${num(r.weight).toFixed(1)}%</div>
+      <div class="h-ret ${cls(r.ret)}">${ps(r.ret)}</div>
     </div>`;
   }).join('');
 }
 
-function rContribs(id,rows){
-  const el=document.getElementById(id);if(!el)return;
-  const s=[...rows].sort((a,b)=>b.contrib-a.contrib);
-  const pos=s.filter(r=>r.contrib>0).slice(0,5);
-  const neg=s.filter(r=>r.contrib<0).slice(-5).reverse();
-  const all=[...pos,...neg];
-  if(!all.length){el.innerHTML='<div class="ci"><span style="color:var(--dim);font-style:italic;font-size:12px">Fund just launched — no moves yet.</span></div>';return;}
-  el.innerHTML=all.map(r=>`<div class="ci">
-    <div class="ci-l">
-      <div class="ci-ind" style="background:${r.contrib>=0?'var(--green)':'var(--red)'}"></div>
-      <div><div class="ci-tk">${esc(r.ticker)}</div><div class="ci-nm">${esc(r.name)}</div></div>
+function renderContribs(id, rows) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const sorted = [...rows].sort((a, b) => num(b.contrib) - num(a.contrib));
+  const pos = sorted.filter(r => num(r.contrib) > 0).slice(0, 5);
+  const neg = sorted.filter(r => num(r.contrib) < 0).slice(-5).reverse();
+  const all = [...pos, ...neg];
+  if (!all.length) {
+    el.innerHTML = '<div class="contrib-item"><span style="color:var(--t3);font-style:italic;font-size:12px">Fund just launched — no moves yet.</span></div>';
+    return;
+  }
+  el.innerHTML = all.map(r => `<div class="contrib-item">
+    <div class="ci-left">
+      <div class="ci-bar" style="background:${num(r.contrib) >= 0 ? 'var(--green)' : 'var(--red)'}"></div>
+      <div><div class="ci-tk">${esc(r.ticker)}</div><div class="ci-name">${esc(r.name)}</div></div>
     </div>
-    <div class="ci-v ${cls(r.contrib)}">${ps(r.contrib)}</div>
+    <div class="ci-val ${cls(r.contrib)}">${ps(r.contrib)}</div>
   </div>`).join('');
 }
 
-function buildChart(cid,lid,rows){
-  const m={};rows.forEach(h=>{m[h.bucket]=(m[h.bucket]||0)+h.weight;});
-  const s=Object.entries(m).sort((a,b)=>b[1]-a[1]);
-  new Chart(document.getElementById(cid),{
-    type:'doughnut',
-    data:{labels:s.map(x=>x[0]),datasets:[{data:s.map(x=>x[1]),backgroundColor:s.map(([l])=>SC[l]||'#888'),borderColor:'#0f1626',borderWidth:2}]},
-    options:{cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed.toFixed(1)}%`}}}}
+function buildChart(cid, lid, rows) {
+  const m = {};
+  rows.forEach(h => { m[h.bucket] = (m[h.bucket] || 0) + num(h.weight); });
+  const s = Object.entries(m).sort((a, b) => b[1] - a[1]);
+  const canvas = document.getElementById(cid);
+  if (!canvas) return;
+  new Chart(canvas, {
+    type: 'doughnut',
+    data: {
+      labels: s.map(x => x[0]),
+      datasets: [{ data: s.map(x => x[1]), backgroundColor: s.map(([l]) => SC[l] || '#555'), borderColor: '#000', borderWidth: 2 }]
+    },
+    options: { cutout: '65%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed.toFixed(1)}%` } } } }
   });
-  document.getElementById(lid).innerHTML=s.map(([l,w])=>
-    `<div class="sli"><div class="sld" style="background:${SC[l]||'#888'}"></div><span class="sln">${esc(l)}</span><span class="slw">${w.toFixed(1)}%</span></div>`
+  const legEl = document.getElementById(lid);
+  if (legEl) legEl.innerHTML = s.map(([l, w]) =>
+    `<div class="sleg-item"><div class="sleg-dot" style="background:${SC[l] || '#555'}"></div><span class="sleg-name">${esc(l)}</span><span class="sleg-w">${w.toFixed(1)}%</span></div>`
   ).join('');
 }
 
-function rNews(id,news){
-  document.getElementById(id).innerHTML=news.map(n=>`<div class="nc ${esc(n.sentiment||'')}">
-    <div class="nct"><span class="nc-tk">${esc(n.ticker)}</span><span class="nc-dt">${esc(n.date)}</span></div>
+function renderNews(id, news) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = news.map(n => `<div class="news-card glass-card ${esc(n.sentiment || '')}">
+    <div class="nc-header"><span class="nc-tk">${esc(n.ticker)}</span><span class="nc-date">${esc(n.date)}</span></div>
     <div class="nc-hl">${esc(n.headline)}</div>
-    <div class="nc-bd">${esc(n.summary)}</div>
+    <div class="nc-body">${esc(n.summary)}</div>
   </div>`).join('');
 }
 
-function rChg(id,changes){
-  document.getElementById(id).innerHTML=changes.map(c=>`<li>${esc(c)}</li>`).join('');
+function renderList(id, items) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = items.map(c => `<li>${esc(c)}</li>`).join('');
 }
 
 /* ── TABS ── */
-function switchTab(p){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
-  const t=document.querySelector(`.tab[data-p="${p}"]`);if(t)t.classList.add('on');
-  const pane=document.getElementById('p'+p);if(pane)pane.classList.add('on');
-  window.scrollTo(0,0);
+function switchTab(p) {
+  document.querySelectorAll('.tab-pill').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(x => x.classList.remove('on'));
+  const t = document.querySelector(`.tab-pill[data-p="${p}"]`);
+  if (t) t.classList.add('on');
+  const pane = document.getElementById('p' + p);
+  if (pane) { pane.classList.add('on'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 }
-document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.p)));
+document.querySelectorAll('.tab-pill').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.p)));
 
-load();
+/* ── SPIN KEYFRAME ── */
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { from { display:inline-block; transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+
+/* ── BOOT ── */
+loadData();
 </script>
 </body>
 </html>
