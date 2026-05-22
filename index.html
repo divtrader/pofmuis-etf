@@ -8,6 +8,9 @@
 <meta name="theme-color" content="#000000"/>
 <title>Pofmuis Portfolio Managers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://divtrader.github.io">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
@@ -731,10 +734,29 @@ function setSt(s, m) {
 }
 
 /* ── LOAD data.json ── */
+const CACHE_KEY = 'pofmuis_data_v1';
+
+function loadCached() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(_) {}
+  return null;
+}
+
+function saveCache(d) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch(_) {}
+}
+
 async function loadData() {
-  setSt('loading', 'Loading…');
-  const icon = document.getElementById('refresh-icon');
-  if (icon) icon.style.animation = 'spin 1s linear infinite';
+  // Show cached data instantly if available
+  const cached = loadCached();
+  if (cached) {
+    renderAll(cached);
+    setSt('live', '⏱ Cached — refreshing…');
+  } else {
+    setSt('loading', 'Loading…');
+  }
 
   // Try two URL forms: relative (works on GitHub Pages) and absolute fallback
   const urls = [
@@ -755,13 +777,17 @@ async function loadData() {
     }
   }
 
-  if (icon) icon.style.animation = '';
-
   if (!D) {
-    setSt('err', 'Failed: ' + lastErr);
+    if (!cached) setSt('err', 'Failed: ' + lastErr);
+    else setSt('err', 'Refresh failed — showing cached data');
     return;
   }
 
+  saveCache(D);
+  renderAll(D);
+}
+
+function renderAll(D) {
   try {
     render(D);
     const ts = D.generated || D.as_of || '—';
