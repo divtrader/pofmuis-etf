@@ -233,11 +233,11 @@ html, body {
   border: 1px solid var(--prf-border);
   box-shadow: 0 0 40px rgba(48,209,88,0.07), inset 0 1px 0 rgba(255,255,255,0.08);
 }
-.hero-topbar { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+.hero-topbar { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
 .hero-ticker { font-size: 14px; font-weight: 800; letter-spacing: .04em; }
 .hero-apf .hero-ticker { color: var(--apf); }
 .hero-prf .hero-ticker { color: var(--prf); }
-.hero-subtitle { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--t3); font-weight: 600; }
+.hero-subtitle { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--t3); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hero-nav {
   font-size: 28px; font-weight: 800; letter-spacing: -.03em; line-height: 1;
   font-family: -apple-system, 'SF Pro Display', 'Inter', monospace;
