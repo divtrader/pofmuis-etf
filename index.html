@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0a0f1c"/>
+<title>Pofmuis Portfolio Managers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0a0f1c;--bg2:#0f1626;--panel:#141d31;--panel2:#1a2440;
+  --border:#243150;--text:#e8edf7;--dim:#8896b3;--soft:#b8c4dd;
+  --green:#28d391;--red:#ff5d6c;--amber:#ffb547;
+  --prf:#5ee8c1;--apf:#ffb547;--blue:#3a93d3;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  overscroll-behavior:none}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.pos{color:var(--green)}.neg{color:var(--red)}.zero{color:var(--soft)}
+
+/* APP */
+#app{display:flex;flex-direction:column;min-height:100dvh;
+  padding-top:env(safe-area-inset-top,0px)}
+
+/* TOP BAR */
+#topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,15,28,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);padding:10px 16px 9px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,#1f6feb 0%,#5ee8c1 100%);
+  display:flex;align-items:center;justify-content:center;font-size:19px}
+.brand-text h1{margin:0;font-size:10.5px;font-weight:600;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--dim);line-height:1}
+.brand-text h2{margin:2px 0 0;font-size:15px;font-weight:700;line-height:1.15}
+.topbar-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+#refresh-btn{background:rgba(58,147,211,.13);border:1px solid rgba(58,147,211,.28);
+  color:var(--blue);border-radius:7px;padding:5px 11px;font-size:11px;
+  font-family:'JetBrains Mono',monospace;cursor:pointer;font-weight:700;
+  transition:opacity .15s}
+#refresh-btn:active{opacity:.6}
+#status-line{font-size:10px;color:var(--dim);display:flex;align-items:center;gap:5px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;
+  animation:pulse 2s infinite}
+.dot.loading{background:var(--amber)!important;animation:none}
+.dot.err{background:var(--red)!important;animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(40,211,145,.5)}
+  70%{box-shadow:0 0 0 6px rgba(40,211,145,0)}100%{box-shadow:0 0 0 0 rgba(40,211,145,0)}}
+
+/* TABS */
+#tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
+  position:sticky;top:57px;z-index:99}
+.tab{flex:1;padding:11px 4px 10px;text-align:center;font-size:12px;font-weight:600;
+  letter-spacing:.05em;color:var(--dim);cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .18s;user-select:none}
+.tab[data-p="apf"].on{color:var(--apf);border-bottom-color:var(--apf)}
+.tab[data-p="prf"].on{color:var(--prf);border-bottom-color:var(--prf)}
+.tab[data-p="ov"].on{color:var(--text);border-bottom-color:var(--blue)}
+
+/* PANES */
+.pane{display:none;padding:14px 14px 60px}
+.pane.on{display:block;animation:fadeUp .17s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* FUND HERO CARDS (overview) */
+.ov-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.fc{border-radius:13px;padding:15px 14px;position:relative;overflow:hidden;cursor:pointer}
+.fc-apf{background:linear-gradient(145deg,#261a03 0%,#16110a 100%);
+  border:1px solid rgba(255,181,71,.22)}
+.fc-prf{background:linear-gradient(145deg,#08261a 0%,#081510 100%);
+  border:1px solid rgba(94,232,193,.22)}
+.fc-bar{position:absolute;top:0;left:0;right:0;height:2.5px}
+.fc-apf .fc-bar{background:linear-gradient(90deg,var(--apf) 60%,transparent)}
+.fc-prf .fc-bar{background:linear-gradient(90deg,var(--prf) 60%,transparent)}
+.fc-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.fc-apf .fc-label{color:var(--apf)}
+.fc-prf .fc-label{color:var(--prf)}
+.fc-nav{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1;
+  font-family:'JetBrains Mono',monospace}
+.fc-ret{font-size:14px;font-weight:700;margin-top:6px;font-family:'JetBrains Mono',monospace}
+.fc-rows{margin-top:9px;display:flex;flex-direction:column;gap:4px}
+.fc-row{display:flex;justify-content:space-between;font-size:11px}
+.fc-row .l{color:var(--dim)} .fc-row .v{font-family:'JetBrains Mono',monospace;font-weight:600}
+
+/* benchmark strip */
+.bench{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:13px 14px;margin-bottom:12px}
+.bench h3{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);
+  font-weight:600;margin:0 0 10px}
+.bench-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,.05)}
+.bench-row:last-child{border:none}
+.bench-fund{font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+.b-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.bench-nums{display:flex;align-items:center;gap:10px}
+.bench-ret{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+.alpha-chip{font-size:10px;font-family:'JetBrains Mono',monospace;font-weight:700;
+  padding:2px 6px;border-radius:4px}
+.alpha-chip.pos{background:rgba(40,211,145,.13);color:var(--green)}
+.alpha-chip.neg{background:rgba(255,93,108,.13);color:var(--red)}
+.alpha-chip.zero{background:rgba(255,255,255,.06);color:var(--soft)}
+
+/* SECTION HEADS */
+.sh{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);
+  font-weight:600;margin:18px 0 9px;display:flex;align-items:center;gap:8px}
+.sh-bar{width:14px;height:2px;border-radius:1px;flex-shrink:0}
+
+/* KPI GRID */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.kpi{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:12px 13px}
+.kpi .kl{font-size:9.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);font-weight:600}
+.kpi .kv{font-size:21px;font-weight:800;margin-top:5px;font-family:'JetBrains Mono',monospace;letter-spacing:-.01em;line-height:1}
+.kpi .ks{font-size:10px;color:var(--dim);margin-top:3px}
+.kpi.full{grid-column:span 2;background:linear-gradient(135deg,var(--panel),var(--bg2));border-color:rgba(58,147,211,.2)}
+
+/* HOLDINGS */
+.hl{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.hi{display:grid;grid-template-columns:44px 1fr 38px 54px;align-items:center;gap:9px;
+  padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.04)}
+.hi:last-child{border:none}
+.hi-tk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
+.hi-name{font-size:12px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi-bk{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin-top:1px}
+.hi-wbar{height:3px;border-radius:2px;margin-top:3px;background:rgba(255,255,255,.08)}
+.hi-wfill{height:3px;border-radius:2px}
+.hi-wt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;text-align:right}
+.hi-ret{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-align:right}
+
+/* CONTRIBUTORS */
+.cl{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.ci{display:flex;justify-content:space-between;align-items:center;
+  padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.04)}
+.ci:last-child{border:none}
+.ci-l{display:flex;align-items:center;gap:9px}
+.ci-ind{width:3px;height:28px;border-radius:2px;flex-shrink:0}
+.ci-tk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
+.ci-nm{font-size:11px;color:var(--dim)}
+.ci-v{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+
+/* SECTOR */
+.sector-box{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px}
+.chart-h{height:200px;margin-bottom:12px}
+.sleg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.sli{display:flex;align-items:center;gap:6px;font-size:11px}
+.sld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.sln{flex:1;color:var(--soft)}
+.slw{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim)}
+
+/* NEWS */
+.nl{display:flex;flex-direction:column;gap:10px}
+.nc{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--blue);
+  border-radius:12px;padding:13px 14px}
+.nc.positive{border-left-color:var(--green)}.nc.negative{border-left-color:var(--red)}.nc.mixed{border-left-color:var(--amber)}
+.nct{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.nc-tk{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px}
+.nc-dt{font-size:10px;color:var(--dim)}
+.nc-hl{font-size:13px;font-weight:600;line-height:1.35;margin-bottom:5px}
+.nc-bd{font-size:12px;color:var(--soft);line-height:1.5}
+
+/* THESIS */
+.thesis{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;
+  font-size:12px;color:var(--soft);line-height:1.65;margin-top:14px}
+.thesis h4{font-size:9.5px;text-transform:uppercase;letter-spacing:.15em;color:var(--dim);
+  font-weight:600;margin:0 0 8px}
+.thesis ul{margin:6px 0 0;padding-left:16px}.thesis li{margin-bottom:4px}
+
+/* FOOTER */
+.footer{text-align:center;font-size:10px;color:var(--dim);
+  padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);
+  border-top:1px solid var(--border);line-height:1.7}
+
+/* ── DESKTOP ── */
+@media(min-width:600px){
+  .pane{padding:18px 24px 70px;max-width:960px;margin:0 auto}
+  .ov-cards{grid-template-columns:1fr 1fr}
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .kpi.full{grid-column:span 1}
+}
+@media(min-width:960px){
+  .pane{max-width:1200px;padding:24px 36px 80px}
+  .kpis{grid-template-columns:repeat(6,1fr)}
+  .kpi.full{grid-column:span 1}
+  .ov-cards{grid-template-columns:repeat(2,1fr)}
+  .hl{display:grid;grid-template-columns:1fr 1fr}
+  .hi{border-right:1px solid rgba(255,255,255,.04)}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="brand">
+    <div class="logo">🍑</div>
+    <div class="brand-text">
+      <h1>Pofmuis Portfolio Managers</h1>
+      <h2>Fund Dashboard</h2>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button id="refresh-btn" onclick="fetchPrices()">↻ Refresh</button>
+    <div id="status-line"><span class="dot" id="sdot"></span><span id="stxt">Loading…</span></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div id="tabs">
+  <div class="tab on"  data-p="ov">Overview</div>
+  <div class="tab"     data-p="apf">⚡ APF</div>
+  <div class="tab"     data-p="prf">🤖 PRF</div>
+</div>
+
+<!-- ══ OVERVIEW ══ -->
+<div class="pane on" id="pov">
+
+  <div class="ov-cards">
+    <div class="fc fc-apf" onclick="switchTab('apf')">
+      <div class="fc-bar"></div>
+      <div class="fc-label">APF <span style="font-size:9px;opacity:.7">AI Power ETF</span></div>
+      <div class="fc-nav" id="ov-apf-nav">—</div>
+      <div class="fc-ret" id="ov-apf-ret">—</div>
+      <div class="fc-rows">
+        <div class="fc-row"><span class="l">Day</span><span class="v" id="ov-apf-day">—</span></div>
+        <div class="fc-row"><span class="l">S&amp;P 500</span><span class="v" id="ov-apf-spy">—</span></div>
+        <div class="fc-row"><span class="l">Alpha</span><span class="v" id="ov-apf-alpha">—</span></div>
+        <div class="fc-row"><span class="l" id="ov-apf-days" style="font-size:10px;color:var(--dim)"></span></div>
+      </div>
+    </div>
+    <div class="fc fc-prf" onclick="switchTab('prf')">
+      <div class="fc-bar"></div>
+      <div class="fc-label">PRF <span style="font-size:9px;opacity:.7">Robotics Fund</span></div>
+      <div class="fc-nav" id="ov-prf-nav">—</div>
+      <div class="fc-ret" id="ov-prf-ret">—</div>
+      <div class="fc-rows">
+        <div class="fc-row"><span class="l">Day</span><span class="v" id="ov-prf-day">—</span></div>
+        <div class="fc-row"><span class="l">S&amp;P 500</span><span class="v" id="ov-prf-spy">—</span></div>
+        <div class="fc-row"><span class="l">Alpha</span><span class="v" id="ov-prf-alpha">—</span></div>
+        <div class="fc-row"><span class="l" id="ov-prf-days" style="font-size:10px;color:var(--dim)"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bench">
+    <h3>Performance vs S&amp;P 500 · Since Each Inception</h3>
+    <div class="bench-row">
+      <span class="bench-fund"><span class="b-dot" style="background:var(--apf)"></span>AI Power ETF · APF</span>
+      <div class="bench-nums">
+        <span class="bench-ret" id="bm-apf-ret">—</span>
+        <span class="alpha-chip" id="bm-apf-alpha">α —</span>
+      </div>
+    </div>
+    <div class="bench-row">
+      <span class="bench-fund"><span class="b-dot" style="background:var(--prf)"></span>Pofmuis Robotics · PRF</span>
+      <div class="bench-nums">
+        <span class="bench-ret" id="bm-prf-ret">—</span>
+        <span class="alpha-chip" id="bm-prf-alpha">α —</span>
+      </div>
+    </div>
+    <div class="bench-row">
+      <span class="bench-fund"><span class="b-dot" style="background:var(--dim)"></span>S&amp;P 500 · SPY</span>
+      <div class="bench-nums">
+        <span class="bench-ret" id="bm-spy-ret">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>APF · Holdings</div>
+  <div class="hl" id="ov-apf-hl"></div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>PRF · Top 10 Holdings</div>
+  <div class="hl" id="ov-prf-hl"></div>
+
+</div>
+
+<!-- ══ APF ══ -->
+<div class="pane" id="papf">
+  <div class="kpis">
+    <div class="kpi full">
+      <div class="kl">NAV · USD</div>
+      <div class="kv" id="apf-nav">—</div>
+      <div class="ks">Base 100.00 · inception 2026-05-22</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Since Inception</div>
+      <div class="kv" id="apf-since">—</div>
+      <div class="ks" id="apf-days">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">S&amp;P 500</div>
+      <div class="kv" id="apf-spy">—</div>
+      <div class="ks">SPY same period</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Alpha</div>
+      <div class="kv" id="apf-alpha">—</div>
+      <div class="ks">APF − SPY</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Day Change</div>
+      <div class="kv" id="apf-day">—</div>
+      <div class="ks">vs. prior close</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Holdings</div>
+      <div class="kv">5</div>
+      <div class="ks">5 buckets</div>
+    </div>
+  </div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>Holdings</div>
+  <div class="hl" id="apf-hl"></div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>Contributors &amp; Detractors</div>
+  <div class="cl" id="apf-cl"></div>
+
+  <div class="sector-box">
+    <div class="sh" style="margin:0 0 10px"><span class="sh-bar" style="background:var(--apf)"></span>Sector Allocation</div>
+    <div class="chart-h"><canvas id="apfChart"></canvas></div>
+    <div class="sleg" id="apf-sleg"></div>
+  </div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--apf)"></span>Market Intelligence</div>
+  <div class="nl" id="apf-nl"></div>
+
+  <div class="thesis">
+    <h4>Investment Thesis</h4>
+    <p>Power is the new bottleneck. AI data-centre demand is driving an unprecedented electricity supercycle — nuclear renaissance, grid buildout and clean firm capacity are the structural beneficiaries.</p>
+    <ul id="apf-chg"></ul>
+  </div>
+</div>
+
+<!-- ══ PRF ══ -->
+<div class="pane" id="pprf">
+  <div class="kpis">
+    <div class="kpi full">
+      <div class="kl">NAV · USD</div>
+      <div class="kv" id="prf-nav">—</div>
+      <div class="ks">Base 100.00 · inception 2026-05-12</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Since Inception</div>
+      <div class="kv" id="prf-since">—</div>
+      <div class="ks" id="prf-days">—</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">S&amp;P 500</div>
+      <div class="kv" id="prf-spy">—</div>
+      <div class="ks">SPY same period</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Alpha</div>
+      <div class="kv" id="prf-alpha">—</div>
+      <div class="ks">PRF − SPY</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Day Change</div>
+      <div class="kv" id="prf-day">—</div>
+      <div class="ks">vs. prior close</div>
+    </div>
+    <div class="kpi">
+      <div class="kl">Holdings</div>
+      <div class="kv">38</div>
+      <div class="ks">9 buckets</div>
+    </div>
+  </div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>All Holdings</div>
+  <div class="hl" id="prf-hl"></div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>Contributors &amp; Detractors</div>
+  <div class="cl" id="prf-cl"></div>
+
+  <div class="sector-box">
+    <div class="sh" style="margin:0 0 10px"><span class="sh-bar" style="background:var(--prf)"></span>Sector Allocation</div>
+    <div class="chart-h"><canvas id="prfChart"></canvas></div>
+    <div class="sleg" id="prf-sleg"></div>
+  </div>
+
+  <div class="sh"><span class="sh-bar" style="background:var(--prf)"></span>Market Intelligence</div>
+  <div class="nl" id="prf-nl"></div>
+
+  <div class="thesis">
+    <h4>Methodology &amp; Active Calls</h4>
+    <ul id="prf-chg"></ul>
+  </div>
+</div>
+
+<div class="footer">
+  Pofmuis Portfolio Managers · E. Carstens &amp; B. de Clerk<br>
+  Live prices via Yahoo Finance · Auto-refresh every 60s during market hours (9:30–16:00 ET)<br>
+  <span style="color:#4e5a72">Illustrative only · Not a registered fund · Not investment advice</span>
+</div>
+</div>
+
+<script>
+/* ─── FUND DATA ─── */
+const FUNDS={
+  apf:{
+    id:'apf',name:'AI Power ETF',ticker:'APF',inception:'2026-05-22',base:100,spyInc:747.79,
+    holdings:[
+      {ticker:'VST', name:'Vistra Corp',          weight:30, bucket:'Nuclear & Gas',     inc:153.165},
+      {ticker:'CEG', name:'Constellation Energy', weight:25, bucket:'Nuclear Fleet',     inc:290.39},
+      {ticker:'TLN', name:'Talen Energy',          weight:20, bucket:'Nucl. Colocation',  inc:364.775},
+      {ticker:'NEE', name:'NextEra Energy',        weight:15, bucket:'Renewables',        inc:89.18},
+      {ticker:'GEV', name:'GE Vernova',            weight:10, bucket:'Grid Infra',        inc:1044.3601},
+    ],
+    news:[
+      {ticker:'VST', headline:'Vistra Posts Record Q1 2026 EBITDA; PJM Capacity +1,038%',summary:'Record adjusted EBITDA driven by surging PJM capacity prices. FY2026 guidance raised, citing AI data-centre load growth as a structural tailwind.',sentiment:'positive',date:'2026-05-15'},
+      {ticker:'CEG', headline:'Constellation Signs Second Hyperscaler Nuclear PPA',summary:'Long-term PPA with a major hyperscaler for dedicated nuclear baseload supply, following the landmark Microsoft Three Mile Island deal.',sentiment:'positive',date:'2026-05-10'},
+      {ticker:'TLN', headline:'Talen Cumulus Campus Reaches 200MW; Amazon Anchor Tenant',summary:'Nuclear-adjacent Cumulus data-centre campus hit 200MW operational. Management indicated >1GW pipeline at Susquehanna site.',sentiment:'positive',date:'2026-05-08'},
+      {ticker:'NEE', headline:'NextEra + Dominion Merger Approved — Southeast Grid Expansion',summary:'Federal regulators conditionally approved the merger, creating the nation\'s largest regulated utility with a 30GW renewable pipeline.',sentiment:'positive',date:'2026-05-18'},
+      {ticker:'GEV', headline:'GE Vernova Transformer Backlog Hits $28B — 3-Year Delivery Wait',summary:'AI data-centre grid demand pushed GEV backlog to $28B with lead times extending to 3 years. Strong pricing power.',sentiment:'positive',date:'2026-05-20'},
+    ],
+    changes:['VST 30%: PEG 0.36x deeply underpriced relative to earnings growth.','TLN 20%: High conviction but levered — capped to manage leverage risk.','GEV 10%: Grid infrastructure pure-play but expensive (FWD P/E 55-69x, priced in).','NEE 15%: Premium valuation (PEG 3.10x) limits upside vs. other positions.']
+  },
+  prf:{
+    id:'prf',name:'Pofmuis Robotics Fund',ticker:'PRF',inception:'2026-05-12',base:100,spyInc:739.30,
+    holdings:[
+      {ticker:'ISRG',name:'Intuitive Surgical',   weight:7.0, bucket:'Medical',     inc:420.06},
+      {ticker:'ROK', name:'Rockwell Automation',  weight:6.5, bucket:'Automation',  inc:456.66},
+      {ticker:'NVDA',name:'NVIDIA',               weight:6.0, bucket:'Software/AI', inc:219.44},
+      {ticker:'SYM', name:'Symbotic',             weight:5.0, bucket:'Logistics',   inc:51.71},
+      {ticker:'FANUY',name:'Fanuc (ADR)',         weight:5.0, bucket:'Industrial',  inc:24.17},
+      {ticker:'TER', name:'Teradyne',             weight:4.5, bucket:'Industrial',  inc:366.64},
+      {ticker:'ZBRA',name:'Zebra Technologies',   weight:4.0, bucket:'Automation',  inc:216.96},
+      {ticker:'CGNX',name:'Cognex',               weight:4.0, bucket:'Automation',  inc:67.26},
+      {ticker:'SYK', name:'Stryker',              weight:4.0, bucket:'Medical',     inc:282.58},
+      {ticker:'ABBNY',name:'ABB Ltd (ADR)',       weight:3.0, bucket:'Industrial',  inc:107.73},
+      {ticker:'MDT', name:'Medtronic',            weight:3.0, bucket:'Medical',     inc:74.54},
+      {ticker:'AVAV',name:'AeroVironment',        weight:3.0, bucket:'Defense',     inc:166.45},
+      {ticker:'KTOS',name:'Kratos Defense',       weight:3.0, bucket:'Defense',     inc:56.99},
+      {ticker:'ATS', name:'ATS Corp',             weight:3.0, bucket:'Logistics',   inc:34.25},
+      {ticker:'TDY', name:'Teledyne Technologies',weight:3.0, bucket:'Defense',     inc:632.58},
+      {ticker:'PTC', name:'PTC Inc',              weight:3.0, bucket:'Software',    inc:145.92},
+      {ticker:'HON', name:'Honeywell',            weight:2.5, bucket:'Industrial',  inc:219.11},
+      {ticker:'PATH',name:'UiPath',               weight:2.5, bucket:'Software',    inc:10.66},
+      {ticker:'LMT', name:'Lockheed Martin',      weight:2.5, bucket:'Defense',     inc:512.25},
+      {ticker:'PEGA',name:'Pegasystems',          weight:2.0, bucket:'Software',    inc:34.26},
+      {ticker:'LECO',name:'Lincoln Electric',     weight:2.0, bucket:'Industrial',  inc:271.23},
+      {ticker:'OMCL',name:'Omnicell',             weight:2.0, bucket:'Medical',     inc:43.30},
+      {ticker:'AME', name:'Ametek',               weight:2.0, bucket:'Professional',inc:232.16},
+      {ticker:'OII', name:'Oceaneering Intl',     weight:2.0, bucket:'Professional',inc:37.93},
+      {ticker:'NOC', name:'Northrop Grumman',     weight:2.0, bucket:'Defense',     inc:548.21},
+      {ticker:'PRCT',name:'Procept BioRobotics',  weight:2.0, bucket:'Medical',     inc:26.45},
+      {ticker:'TSLA',name:'Tesla',                weight:1.5, bucket:'Industrial',  inc:445.00},
+      {ticker:'AMZN',name:'Amazon',               weight:1.5, bucket:'Logistics',   inc:268.99},
+      {ticker:'ESLT',name:'Elbit Systems',        weight:1.0, bucket:'Defense',     inc:794.95},
+      {ticker:'TXT', name:'Textron',              weight:1.0, bucket:'Defense',     inc:91.66},
+      {ticker:'GD',  name:'General Dynamics',     weight:1.0, bucket:'Defense',     inc:344.03},
+      {ticker:'RTX', name:'RTX Corporation',      weight:1.0, bucket:'Defense',     inc:178.61},
+      {ticker:'LHX', name:'L3Harris Technologies',weight:1.0, bucket:'Defense',     inc:302.35},
+      {ticker:'QCOM',name:'Qualcomm',             weight:1.0, bucket:'Software',    inc:237.53},
+      {ticker:'SERV',name:'Serve Robotics',       weight:1.0, bucket:'Logistics',   inc:8.85},
+      {ticker:'BA',  name:'Boeing',               weight:0.5, bucket:'Defense',     inc:238.21},
+      {ticker:'PDYN',name:'Palladyne AI',         weight:0.5, bucket:'Software',    inc:6.59},
+      {ticker:'RR',  name:'Richtech Robotics',    weight:0.5, bucket:'Service',     inc:2.75},
+    ],
+    news:[
+      {ticker:'ABBNY',headline:'SoftBank Acquires ABB Robotics for ~$5.3B',summary:'ABB agreed to divest its Robotics division to SoftBank. Reduces pure-play exposure. ABBNY downgraded 6%→3%.',sentiment:'mixed',date:'2026-03-15'},
+      {ticker:'ROK',  headline:'Rockwell Automation Q2 FY26 Beat & Raise',summary:'Q2 revenue and EPS beat consensus. Management raised FY26 guidance on reshoring demand and AI data-centre automation buildout.',sentiment:'positive',date:'2026-05-07'},
+      {ticker:'AVAV', headline:'AeroVironment Wins $90M LASSO Contract Extension',summary:'US Army extended AVAV\'s LASSO loitering munition contract for $90M. Switchblade 600 gaining traction in allied military procurement.',sentiment:'positive',date:'2026-05-12'},
+      {ticker:'ISRG', headline:'Intuitive Q1 Beat; Minor FDA Recall on Ion Accessories',summary:'Intuitive beat Q1 estimates. Minor voluntary recall on certain Ion accessories; corrective action complete, no material impact.',sentiment:'mixed',date:'2026-04-22'},
+      {ticker:'NVDA', headline:'NVIDIA Unveils GR00T N1 Humanoid Foundation Model',summary:'NVIDIA launched GR00T N1 at GTC — a general-purpose humanoid foundation model trained on human motion data. Direct Isaac platform uplift.',sentiment:'positive',date:'2026-03-18'},
+      {ticker:'SYM',  headline:'Symbotic Expands Walmart Deal — 42 RDCs, $5B+ Backlog',summary:'Symbotic secured expanded deployment across all 42 Walmart regional distribution centres. Backlog uplift exceeds $5B.',sentiment:'positive',date:'2026-04-10'},
+      {ticker:'TER',  headline:'Teradyne Opens Michigan Cobot Hub with NVIDIA AI',summary:'New Universal Robots AI training hub in Michigan. Cognitive Cobot platform powered by NVIDIA runs natural-language task programming.',sentiment:'positive',date:'2026-05-05'},
+      {ticker:'TSLA', headline:'Optimus Production Delayed to Q4 2026',summary:'Tesla pushed Optimus mass production targets to Q4 2026, citing actuator supply constraints. Beta units still on track for internal factory deployment.',sentiment:'negative',date:'2026-05-01'},
+    ],
+    changes:['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.']
+  }
+};
+
+const SC={
+  'Medical':'#28d391','Industrial':'#ffb547','Automation':'#3a93d3',
+  'Software/AI':'#a78bfa','Software':'#a78bfa','Logistics':'#5ee8c1',
+  'Defense':'#ff5d6c','Professional':'#b4b4c8','Service':'#ec4899',
+  'Nuclear & Gas':'#ffe080','Nuclear Fleet':'#5ee8c1','Nucl. Colocation':'#7fbfe3',
+  'Renewables':'#5ee8b6','Grid Infra':'#ff8b96'
+};
+
+/* ─── PRICE STATE ─── */
+let LP={};
+let chartsBuilt={apf:false,prf:false};
+let newsBuilt={apf:false,prf:false};
+
+function allTickers(){
+  const s=new Set(['SPY']);
+  [...FUNDS.apf.holdings,...FUNDS.prf.holdings].forEach(h=>s.add(h.ticker));
+  return[...s];
+}
+
+/* ─── FETCH ─── */
+async function fetchPrices(){
+  setSt('loading','Fetching prices…');
+  const syms=allTickers().join(',');
+  const yfURL=`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${syms}&fields=regularMarketPrice,regularMarketOpen,regularMarketPreviousClose`;
+  const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(yfURL)}`;
+  let ok=false;
+  // try proxy first
+  try{
+    const r=await fetch(proxy,{cache:'no-store'});
+    if(r.ok){
+      const outer=await r.json();
+      const d=JSON.parse(outer.contents);
+      ingestYF(d);ok=true;
+    }
+  }catch(_){}
+  // fallback: direct (works on some devices/networks)
+  if(!ok){
+    try{
+      const r=await fetch(yfURL,{cache:'no-store'});
+      if(r.ok){const d=await r.json();ingestYF(d);ok=true;}
+    }catch(_){}
+  }
+  if(ok){setSt('live','Updated '+new Date().toLocaleTimeString());render();}
+  else setSt('err','Price fetch failed — tap ↻ to retry');
+}
+
+function ingestYF(d){
+  (d?.quoteResponse?.result||[]).forEach(q=>{
+    LP[q.symbol]={
+      price:q.regularMarketPrice,
+      open: q.regularMarketOpen||q.regularMarketPrice,
+      prev: q.regularMarketPreviousClose||q.regularMarketPrice
+    };
+  });
+}
+
+function setSt(state,msg){
+  document.getElementById('sdot').className='dot'+(state==='loading'?' loading':state==='err'?' err':'');
+  document.getElementById('stxt').textContent=msg;
+}
+
+/* ─── COMPUTE ─── */
+function compute(fd){
+  let navChg=0,dayChg=0;
+  const rows=fd.holdings.map(h=>{
+    const q=LP[h.ticker];
+    const cur=q?.price,prev=q?.prev||cur;
+    const ret=(cur&&h.inc)?(cur/h.inc-1)*100:0;
+    const day=(cur&&prev)?(cur/prev-1)*100:0;
+    const contrib=ret*h.weight/100;
+    navChg+=contrib; dayChg+=day*h.weight/100;
+    return{...h,cur,prev,ret,day,contrib};
+  });
+  const nav=fd.base*(1+navChg/100);
+  const spyCur=LP['SPY']?.price;
+  const spyRet=(spyCur&&fd.spyInc)?(spyCur/fd.spyInc-1)*100:null;
+  const alpha=spyRet!=null?navChg-spyRet:null;
+  const days=Math.max(0,Math.floor((Date.now()-new Date(fd.inception))/86400000));
+  return{nav,navChg,dayChg,spyRet,alpha,rows,days};
+}
+
+/* ─── HELPERS ─── */
+function ps(v,d=2){return v==null?'—':((v>=0?'+':'')+v.toFixed(d)+'%')}
+function cls(v){return v==null?'zero':v>0.001?'pos':v<-0.001?'neg':'zero'}
+function esc(s){return s==null?'':String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]||m))}
+function set(id,txt,c){const e=document.getElementById(id);if(!e)return;e.textContent=txt;if(c)e.className=e.className.replace(/\b(pos|neg|zero)\b/g,'')+' '+c;}
+
+/* ─── RENDER HOLDINGS ─── */
+function rHolds(id,rows,compact,fund){
+  const el=document.getElementById(id);if(!el)return;
+  const g=fund==='apf'?'#c07010,#ffb547':'#2a7ab5,#5ee8c1';
+  const mx=Math.max(...rows.map(r=>r.weight));
+  el.innerHTML=rows.map(r=>`
+  <div class="hi">
+    <div><div class="hi-tk">${esc(r.ticker)}</div>${compact?'':'<div style="font-size:10px;color:var(--dim)">${r.cur?\'$\'+r.cur.toFixed(2):\'—\'}</div>'}</div>
+    <div style="min-width:0">
+      <div class="hi-name">${esc(r.name)}</div>
+      ${compact?'':'<div class="hi-bk">'+esc(r.bucket)+'</div>'}
+      <div class="hi-wbar"><div class="hi-wfill" style="width:${(r.weight/mx*100).toFixed(0)}%;background:linear-gradient(90deg,${g})"></div></div>
+    </div>
+    <div class="hi-wt">${r.weight.toFixed(1)}%</div>
+    <div class="hi-ret ${cls(r.ret)}">${ps(r.ret)}</div>
+  </div>`).join('').replace(/\$\{r\.cur\?'.*?'\}/g, r2=>r2);
+  // fix price cells (template literal workaround)
+  el.querySelectorAll('.hi').forEach((row,i)=>{
+    const price=rows[i]?.cur;
+    const pd=row.querySelector('[data-price]');
+    if(pd) pd.textContent=price?'$'+price.toFixed(2):'—';
+  });
+}
+
+function renderHoldsProper(id,rows,compact,fund){
+  const el=document.getElementById(id);if(!el)return;
+  const g=fund==='apf'?'#c07010,#ffb547':'#2a7ab5,#5ee8c1';
+  const mx=Math.max(...rows.map(r=>r.weight));
+  el.innerHTML=rows.map(r=>{
+    const priceHtml=compact?'':'<div style="font-size:10px;color:var(--dim)">'+(r.cur?'$'+r.cur.toFixed(2):'—')+'</div>';
+    const bkHtml=compact?'':'<div class="hi-bk">'+esc(r.bucket)+'</div>';
+    return`<div class="hi">
+      <div><div class="hi-tk">${esc(r.ticker)}</div>${priceHtml}</div>
+      <div style="min-width:0">
+        <div class="hi-name">${esc(r.name)}</div>${bkHtml}
+        <div class="hi-wbar"><div class="hi-wfill" style="width:${(r.weight/mx*100).toFixed(0)}%;background:linear-gradient(90deg,${g})"></div></div>
+      </div>
+      <div class="hi-wt">${r.weight.toFixed(1)}%</div>
+      <div class="hi-ret ${cls(r.ret)}">${ps(r.ret)}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ─── RENDER ─── */
+function render(){
+  const A=compute(FUNDS.apf), P=compute(FUNDS.prf);
+
+  /* OVERVIEW */
+  set('ov-apf-nav',A.nav.toFixed(4));
+  set('ov-apf-ret',ps(A.navChg),cls(A.navChg));
+  set('ov-apf-day',ps(A.dayChg),cls(A.dayChg));
+  set('ov-apf-spy',A.spyRet!=null?ps(A.spyRet):'—',cls(A.spyRet));
+  set('ov-apf-alpha',A.alpha!=null?ps(A.alpha)+'  α':'—',cls(A.alpha));
+  document.getElementById('ov-apf-days').textContent=A.days+' day'+(A.days!==1?'s':'')+' live';
+
+  set('ov-prf-nav',P.nav.toFixed(4));
+  set('ov-prf-ret',ps(P.navChg),cls(P.navChg));
+  set('ov-prf-day',ps(P.dayChg),cls(P.dayChg));
+  set('ov-prf-spy',P.spyRet!=null?ps(P.spyRet):'—',cls(P.spyRet));
+  set('ov-prf-alpha',P.alpha!=null?ps(P.alpha)+'  α':'—',cls(P.alpha));
+  document.getElementById('ov-prf-days').textContent=P.days+' day'+(P.days!==1?'s':'')+' live';
+
+  // benchmark strip
+  set('bm-apf-ret',ps(A.navChg),cls(A.navChg));
+  set('bm-prf-ret',ps(P.navChg),cls(P.navChg));
+  const spyEl=document.getElementById('bm-spy-ret');
+  const spyV=A.spyRet??P.spyRet;
+  if(spyEl){spyEl.textContent=spyV!=null?ps(spyV):'—';spyEl.className='bench-ret '+cls(spyV);}
+  const alphaChipStyle=v=>v==null?'alpha-chip zero':v>0?'alpha-chip pos':v<0?'alpha-chip neg':'alpha-chip zero';
+  const apfAlphaEl=document.getElementById('bm-apf-alpha');
+  const prfAlphaEl=document.getElementById('bm-prf-alpha');
+  if(apfAlphaEl){apfAlphaEl.textContent=A.alpha!=null?'α '+ps(A.alpha):'α —';apfAlphaEl.className=alphaChipStyle(A.alpha);}
+  if(prfAlphaEl){prfAlphaEl.textContent=P.alpha!=null?'α '+ps(P.alpha):'α —';prfAlphaEl.className=alphaChipStyle(P.alpha);}
+
+  // overview hold lists
+  renderHoldsProper('ov-apf-hl',A.rows,true,'apf');
+  renderHoldsProper('ov-prf-hl',[...P.rows].sort((a,b)=>b.weight-a.weight).slice(0,10),true,'prf');
+
+  /* APF PANE */
+  set('apf-nav',A.nav.toFixed(4));
+  set('apf-since',ps(A.navChg),cls(A.navChg));
+  document.getElementById('apf-days').textContent=A.days+' day'+(A.days!==1?'s':'')+' live';
+  set('apf-spy',A.spyRet!=null?ps(A.spyRet):'—',cls(A.spyRet));
+  set('apf-alpha',A.alpha!=null?ps(A.alpha):'—',cls(A.alpha));
+  set('apf-day',ps(A.dayChg),cls(A.dayChg));
+  renderHoldsProper('apf-hl',A.rows,false,'apf');
+  renderContribs('apf-cl',A.rows);
+  if(!chartsBuilt.apf){buildChart('apfChart','apf-sleg',FUNDS.apf.holdings);chartsBuilt.apf=true;}
+  if(!newsBuilt.apf){renderNews('apf-nl',FUNDS.apf.news);renderChg('apf-chg',FUNDS.apf.changes);newsBuilt.apf=true;}
+
+  /* PRF PANE */
+  set('prf-nav',P.nav.toFixed(4));
+  set('prf-since',ps(P.navChg),cls(P.navChg));
+  document.getElementById('prf-days').textContent=P.days+' day'+(P.days!==1?'s':'')+' live';
+  set('prf-spy',P.spyRet!=null?ps(P.spyRet):'—',cls(P.spyRet));
+  set('prf-alpha',P.alpha!=null?ps(P.alpha):'—',cls(P.alpha));
+  set('prf-day',ps(P.dayChg),cls(P.dayChg));
+  renderHoldsProper('prf-hl',[...P.rows].sort((a,b)=>b.weight-a.weight),false,'prf');
+  renderContribs('prf-cl',P.rows);
+  if(!chartsBuilt.prf){buildChart('prfChart','prf-sleg',FUNDS.prf.holdings);chartsBuilt.prf=true;}
+  if(!newsBuilt.prf){renderNews('prf-nl',FUNDS.prf.news);renderChg('prf-chg',FUNDS.prf.changes);newsBuilt.prf=true;}
+}
+
+function renderContribs(id,rows){
+  const el=document.getElementById(id);if(!el)return;
+  const s=[...rows].sort((a,b)=>b.contrib-a.contrib);
+  const pos=s.filter(r=>r.contrib>0).slice(0,5);
+  const neg=s.filter(r=>r.contrib<0).slice(-5).reverse();
+  const all=[...pos,...neg];
+  if(!all.length){el.innerHTML='<div class="ci"><span style="color:var(--dim);font-style:italic;font-size:12px">Fund just launched — no moves yet.</span></div>';return;}
+  el.innerHTML=all.map(r=>`<div class="ci">
+    <div class="ci-l">
+      <div class="ci-ind" style="background:${r.contrib>=0?'var(--green)':'var(--red)'}"></div>
+      <div><div class="ci-tk">${esc(r.ticker)}</div><div class="ci-nm">${esc(r.name)}</div></div>
+    </div>
+    <div class="ci-v ${cls(r.contrib)}">${ps(r.contrib)}</div>
+  </div>`).join('');
+}
+
+function buildChart(cid,lid,holdings){
+  const m={};holdings.forEach(h=>{m[h.bucket]=(m[h.bucket]||0)+h.weight;});
+  const s=Object.entries(m).sort((a,b)=>b[1]-a[1]);
+  const labels=s.map(x=>x[0]),vals=s.map(x=>x[1]),colors=labels.map(l=>SC[l]||'#888');
+  new Chart(document.getElementById(cid),{
+    type:'doughnut',
+    data:{labels,datasets:[{data:vals,backgroundColor:colors,borderColor:'#0f1626',borderWidth:2}]},
+    options:{cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.label}: ${c.parsed.toFixed(1)}%`}}}}
+  });
+  document.getElementById(lid).innerHTML=s.map(([l,w])=>
+    `<div class="sli"><div class="sld" style="background:${SC[l]||'#888'}"></div><span class="sln">${esc(l)}</span><span class="slw">${w.toFixed(1)}%</span></div>`
+  ).join('');
+}
+
+function renderNews(id,news){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=news.map(n=>`<div class="nc ${esc(n.sentiment||'')}">
+    <div class="nct"><span class="nc-tk">${esc(n.ticker)}</span><span class="nc-dt">${esc(n.date)}</span></div>
+    <div class="nc-hl">${esc(n.headline)}</div>
+    <div class="nc-bd">${esc(n.summary)}</div>
+  </div>`).join('');
+}
+
+function renderChg(id,changes){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=changes.map(c=>`<li>${esc(c)}</li>`).join('');
+}
+
+/* ─── TABS ─── */
+function switchTab(p){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
+  const t=document.querySelector(`.tab[data-p="${p}"]`);
+  if(t) t.classList.add('on');
+  const pane=document.getElementById('p'+p);
+  if(pane) pane.classList.add('on');
+}
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>switchTab(t.dataset.p));
+});
+
+/* ─── AUTO REFRESH ─── */
+function isMarketOpen(){
+  const et=new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const d=et.getDay(),h=et.getHours(),m=et.getMinutes(),mins=h*60+m;
+  return d>=1&&d<=5&&mins>=570&&mins<=960;
+}
+setInterval(()=>{
+  if(isMarketOpen()) fetchPrices();
+  else setSt('live','Market closed · '+new Date().toLocaleTimeString());
+},60000);
+
+fetchPrices();
+</script>
+</body>
+</html>
