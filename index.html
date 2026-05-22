@@ -791,19 +791,28 @@ function renderAll(D) {
   try {
     render(D);
     const ts = D.generated || D.as_of || '—';
-    // Convert UTC timestamp to CET for display
-    let cetLabel = D.as_of || '—';
+    // Convert UTC timestamp to ET for display
+    let tsLabel = D.as_of || '—';
     try {
       if (D.generated) {
-        // "2026-05-22 14:39 UTC" → parse as UTC
         const utcStr = D.generated.replace(' UTC', '').replace(' ', 'T') + ':00Z';
         const d = new Date(utcStr);
         if (!isNaN(d)) {
-          cetLabel = d.toLocaleString('en-GB', {
-            timeZone: 'Europe/Paris',
-            year: 'numeric', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit'
-          }).replace(',', '') + ' CET';
+          const etTime = d.toLocaleString('en-US', {
+            timeZone: 'America/New_York',
+            month: '2-digit', day: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', hour12: false
+          });
+          // Format as "22/05/2026 12:46 ET" using formatToParts for Safari safety
+          const parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            month: '2-digit', day: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', hour12: false
+          }).formatToParts(d);
+          const p = {};
+          parts.forEach(x => { if (x.type !== 'literal') p[x.type] = x.value; });
+          const h = parseInt(p.hour) % 24;
+          tsLabel = `${p.day}/${p.month}/${p.year} ${String(h).padStart(2,'0')}:${p.minute} ET`;
         }
       }
     } catch(_) {}
@@ -850,9 +859,9 @@ function renderAll(D) {
     const marketOpen = isWeekday && !isHoliday && etMins >= 9*60+30 && etMins < 16*60;
     const dot = document.getElementById('sdot');
     if (dot) dot.style.background = marketOpen ? 'var(--green)' : 'var(--red)';
-    setSt('live', 'As of ' + cetLabel + (marketOpen ? ' · Market open' : ' · Market closed'));
+    setSt('live', 'As of ' + tsLabel + (marketOpen ? ' · Market open' : ' · Market closed'));
     const ftEl = document.getElementById('ft-ts');
-    if (ftEl) ftEl.textContent = 'Updated: ' + cetLabel;
+    if (ftEl) ftEl.textContent = 'Updated: ' + tsLabel;
   } catch (e) {
     setSt('err', 'Render error: ' + e.message);
     console.error('render crash:', e);
