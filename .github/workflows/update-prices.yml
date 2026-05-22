@@ -2,8 +2,8 @@ name: Update prices
 
 on:
   schedule:
-    # Every 30 min Mon-Fri 13:00-21:00 UTC (09:00-17:00 ET)
-    - cron: "0,30 13-21 * * 1-5"
+    # Every hour Mon-Fri 13:00-21:00 UTC (09:00-17:00 ET)
+    - cron: "0 13-21 * * 1-5"
   workflow_dispatch:   # allow manual trigger from GitHub UI
 
 jobs:
