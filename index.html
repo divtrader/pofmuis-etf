@@ -848,8 +848,9 @@ function renderAll(D) {
     const isWeekday = !['Sat','Sun'].includes(etWeekday);
     const isHoliday = holidays.includes(etDate);
     const marketOpen = isWeekday && !isHoliday && etMins >= 9*60+30 && etMins < 16*60;
-    const marketLabel = marketOpen ? ' · 🟢 Market open' : ' · 🔴 Market closed';
-    setSt('live', 'As of ' + cetLabel + marketLabel);
+    const dot = document.getElementById('sdot');
+    if (dot) dot.style.background = marketOpen ? 'var(--green)' : 'var(--red)';
+    setSt('live', 'As of ' + cetLabel + (marketOpen ? ' · Market open' : ' · Market closed'));
     const ftEl = document.getElementById('ft-ts');
     if (ftEl) ftEl.textContent = 'Updated: ' + cetLabel;
   } catch (e) {
