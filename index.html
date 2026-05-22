@@ -257,10 +257,10 @@ html, body {
 /* ── BENCHMARK CARD ── */
 .bench-card { margin-bottom: 14px; }
 .bench-head { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); padding: 14px 16px 10px; }
-.bench-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid var(--glass-border); }
-.bench-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; }
+.bench-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid var(--glass-border); gap: 8px; }
+.bench-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; min-width: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bench-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; }
-.bench-right { display: flex; align-items: center; gap: 8px; }
+.bench-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .bench-ret { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
 .alpha-chip {
   font-size: 10px; font-weight: 800;
