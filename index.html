@@ -260,6 +260,7 @@ html, body {
 .bench-head { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); padding: 14px 16px 10px; }
 .bench-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-top: 1px solid var(--glass-border); gap: 8px; }
 .bench-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; min-width: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bench-since { font-size: 10px; font-weight: 400; color: var(--t4); }
 .bench-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; }
 .bench-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .bench-ret { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
@@ -490,17 +491,17 @@ html, body {
 
       <!-- Benchmark -->
       <div class="glass-card bench-card">
-        <div class="bench-head">Performance vs S&amp;P 500 · Since Each Inception</div>
+        <div class="bench-head">Fund Return · Since Inception &nbsp;|&nbsp; vs S&amp;P 500 Benchmark</div>
         <div class="bench-row">
-          <div class="bench-left"><span class="bench-dot" style="background:var(--apf)"></span>Pofmuis AI Power Fund · APF</div>
-          <div class="bench-right"><span class="bench-ret" id="bm-apf">—</span><span class="alpha-chip" id="bm-apf-a">α —</span></div>
+          <div class="bench-left"><span class="bench-dot" style="background:var(--apf)"></span>Pofmuis AI Power Fund · APF <span class="bench-since">since 22 May</span></div>
+          <div class="bench-right"><span class="bench-ret" id="bm-apf">—</span><span class="alpha-chip" id="bm-apf-a">vs S&amp;P —</span></div>
         </div>
         <div class="bench-row">
-          <div class="bench-left"><span class="bench-dot" style="background:var(--prf)"></span>Pofmuis Robotics Fund · PRF</div>
-          <div class="bench-right"><span class="bench-ret" id="bm-prf">—</span><span class="alpha-chip" id="bm-prf-a">α —</span></div>
+          <div class="bench-left"><span class="bench-dot" style="background:var(--prf)"></span>Pofmuis Robotics Fund · PRF <span class="bench-since">since 12 May</span></div>
+          <div class="bench-right"><span class="bench-ret" id="bm-prf">—</span><span class="alpha-chip" id="bm-prf-a">vs S&amp;P —</span></div>
         </div>
         <div class="bench-row">
-          <div class="bench-left"><span class="bench-dot" style="background:var(--t4)"></span>S&amp;P 500 · SPY</div>
+          <div class="bench-left"><span class="bench-dot" style="background:var(--t4)"></span>S&amp;P 500 · SPY <span class="bench-since">since APF inception</span></div>
           <div class="bench-right"><span class="bench-ret" id="bm-spy">—</span></div>
         </div>
       </div>
@@ -858,8 +859,8 @@ function render(D) {
 function setAlphaChip(id, v) {
   const e = document.getElementById(id);
   if (!e) return;
-  if (v == null || isNaN(v)) { e.textContent = 'α —'; e.className = 'alpha-chip zero'; return; }
-  e.textContent = 'α ' + ps(v);
+  if (v == null || isNaN(v)) { e.textContent = 'vs S&P —'; e.className = 'alpha-chip zero'; return; }
+  e.textContent = 'vs S&P ' + ps(v);
   e.className = 'alpha-chip ' + (v > 0 ? 'pos' : v < 0 ? 'neg' : 'zero');
 }
 
