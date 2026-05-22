@@ -376,7 +376,8 @@ html, body {
 /* ── SECTOR CHART ── */
 .sector-wrap { border-radius: var(--r-lg); overflow: hidden; }
 .chart-box { padding: 16px; }
-.chart-canvas-wrap { height: 190px; margin-bottom: 14px; }
+.chart-canvas-wrap { height: 190px; margin-bottom: 14px; display: flex; justify-content: center; align-items: center; }
+.chart-canvas-wrap canvas { max-width: 190px; max-height: 190px; }
 .sleg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .sleg-item { display: flex; align-items: center; gap: 7px; font-size: 11px; }
 .sleg-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
@@ -813,28 +814,21 @@ function renderAll(D) {
   try {
     render(D);
     const ts = D.generated || D.as_of || '—';
-    // Convert UTC timestamp to ET for display
+    // Convert UTC timestamp to device local time
     let tsLabel = D.as_of || '—';
     try {
       if (D.generated) {
         const utcStr = D.generated.replace(' UTC', '').replace(' ', 'T') + ':00Z';
         const d = new Date(utcStr);
         if (!isNaN(d)) {
-          const etTime = d.toLocaleString('en-US', {
-            timeZone: 'America/New_York',
-            month: '2-digit', day: '2-digit', year: 'numeric',
-            hour: '2-digit', minute: '2-digit', hour12: false
-          });
-          // Format as "22/05/2026 12:46 ET" using formatToParts for Safari safety
-          const parts = new Intl.DateTimeFormat('en-US', {
-            timeZone: 'America/New_York',
+          const parts = new Intl.DateTimeFormat(undefined, {
             month: '2-digit', day: '2-digit', year: 'numeric',
             hour: '2-digit', minute: '2-digit', hour12: false
           }).formatToParts(d);
           const p = {};
           parts.forEach(x => { if (x.type !== 'literal') p[x.type] = x.value; });
           const h = parseInt(p.hour) % 24;
-          tsLabel = `${p.day}/${p.month}/${p.year} ${String(h).padStart(2,'0')}:${p.minute} ET`;
+          tsLabel = `${p.day}/${p.month}/${p.year} ${String(h).padStart(2,'0')}:${p.minute}`;
         }
       }
     } catch(_) {}
