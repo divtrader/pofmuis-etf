@@ -78,7 +78,8 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .mono { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
@@ -102,12 +103,20 @@ html, body {
 #app {
   position: relative; z-index: 1;
   display: flex; flex-direction: column;
-  min-height: 100dvh;
+  height: 100dvh;
   padding-top: var(--sat);
   overflow: hidden;
 }
-/* Each pane scrolls independently, bottom padding for tab bar */
+#pane-wrap {
+  flex: 1;
+  min-height: 0; /* critical — allows flex child to shrink below content size */
+}
+/* Each pane fills the available height and scrolls independently */
 .pane {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   padding-bottom: calc(var(--sab) + 80px);
 }
 
@@ -201,14 +210,10 @@ html, body {
   width: 300vw;
   will-change: transform;
   transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  flex: 1;
 }
 #pane-wrap.dragging { transition: none; }
 .pane {
   width: 100vw;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
   flex-shrink: 0;
 }
 @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
