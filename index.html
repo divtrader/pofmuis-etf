@@ -309,8 +309,9 @@ html, body {
   font-size: 26px; font-weight: 800; letter-spacing: -.02em; line-height: 1;
   margin-top: 6px;
   font-family: -apple-system, 'SF Pro Display', 'Inter', monospace;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.kpi-hero .kpi-val { font-size: 34px; }
+.kpi-hero .kpi-val { font-size: clamp(20px, 2.8vw, 34px); }
 .kpi-currency { font-size: 12px; font-weight: 600; color: var(--t3); vertical-align: super; margin-right: 2px; }
 .kpi-sub { font-size: 10px; color: var(--t4); margin-top: 4px; }
 
@@ -406,14 +407,14 @@ html, body {
 @media (min-width: 600px) {
   .scroll-content { padding: 20px 24px 32px; max-width: 960px; margin: 0 auto; }
   .kpi-grid { grid-template-columns: repeat(3, 1fr); }
-  .kpi-card.kpi-hero { grid-column: span 1; }
-  .kpi-hero .kpi-val { font-size: 28px; }
+  .kpi-card.kpi-hero { grid-column: span 2; }
+  .kpi-hero .kpi-val { font-size: clamp(20px, 2.8vw, 30px); }
   #tabbar { padding: 12px 24px calc(var(--sab) + 12px); max-width: 600px; margin: 0 auto; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
 }
 @media (min-width: 960px) {
   .scroll-content { max-width: 1200px; padding: 24px 36px 40px; }
   .kpi-grid { grid-template-columns: repeat(6, 1fr); }
-  .kpi-card.kpi-hero { grid-column: span 1; }
+  .kpi-card.kpi-hero { grid-column: span 2; }
   .hero-grid { grid-template-columns: repeat(2, 1fr); max-width: 800px; }
   .hold-list { display: grid; grid-template-columns: 1fr 1fr; }
   .hold-item { border-right: 1px solid var(--glass-border); }
