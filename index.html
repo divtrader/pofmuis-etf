@@ -529,7 +529,7 @@ html, body {
         <div class="glass-card kpi-card kpi-hero">
           <div class="kpi-label">Net Asset Value</div>
           <div class="kpi-val"><span class="kpi-currency">USD</span><span id="apf-nav">—</span></div>
-          <div class="kpi-sub">Base 100.00 · Inception 2026-05-22</div>
+          <div class="kpi-sub">$100,000 initial · Inception 2026-05-22</div>
         </div>
         <div class="glass-card kpi-card">
           <div class="kpi-label">Since Inception</div>
@@ -597,7 +597,7 @@ html, body {
         <div class="glass-card kpi-card kpi-hero">
           <div class="kpi-label">Net Asset Value</div>
           <div class="kpi-val"><span class="kpi-currency">USD</span><span id="prf-nav">—</span></div>
-          <div class="kpi-sub">Base 100.00 · Inception 2026-05-12</div>
+          <div class="kpi-sub">$100,000 initial · Inception 2026-05-12</div>
         </div>
         <div class="glass-card kpi-card">
           <div class="kpi-label">Since Inception</div>
@@ -708,6 +708,11 @@ function set(id, txt, c) {
 }
 function days(d) { return Math.max(0, Math.floor((Date.now() - new Date(d)) / 86400000)); }
 function num(v) { return typeof v === 'number' ? v : parseFloat(v) || 0; }
+function navToPortfolio(nav) {
+  // $100,000 initial investment × NAV/100, formatted with commas and 2 decimals
+  const val = num(nav) / 100 * 100000;
+  return val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
 /* ── STATUS ── */
 function setSt(s, m) {
@@ -794,7 +799,7 @@ function render(D) {
   const dA = days('2026-05-22'), dP = days('2026-05-12');
 
   /* OVERVIEW HEROES */
-  set('ov-apf-nav', num(A.nav).toFixed(4));
+  set('ov-apf-nav', navToPortfolio(A.nav));
   set('ov-apf-ret', ps(A.nav_change), cls(A.nav_change));
   set('ov-apf-day', ps(A.day_change), cls(A.day_change));
   set('ov-apf-spy', A.spy_ret != null ? ps(A.spy_ret) : '—', cls(A.spy_ret));
@@ -802,7 +807,7 @@ function render(D) {
   const apfDEl = document.getElementById('ov-apf-days');
   if (apfDEl) apfDEl.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live';
 
-  set('ov-prf-nav', num(P.nav).toFixed(4));
+  set('ov-prf-nav', navToPortfolio(P.nav));
   set('ov-prf-ret', ps(P.nav_change), cls(P.nav_change));
   set('ov-prf-day', ps(P.day_change), cls(P.day_change));
   set('ov-prf-spy', P.spy_ret != null ? ps(P.spy_ret) : '—', cls(P.spy_ret));
@@ -823,7 +828,7 @@ function render(D) {
   renderHolds('ov-prf-hl', [...(P.rows || [])].sort((a,b) => b.weight - a.weight).slice(0, 10), true, 'prf');
 
   /* APF PANE KPIs */
-  set('apf-nav', num(A.nav).toFixed(4));
+  set('apf-nav', navToPortfolio(A.nav));
   set('apf-since', ps(A.nav_change), cls(A.nav_change));
   const apfDays = document.getElementById('apf-days');
   if (apfDays) apfDays.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live';
@@ -836,7 +841,7 @@ function render(D) {
   if (!staticBuilt.apf) { renderNews('apf-nl', NEWS.apf); renderList('apf-chg', CHANGES.apf); staticBuilt.apf = true; }
 
   /* PRF PANE KPIs */
-  set('prf-nav', num(P.nav).toFixed(4));
+  set('prf-nav', navToPortfolio(P.nav));
   set('prf-since', ps(P.nav_change), cls(P.nav_change));
   const prfDays = document.getElementById('prf-days');
   if (prfDays) prfDays.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live';
