@@ -757,9 +757,25 @@ async function loadData() {
   try {
     render(D);
     const ts = D.generated || D.as_of || '—';
-    setSt('live', 'As of ' + (D.as_of || '—'));
+    // Convert UTC timestamp to CET for display
+    let cetLabel = D.as_of || '—';
+    try {
+      if (D.generated) {
+        // "2026-05-22 14:39 UTC" → parse as UTC
+        const utcStr = D.generated.replace(' UTC', '').replace(' ', 'T') + ':00Z';
+        const d = new Date(utcStr);
+        if (!isNaN(d)) {
+          cetLabel = d.toLocaleString('en-GB', {
+            timeZone: 'Europe/Paris',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+          }).replace(',', '') + ' CET';
+        }
+      }
+    } catch(_) {}
+    setSt('live', 'As of ' + cetLabel);
     const ftEl = document.getElementById('ft-ts');
-    if (ftEl) ftEl.textContent = 'Updated: ' + ts;
+    if (ftEl) ftEl.textContent = 'Updated: ' + cetLabel;
   } catch (e) {
     setSt('err', 'Render error: ' + e.message);
     console.error('render crash:', e);
