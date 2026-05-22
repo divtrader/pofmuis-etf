@@ -806,7 +806,7 @@ function render(D) {
   set('ov-apf-spy', A.spy_ret != null ? ps(A.spy_ret) : '—', cls(A.spy_ret));
   set('ov-apf-alpha', A.alpha != null ? ps(A.alpha) : '—', cls(A.alpha));
   const apfDEl = document.getElementById('ov-apf-days');
-  if (apfDEl) apfDEl.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live';
+  if (apfDEl) apfDEl.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live · since 22 May 2026';
 
   set('ov-prf-nav', navToPortfolio(P.nav));
   set('ov-prf-ret', ps(P.nav_change), cls(P.nav_change));
@@ -814,7 +814,7 @@ function render(D) {
   set('ov-prf-spy', P.spy_ret != null ? ps(P.spy_ret) : '—', cls(P.spy_ret));
   set('ov-prf-alpha', P.alpha != null ? ps(P.alpha) : '—', cls(P.alpha));
   const prfDEl = document.getElementById('ov-prf-days');
-  if (prfDEl) prfDEl.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live';
+  if (prfDEl) prfDEl.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live · since 12 May 2026';
 
   /* BENCHMARK STRIP */
   set('bm-apf', ps(A.nav_change), cls(A.nav_change));
@@ -832,7 +832,7 @@ function render(D) {
   set('apf-nav', navToPortfolio(A.nav));
   set('apf-since', ps(A.nav_change), cls(A.nav_change));
   const apfDays = document.getElementById('apf-days');
-  if (apfDays) apfDays.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live';
+  if (apfDays) apfDays.textContent = dA + ' day' + (dA !== 1 ? 's' : '') + ' live · since 22 May 2026';
   set('apf-spy', A.spy_ret != null ? ps(A.spy_ret) : '—', cls(A.spy_ret));
   set('apf-alpha', A.alpha != null ? ps(A.alpha) : '—', cls(A.alpha));
   set('apf-day', ps(A.day_change), cls(A.day_change));
@@ -845,7 +845,7 @@ function render(D) {
   set('prf-nav', navToPortfolio(P.nav));
   set('prf-since', ps(P.nav_change), cls(P.nav_change));
   const prfDays = document.getElementById('prf-days');
-  if (prfDays) prfDays.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live';
+  if (prfDays) prfDays.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live · since 12 May 2026';
   set('prf-spy', P.spy_ret != null ? ps(P.spy_ret) : '—', cls(P.spy_ret));
   set('prf-alpha', P.alpha != null ? ps(P.alpha) : '—', cls(P.alpha));
   set('prf-day', ps(P.day_change), cls(P.day_change));
