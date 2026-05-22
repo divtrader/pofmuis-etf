@@ -804,13 +804,19 @@ async function loadData() {
       ];
     }
     const now = new Date();
-    const etParts = now.toLocaleString('en-US', { timeZone:'America/New_York', weekday:'short', hour:'2-digit', minute:'2-digit', hour12:false, year:'numeric', month:'2-digit', day:'2-digit' });
-    const etDate = now.toLocaleDateString('en-CA', { timeZone:'America/New_York' }); // YYYY-MM-DD
-    const etTime2 = now.toLocaleTimeString('en-US', { timeZone:'America/New_York', hour:'2-digit', minute:'2-digit', hour12:false });
-    const etWeekday = now.toLocaleDateString('en-US', { timeZone:'America/New_York', weekday:'short' });
-    const [etH, etM] = etTime2.split(':').map(Number);
-    const etMins = etH * 60 + etM;
-    const yr = parseInt(etDate.slice(0,4));
+    // Use formatToParts — reliable on iOS Safari unlike toLocaleTimeString with hour12:false
+    const etParts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      weekday: 'short', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    }).formatToParts(now);
+    const ep = {};
+    etParts.forEach(p => { if (p.type !== 'literal') ep[p.type] = p.value; });
+    const etDate = `${ep.year}-${ep.month}-${ep.day}`;
+    const etH = parseInt(ep.hour) % 24; // guard against "24" on some engines
+    const etMins = etH * 60 + parseInt(ep.minute);
+    const etWeekday = ep.weekday;
+    const yr = parseInt(ep.year);
     const holidays = nyseHolidays(yr);
     const isWeekday = !['Sat','Sun'].includes(etWeekday);
     const isHoliday = holidays.includes(etDate);
