@@ -1385,12 +1385,18 @@ function fmtTs(ts) {
 
 function buildSparkline(canvasId, points, color) {
   const el = document.getElementById(canvasId);
-  if (!el || !points || points.length < 2) return;
+  if (!el) return;
   const fund = canvasId.includes('apf') ? 'apf'
              : canvasId.includes('psf') ? 'psf'
              : canvasId.includes('pmf') ? 'pmf'
              : 'prf';
   if (sparkBuilt[fund]) return;
+  if (!points || points.length < 2) {
+    // Hide the sparkline wrap when there's no data
+    const wrap = el.closest('.hero-spark');
+    if (wrap) wrap.style.display = 'none';
+    return;
+  }
   sparkBuilt[fund] = true;
   new Chart(el, {
     type: 'line',
@@ -1433,9 +1439,16 @@ function buildPerfChart(canvasId, fundKey, spyKey, fundColor, fundLabel) {
              : fundKey === 'psf' ? 'psf'
              : 'prf';
   if (perfChartsBuilt[fund]) return;
-  perfChartsBuilt[fund] = true;
   const pts = H.filter(d => d[fundKey] != null);
-  if (pts.length < 2) return;
+  if (pts.length < 2) {
+    // Not enough data yet — render a placeholder message inside the chart card
+    const card = el.closest('.perf-chart-card');
+    if (card) {
+      card.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:180px;color:var(--t3);font-size:13px;text-align:center;padding:0 20px;">Performance chart will populate as prices update.<br><span style="font-size:11px;color:var(--t4);margin-top:6px;">Fund just launched — check back after the next hourly update.</span></div>';
+    }
+    return;
+  }
+  perfChartsBuilt[fund] = true;
   new Chart(el, {
     type: 'line',
     data: {
