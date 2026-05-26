@@ -361,7 +361,10 @@ html, body {
 .h-wbar { height: 3px; border-radius: 2px; margin-top: 4px; background: rgba(255,255,255,0.07); overflow: hidden; }
 .h-wfill { height: 3px; border-radius: 2px; }
 .h-wt { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; text-align: right; color: var(--t2); }
+.h-rets { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .h-ret { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; text-align: right; }
+.h-ret-day { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; text-align: right; color: var(--t3); }
+.h-ret-lbl { font-size: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--t4); text-align: right; }
 
 /* ── CONTRIBUTORS ── */
 .contrib-list { border-radius: var(--r-lg); overflow: hidden; }
@@ -988,7 +991,12 @@ function renderHolds(id, rows, compact, fund) {
         <div class="h-wbar"><div class="h-wfill" style="width:${fillW}%;background:linear-gradient(90deg,${g})"></div></div>
       </div>
       <div class="h-wt">${num(r.weight).toFixed(1)}%</div>
-      <div class="h-ret ${cls(r.ret)}">${ps(r.ret)}</div>
+      <div class="h-rets">
+        <div class="h-ret-lbl">Day</div>
+        <div class="h-ret-day ${cls(r.day)}">${ps(r.day)}</div>
+        <div class="h-ret-lbl" style="margin-top:3px">Inception</div>
+        <div class="h-ret ${cls(r.ret)}">${ps(r.ret)}</div>
+      </div>
     </div>`;
   }).join('');
 }
