@@ -430,6 +430,17 @@ html, body {
   font-size: 10px; color: var(--t4); line-height: 1.7;
 }
 
+/* ── SPARKLINE IN HERO CARD ── */
+.hero-spark { height: 48px; margin: 10px -2px 4px; opacity: 0.8; }
+
+/* ── PERFORMANCE CHART CARD ── */
+.perf-chart-card { padding: 16px; margin-bottom: 14px; }
+
+/* ── CENTER OVERVIEW HERO CARDS ── */
+#pov .scroll-content { display: flex; flex-direction: column; align-items: center; }
+#pov .hero-grid { width: 100%; }
+#pov .sec-head, #pov .hold-list, #pov .footer-note { width: 100%; }
+
 /* ── DESKTOP ── */
 @media (min-width: 600px) {
   .scroll-content { padding: 20px 24px 32px; max-width: 960px; margin: 0 auto; }
@@ -499,6 +510,7 @@ html, body {
             <div class="hero-row"><span class="rl">S&amp;P 500 Return</span><span class="rv" id="ov-apf-spy">—</span></div>
             <div class="hero-row"><span class="rl">vs S&amp;P</span><span class="rv" id="ov-apf-alpha">—</span></div>
           </div>
+          <div class="hero-spark"><canvas id="ov-apf-spark"></canvas></div>
           <div class="hero-days" id="ov-apf-days"></div>
         </div>
         <!-- PRF Hero -->
@@ -515,6 +527,7 @@ html, body {
             <div class="hero-row"><span class="rl">S&amp;P 500 Return</span><span class="rv" id="ov-prf-spy">—</span></div>
             <div class="hero-row"><span class="rl">vs S&amp;P</span><span class="rv" id="ov-prf-alpha">—</span></div>
           </div>
+          <div class="hero-spark"><canvas id="ov-prf-spark"></canvas></div>
           <div class="hero-days" id="ov-prf-days"></div>
         </div>
       </div>
@@ -572,6 +585,11 @@ html, body {
           <div class="kpi-val">5</div>
           <div class="kpi-sub">5 buckets</div>
         </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>Performance vs S&amp;P 500</div>
+      <div class="glass-card perf-chart-card">
+        <canvas id="apf-perf" height="180"></canvas>
       </div>
 
       <div class="sec-head"><span class="sec-accent" style="background:var(--apf)"></span>Holdings</div>
@@ -640,6 +658,11 @@ html, body {
           <div class="kpi-val">38</div>
           <div class="kpi-sub">9 buckets</div>
         </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>Performance vs S&amp;P 500</div>
+      <div class="glass-card perf-chart-card">
+        <canvas id="prf-perf" height="180"></canvas>
       </div>
 
       <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>All Holdings</div>
@@ -1026,6 +1049,135 @@ function renderList(id, items) {
   el.innerHTML = items.map(c => `<li>${esc(c)}</li>`).join('');
 }
 
+/* ── HISTORY / PERFORMANCE CHARTS ── */
+let H = null; // history data
+let perfChartsBuilt = { apf: false, prf: false };
+let sparkBuilt = { apf: false, prf: false };
+
+async function loadHistory() {
+  const urls = [
+    'history.json?t=' + Date.now(),
+    'https://divtrader.github.io/pofmuis-etf/history.json?t=' + Date.now()
+  ];
+  for (const url of urls) {
+    try {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) continue;
+      H = JSON.parse(await r.text());
+      break;
+    } catch(_) {}
+  }
+  if (H) {
+    buildSparklines();
+    buildPerfCharts();
+  }
+}
+
+function fmtTs(ts) {
+  // "2026-05-22 14:51 UTC" → "22 May"
+  try {
+    const d = new Date(ts.replace(' UTC','').replace(' ','T')+'Z');
+    return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+  } catch(_) { return ts.slice(5,10); }
+}
+
+function buildSparkline(canvasId, points, color) {
+  const el = document.getElementById(canvasId);
+  if (!el || !points || points.length < 2) return;
+  const fund = canvasId.includes('apf') ? 'apf' : 'prf';
+  if (sparkBuilt[fund]) return;
+  sparkBuilt[fund] = true;
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels: points.map(d => fmtTs(d.ts)),
+      datasets: [{
+        data: points.map(d => d.val),
+        borderColor: color,
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: color.replace('rgb(','rgba(').replace(')',',0.15)'),
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: { x: { display: false }, y: { display: false } }
+    }
+  });
+}
+
+function buildSparklines() {
+  const apfPts = H.filter(d => d.apf != null).map(d => ({ ts: d.ts, val: d.apf }));
+  const prfPts = H.filter(d => d.prf != null).map(d => ({ ts: d.ts, val: d.prf }));
+  buildSparkline('ov-apf-spark', apfPts, 'rgb(255,214,10)');
+  buildSparkline('ov-prf-spark', prfPts, 'rgb(48,209,88)');
+}
+
+function buildPerfChart(canvasId, fundKey, spyKey, fundColor, fundLabel) {
+  const el = document.getElementById(canvasId);
+  if (!el || !H) return;
+  const fund = fundKey === 'apf' ? 'apf' : 'prf';
+  if (perfChartsBuilt[fund]) return;
+  perfChartsBuilt[fund] = true;
+  const pts = H.filter(d => d[fundKey] != null);
+  if (pts.length < 2) return;
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels: pts.map(d => fmtTs(d.ts)),
+      datasets: [
+        {
+          label: fundLabel,
+          data: pts.map(d => d[fundKey]),
+          borderColor: fundColor,
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false,
+          tension: 0.4,
+        },
+        {
+          label: 'S&P 500',
+          data: pts.map(d => d[spyKey]),
+          borderColor: 'rgba(255,255,255,0.35)',
+          borderWidth: 1.5,
+          borderDash: [5, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.4,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, labels: { color: 'rgba(255,255,255,0.6)', font: { size: 11 }, boxWidth: 14 } },
+        tooltip: {
+          mode: 'index',
+          callbacks: { label: c => ` ${c.dataset.label}: ${c.raw >= 0 ? '+' : ''}${Number(c.raw).toFixed(2)}%` }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 }, maxTicksLimit: 7 },
+          grid: { color: 'rgba(255,255,255,0.06)' }
+        },
+        y: {
+          ticks: { color: 'rgba(255,255,255,0.35)', font: { size: 9 }, callback: v => v + '%' },
+          grid: { color: 'rgba(255,255,255,0.06)' }
+        }
+      }
+    }
+  });
+}
+
+function buildPerfCharts() {
+  buildPerfChart('apf-perf', 'apf', 'spy_apf', '#ffd60a', 'Pofmuis AI Power Fund');
+  buildPerfChart('prf-perf', 'prf', 'spy_prf', '#30d158', 'Pofmuis Robotics Fund');
+}
+
 /* ── TABS + iOS SWIPE ── */
 const TABS = ['ov', 'apf', 'prf'];
 let _tabIdx = 0;
@@ -1044,6 +1196,7 @@ function switchTab(p, animate = true) {
   // Scroll active pane to top
   const pane = document.getElementById('p' + p);
   if (pane) pane.scrollTop = 0;
+  if (H) buildPerfCharts();
 }
 document.querySelectorAll('.tab-pill').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.p)));
 
@@ -1090,6 +1243,7 @@ document.head.appendChild(style);
 
 /* ── BOOT ── */
 loadData();
+loadHistory();
 </script>
 </body>
 </html>

@@ -201,6 +201,36 @@ def main():
     path = ROOT / "data.json"
     path.write_text(json.dumps(out, indent=2))
     print(f"Wrote {path}  —  APF NAV {out['apf']['nav']:.4f} ({out['apf']['nav_change']:+.2f}%)  PRF NAV {out['prf']['nav']:.4f} ({out['prf']['nav_change']:+.2f}%)")
+    update_history(out, ROOT)
+
+
+def update_history(out, root):
+    """Append hourly NAV snapshot to history.json for charting."""
+    path = root / "history.json"
+    try:
+        entries = json.loads(path.read_text()) if path.exists() else []
+    except Exception:
+        entries = []
+
+    point = {
+        "ts": out["generated"],
+        "apf": out["apf"]["nav_change"],
+        "prf": out["prf"]["nav_change"],
+        "spy_apf": out["apf"]["spy_ret"],
+        "spy_prf": out["prf"]["spy_ret"],
+    }
+
+    # Update existing entry if same hour, else append
+    ts_hour = point["ts"][:13]
+    if entries and entries[-1]["ts"][:13] == ts_hour:
+        entries[-1] = point
+    else:
+        entries.append(point)
+
+    entries = entries[-1000:]  # cap at 1000 entries
+    path.write_text(json.dumps(entries))
+    print(f"Updated {path}  ({len(entries)} entries)")
+
 
 if __name__ == "__main__":
     main()
