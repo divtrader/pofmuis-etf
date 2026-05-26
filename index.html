@@ -880,7 +880,7 @@ function renderAll(D) {
     const marketOpen = isWeekday && !isHoliday && etMins >= 9*60+30 && etMins < 16*60;
     const dot = document.getElementById('sdot');
     if (dot) dot.style.background = marketOpen ? 'var(--green)' : 'var(--red)';
-    setSt('live', 'Last updated ' + tsLabel + (marketOpen ? ' · Market open' : ' · Market closed'));
+    setSt('live', 'Prices: ' + tsLabel + (marketOpen ? ' · Market open now' : ' · Market closed'));
     const ftEl = document.getElementById('ft-ts');
     if (ftEl) ftEl.textContent = 'Updated: ' + tsLabel;
   } catch (e) {
