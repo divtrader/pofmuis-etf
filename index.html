@@ -52,6 +52,9 @@
   --prf: #30d158;
   --prf-dim: rgba(48,209,88,0.12);
   --prf-border: rgba(48,209,88,0.22);
+  --pmf: #bf5af2;
+  --pmf-dim: rgba(191,90,242,0.12);
+  --pmf-border: rgba(191,90,242,0.22);
 
   /* Blur */
   --blur-sm: blur(12px) saturate(1.6);
@@ -97,6 +100,7 @@ html, body {
 }
 .glow-apf { width: 400px; height: 400px; background: var(--apf); top: -100px; left: -50px; }
 .glow-prf { width: 350px; height: 350px; background: var(--prf); top: 200px; right: -80px; }
+.glow-pmf { width: 320px; height: 320px; background: var(--pmf); bottom: 200px; left: -60px; }
 .glow-blue { width: 300px; height: 300px; background: var(--blue); bottom: 100px; left: 50%; transform: translateX(-50%); }
 
 /* ── APP SHELL ── */
@@ -199,6 +203,7 @@ html, body {
 }
 .tab-pill[data-p="apf"].on { color: var(--apf); border-color: var(--apf-border); background: var(--apf-dim); }
 .tab-pill[data-p="prf"].on { color: var(--prf); border-color: var(--prf-border); background: var(--prf-dim); }
+.tab-pill[data-p="pmf"].on { color: var(--pmf); border-color: var(--pmf-border); background: var(--pmf-dim); }
 .tab-pill:active { transform: scale(0.95); }
 .tab-icon { font-size: 16px; line-height: 1; }
 .tab-label { font-size: 11px; font-weight: 700; }
@@ -207,7 +212,7 @@ html, body {
 /* ── SLIDING PANE LAYOUT ── */
 #pane-wrap {
   display: flex;
-  width: 300vw;
+  width: 400vw;
   will-change: transform;
   transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -239,7 +244,10 @@ html, body {
 }
 
 /* ── FUND HERO CARDS (Overview) ── */
-.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
+@media (min-width: 600px) {
+  .hero-grid { grid-template-columns: repeat(3, 1fr); }
+}
 .hero-card {
   border-radius: var(--r-xl);
   padding: 18px 16px 16px;
@@ -259,10 +267,16 @@ html, body {
   border: 1px solid var(--prf-border);
   box-shadow: 0 0 40px rgba(48,209,88,0.07), inset 0 1px 0 rgba(255,255,255,0.08);
 }
+.hero-pmf {
+  background: linear-gradient(145deg, rgba(191,90,242,0.15) 0%, rgba(191,90,242,0.05) 100%);
+  border: 1px solid var(--pmf-border);
+  box-shadow: 0 0 40px rgba(191,90,242,0.08), inset 0 1px 0 rgba(255,255,255,0.1);
+}
 .hero-topbar { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
 .hero-ticker { font-size: 14px; font-weight: 800; letter-spacing: .04em; }
 .hero-apf .hero-ticker { color: var(--apf); }
 .hero-prf .hero-ticker { color: var(--prf); }
+.hero-pmf .hero-ticker { color: var(--pmf); }
 .hero-subtitle { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--t3); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hero-nav {
   font-size: clamp(15px, 4.8vw, 32px); font-weight: 800; letter-spacing: -.03em; line-height: 1;
@@ -456,7 +470,7 @@ html, body {
   .scroll-content { max-width: 1200px; padding: 24px 36px 40px; }
   .kpi-grid { grid-template-columns: repeat(6, 1fr); }
   .kpi-card.kpi-hero { grid-column: span 2; }
-  .hero-grid { grid-template-columns: repeat(2, 1fr); max-width: 800px; }
+  .hero-grid { grid-template-columns: repeat(3, 1fr); max-width: 1100px; }
   .hold-list { display: grid; grid-template-columns: 1fr 1fr; }
   .hold-item { border-right: 1px solid var(--glass-border); }
 }
@@ -467,6 +481,7 @@ html, body {
 <div id="bg-glow">
   <div class="glow-orb glow-apf"></div>
   <div class="glow-orb glow-prf"></div>
+  <div class="glow-orb glow-pmf"></div>
   <div class="glow-orb glow-blue"></div>
 </div>
 
@@ -533,6 +548,23 @@ html, body {
           <div class="hero-spark"><canvas id="ov-prf-spark"></canvas></div>
           <div class="hero-days" id="ov-prf-days"></div>
         </div>
+        <!-- PMF Hero -->
+        <div class="hero-card hero-pmf" onclick="switchTab('pmf')">
+          <div class="hero-card-shine"></div>
+          <div class="hero-topbar">
+            <span class="hero-ticker">PMF</span>
+            <span class="hero-subtitle">Pofmuis Memory Fund</span>
+          </div>
+          <div class="hero-nav"><span class="currency">USD</span><span id="ov-pmf-nav">—</span></div>
+          <div class="hero-ret" id="ov-pmf-ret">—</div>
+          <div class="hero-rows">
+            <div class="hero-row"><span class="rl">Day</span><span class="rv" id="ov-pmf-day">—</span></div>
+            <div class="hero-row"><span class="rl">S&amp;P 500 Return</span><span class="rv" id="ov-pmf-spy">—</span></div>
+            <div class="hero-row"><span class="rl">vs S&amp;P</span><span class="rv" id="ov-pmf-alpha">—</span></div>
+          </div>
+          <div class="hero-spark"><canvas id="ov-pmf-spark"></canvas></div>
+          <div class="hero-days" id="ov-pmf-days"></div>
+        </div>
       </div>
 
 
@@ -541,6 +573,9 @@ html, body {
 
       <div class="sec-head"><span class="sec-accent" style="background:var(--prf)"></span>PRF · Top 10</div>
       <div class="hold-list glass-card" id="ov-prf-hl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>PMF · Holdings</div>
+      <div class="hold-list glass-card" id="ov-pmf-hl"></div>
 
       <div class="footer-note">Prices updated every 30 min · <span id="ft-ts">—</span><br>
         Illustrative only · Not a registered fund · Not investment advice</div>
@@ -692,6 +727,79 @@ html, body {
     </div>
   </div>
 
+  <!-- ══ PMF ══ -->
+  <div class="pane" id="ppmf">
+    <div class="scroll-content">
+      <div class="page-header">
+        <div class="page-header-icon" style="background:var(--pmf-dim);border-color:var(--pmf-border)">💾</div>
+        <div class="page-header-text">
+          <div class="page-header-title" style="color:var(--pmf)">Pofmuis Memory Fund</div>
+          <div class="page-header-sub">PMF · Inception 2026-05-26</div>
+        </div>
+      </div>
+      <div class="kpi-grid">
+        <div class="glass-card kpi-card kpi-hero">
+          <div class="kpi-label">Net Asset Value</div>
+          <div class="kpi-val"><span class="kpi-currency">USD</span><span id="pmf-nav">—</span></div>
+          <div class="kpi-sub">$100,000 initial · Inception 2026-05-26</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Since Inception</div>
+          <div class="kpi-val" id="pmf-since">—</div>
+          <div class="kpi-sub" id="pmf-days">—</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">S&amp;P 500 Return</div>
+          <div class="kpi-val" id="pmf-spy">—</div>
+          <div class="kpi-sub">What S&amp;P 500 returned</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">vs S&amp;P 500</div>
+          <div class="kpi-val" id="pmf-alpha">—</div>
+          <div class="kpi-sub">Fund outperformance vs S&amp;P</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Day Change</div>
+          <div class="kpi-val" id="pmf-day">—</div>
+          <div class="kpi-sub">vs. prior close</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Holdings</div>
+          <div class="kpi-val">8</div>
+          <div class="kpi-sub">8 buckets</div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>Performance vs S&amp;P 500</div>
+      <div class="glass-card perf-chart-card">
+        <canvas id="pmf-perf" height="180"></canvas>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>Holdings</div>
+      <div class="hold-list glass-card" id="pmf-hl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>Contributors &amp; Detractors</div>
+      <div class="contrib-list glass-card" id="pmf-cl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>Sector Allocation</div>
+      <div class="sector-wrap glass-card">
+        <div class="chart-box">
+          <div class="chart-canvas-wrap"><canvas id="pmfChart"></canvas></div>
+          <div class="sleg" id="pmf-sleg"></div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>Market Intelligence</div>
+      <div class="news-stack" id="pmf-nl"></div>
+
+      <div class="glass-card thesis-card" style="margin-top:14px">
+        <h4>Investment Thesis</h4>
+        <p>Memory is the new oil. HBM stacks for AI training are in chronic undersupply, NAND pricing has bottomed and is recovering, and enterprise storage is structural. Memory bit-demand is growing 25-30% per year against constrained wafer capacity — pricing power for the next 3-5 years.</p>
+        <ul id="pmf-chg"></ul>
+      </div>
+    </div>
+  </div>
+
   </div><!-- /pane-wrap -->
 
 </div><!-- /app -->
@@ -701,6 +809,7 @@ html, body {
   <div class="tab-pill on" data-p="ov"><span class="tab-icon">📊</span><span class="tab-label">Overview</span></div>
   <div class="tab-pill" data-p="apf"><span class="tab-icon">⚡</span><span class="tab-label">APF</span></div>
   <div class="tab-pill" data-p="prf"><span class="tab-icon">🤖</span><span class="tab-label">PRF</span></div>
+  <div class="tab-pill" data-p="pmf"><span class="tab-icon">🧠</span><span class="tab-label">PMF</span></div>
 </div>
 
 <script>
@@ -710,7 +819,10 @@ const SC = {
   'Software/AI':'#bf5af2','Software':'#bf5af2','Logistics':'#5ac8fa',
   'Defense':'#ff453a','Professional':'#98989d','Service':'#ff375f',
   'Nuclear & Gas':'#ffd60a','Nuclear Fleet':'#5ac8fa','Nucl. Colocation':'#0a84ff',
-  'Renewables':'#30d158','Grid Infra':'#ff6961'
+  'Renewables':'#30d158','Grid Infra':'#ff6961',
+  'HBM/DRAM':'#bf5af2','NAND Flash':'#5e5ce6','Storage Systems':'#0a84ff',
+  'Mass Storage':'#5ac8fa','Memory IP':'#ff375f','Hybrid Cloud Storage':'#30d158',
+  'Enterprise Solutions':'#ffd60a','Enterprise Storage':'#ff6961'
 };
 
 /* ── STATIC CONTENT ── */
@@ -731,11 +843,22 @@ const NEWS = {
     {ticker:'SYM',   headline:'Symbotic Expands Walmart Deal — 42 RDCs, $5B+ Backlog', summary:'Symbotic secured expanded deployment across all 42 Walmart regional distribution centres. Backlog uplift exceeds $5B.', sentiment:'positive', date:'2026-04-10'},
     {ticker:'TER',   headline:'Teradyne Opens Michigan Cobot Hub with NVIDIA AI', summary:'New Universal Robots AI training hub in Michigan. Cognitive Cobot platform powered by NVIDIA runs natural-language task programming.', sentiment:'positive', date:'2026-05-05'},
     {ticker:'TSLA',  headline:'Optimus Production Delayed to Q4 2026', summary:'Tesla pushed Optimus mass production targets to Q4 2026, citing actuator supply constraints.', sentiment:'negative', date:'2026-05-01'},
+  ],
+  pmf: [
+    {ticker:'MU',   headline:'Micron HBM4 Production Ramps — Sold Out Through 2027', summary:'Micron confirmed HBM4 production ramping at Boise. Capacity sold out through 2027 with hyperscaler reservation contracts. Mix shift expected to drive gross margin to 50%+.', sentiment:'positive', date:'2026-05-22'},
+    {ticker:'SNDK', headline:'SanDisk QLC Wins Meta Datacenter SSD Contract', summary:'SanDisk QLC enterprise SSDs selected for Meta\'s next-gen AI training clusters. ASP uplift and multi-year volume commitment.', sentiment:'positive', date:'2026-05-18'},
+    {ticker:'WDC',  headline:'WD HAMR Drives Hit 40TB — Hyperscaler Qualification Complete', summary:'Western Digital\'s 40TB HAMR drives passed final qualification at two major hyperscalers. Mass production ramps Q3 2026.', sentiment:'positive', date:'2026-05-15'},
+    {ticker:'STX',  headline:'Seagate Mozaic 3+ Generation Launches — 50TB Roadmap', summary:'Seagate announced Mozaic 3+ HAMR platform with 50TB roadmap. AI dataset storage demand pulling forward HDD ASPs.', sentiment:'positive', date:'2026-05-20'},
+    {ticker:'RMBS', headline:'Rambus DDR5 Royalties Up 41% YoY', summary:'Rambus reported DDR5 royalty revenue up 41% YoY. Memory interface IP attached to every server DRAM shipment.', sentiment:'positive', date:'2026-05-12'},
+    {ticker:'NTAP', headline:'NetApp Q4 In-line; FY27 Guide Below Street', summary:'NetApp Q4 met expectations but FY27 guide came in slightly below consensus. Cloud transition optics cited.', sentiment:'mixed', date:'2026-05-08'},
+    {ticker:'DELL', headline:'Dell PowerStore AI Hits $2B ARR', summary:'Dell PowerStore AI storage line crossed $2B annual run-rate. Hyperscaler-adjacent enterprise winning AI infrastructure refresh.', sentiment:'positive', date:'2026-05-21'},
+    {ticker:'HPE',  headline:'HPE Alletra Storage Wins UK Government Cloud', summary:'HPE Alletra MP storage selected for UK G-Cloud framework. Sovereign AI compute demand driving enterprise storage growth.', sentiment:'positive', date:'2026-05-14'},
   ]
 };
 const CHANGES = {
   apf: ['VST 30%: PEG 0.36x deeply underpriced relative to earnings growth.','TLN 20%: High conviction but levered — capped to manage leverage risk.','GEV 10%: Grid infrastructure pure-play but expensive (FWD P/E 55-69x, priced in).','NEE 15%: Premium valuation (PEG 3.10x) limits upside vs. other positions.'],
-  prf: ['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.']
+  prf: ['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.'],
+  pmf: ['MU 35%: Pure-play HBM leader — biggest AI memory cycle beneficiary','SNDK 20%: Post-spinoff pure-play NAND leader, hyperscaler SSD wins','RMBS 10%: Royalty IP model — every DDR5/HBM stack pays Rambus','DELL/HPE 5% combined: Enterprise storage refresh cycle exposure, not pure memory']
 };
 
 /* ── HELPERS ── */
@@ -900,15 +1023,16 @@ function renderAll(D) {
 }
 
 /* ── RENDER ── */
-let chartsBuilt = { apf: false, prf: false };
-let staticBuilt = { apf: false, prf: false };
+let chartsBuilt = { apf: false, prf: false, pmf: false };
+let staticBuilt = { apf: false, prf: false, pmf: false };
 
 function render(D) {
   const A = D.apf;
   const P = D.prf;
-  if (!A || !P) throw new Error('data.json missing apf/prf keys');
+  const M = D.pmf;
+  if (!A || !P || !M) throw new Error('data.json missing apf/prf/pmf keys');
 
-  const dA = days('2026-05-22'), dP = days('2026-05-12');
+  const dA = days('2026-05-22'), dP = days('2026-05-12'), dM = days('2026-05-26');
 
   /* OVERVIEW HEROES */
   set('ov-apf-nav', navToPortfolio(A.nav));
@@ -927,10 +1051,18 @@ function render(D) {
   const prfDEl = document.getElementById('ov-prf-days');
   if (prfDEl) prfDEl.textContent = dP + ' day' + (dP !== 1 ? 's' : '') + ' live · since 12 May 2026';
 
+  set('ov-pmf-nav', navToPortfolio(M.nav));
+  set('ov-pmf-ret', ps(M.nav_change), cls(M.nav_change));
+  set('ov-pmf-day', ps(M.day_change), cls(M.day_change));
+  set('ov-pmf-spy', M.spy_ret != null ? ps(M.spy_ret) : '—', cls(M.spy_ret));
+  set('ov-pmf-alpha', M.alpha != null ? ps(M.alpha) : '—', cls(M.alpha));
+  const pmfDEl = document.getElementById('ov-pmf-days');
+  if (pmfDEl) pmfDEl.textContent = dM + ' day' + (dM !== 1 ? 's' : '') + ' live · since 26 May 2026';
+
   /* BENCHMARK STRIP */
   set('bm-apf', ps(A.nav_change), cls(A.nav_change));
   set('bm-prf', ps(P.nav_change), cls(P.nav_change));
-  const spyV = A.spy_ret != null ? A.spy_ret : P.spy_ret;
+  const spyV = A.spy_ret != null ? A.spy_ret : (P.spy_ret != null ? P.spy_ret : M.spy_ret);
   set('bm-spy', spyV != null ? ps(spyV) : '—', cls(spyV));
   setAlphaChip('bm-apf-a', A.alpha);
   setAlphaChip('bm-prf-a', P.alpha);
@@ -938,6 +1070,7 @@ function render(D) {
   /* OV HOLD LISTS */
   renderHolds('ov-apf-hl', A.rows || [], true, 'apf');
   renderHolds('ov-prf-hl', [...(P.rows || [])].sort((a,b) => b.weight - a.weight).slice(0, 10), true, 'prf');
+  renderHolds('ov-pmf-hl', M.rows || [], true, 'pmf');
 
   /* APF PANE KPIs */
   set('apf-nav', navToPortfolio(A.nav));
@@ -964,6 +1097,19 @@ function render(D) {
   renderContribs('prf-cl', P.rows || []);
   if (!chartsBuilt.prf) { buildChart('prfChart', 'prf-sleg', P.rows || []); chartsBuilt.prf = true; }
   if (!staticBuilt.prf) { renderNews('prf-nl', NEWS.prf); renderList('prf-chg', CHANGES.prf); staticBuilt.prf = true; }
+
+  /* PMF PANE KPIs */
+  set('pmf-nav', navToPortfolio(M.nav));
+  set('pmf-since', ps(M.nav_change), cls(M.nav_change));
+  const pmfDays = document.getElementById('pmf-days');
+  if (pmfDays) pmfDays.textContent = dM + ' day' + (dM !== 1 ? 's' : '') + ' live · since 26 May 2026';
+  set('pmf-spy', M.spy_ret != null ? ps(M.spy_ret) : '—', cls(M.spy_ret));
+  set('pmf-alpha', M.alpha != null ? ps(M.alpha) : '—', cls(M.alpha));
+  set('pmf-day', ps(M.day_change), cls(M.day_change));
+  renderHolds('pmf-hl', [...(M.rows || [])].sort((a,b) => b.weight - a.weight), false, 'pmf');
+  renderContribs('pmf-cl', M.rows || []);
+  if (!chartsBuilt.pmf) { buildChart('pmfChart', 'pmf-sleg', M.rows || []); chartsBuilt.pmf = true; }
+  if (!staticBuilt.pmf) { renderNews('pmf-nl', NEWS.pmf); renderList('pmf-chg', CHANGES.pmf); staticBuilt.pmf = true; }
 }
 
 function setAlphaChip(id, v) {
@@ -977,7 +1123,9 @@ function setAlphaChip(id, v) {
 function renderHolds(id, rows, compact, fund) {
   const el = document.getElementById(id);
   if (!el || !rows.length) return;
-  const g = fund === 'apf' ? '#c08000,#ffd60a' : '#1a7a30,#30d158';
+  const g = fund === 'apf' ? '#c08000,#ffd60a'
+          : fund === 'prf' ? '#1a7a30,#30d158'
+          : '#7c2db5,#bf5af2';
   const mx = Math.max(...rows.map(r => num(r.weight)));
   el.innerHTML = rows.map(r => {
     const price = r.cur ? '$' + num(r.cur).toFixed(2) : '—';
@@ -1059,8 +1207,8 @@ function renderList(id, items) {
 
 /* ── HISTORY / PERFORMANCE CHARTS ── */
 let H = null; // history data
-let perfChartsBuilt = { apf: false, prf: false };
-let sparkBuilt = { apf: false, prf: false };
+let perfChartsBuilt = { apf: false, prf: false, pmf: false };
+let sparkBuilt = { apf: false, prf: false, pmf: false };
 
 async function loadHistory() {
   const urls = [
@@ -1092,7 +1240,7 @@ function fmtTs(ts) {
 function buildSparkline(canvasId, points, color) {
   const el = document.getElementById(canvasId);
   if (!el || !points || points.length < 2) return;
-  const fund = canvasId.includes('apf') ? 'apf' : 'prf';
+  const fund = canvasId.includes('apf') ? 'apf' : canvasId.includes('pmf') ? 'pmf' : 'prf';
   if (sparkBuilt[fund]) return;
   sparkBuilt[fund] = true;
   new Chart(el, {
@@ -1120,14 +1268,16 @@ function buildSparkline(canvasId, points, color) {
 function buildSparklines() {
   const apfPts = H.filter(d => d.apf != null).map(d => ({ ts: d.ts, val: d.apf }));
   const prfPts = H.filter(d => d.prf != null).map(d => ({ ts: d.ts, val: d.prf }));
+  const pmfPts = H.filter(d => d.pmf != null).map(d => ({ ts: d.ts, val: d.pmf }));
   buildSparkline('ov-apf-spark', apfPts, 'rgb(255,214,10)');
   buildSparkline('ov-prf-spark', prfPts, 'rgb(48,209,88)');
+  buildSparkline('ov-pmf-spark', pmfPts, 'rgb(191,90,242)');
 }
 
 function buildPerfChart(canvasId, fundKey, spyKey, fundColor, fundLabel) {
   const el = document.getElementById(canvasId);
   if (!el || !H) return;
-  const fund = fundKey === 'apf' ? 'apf' : 'prf';
+  const fund = fundKey === 'apf' ? 'apf' : fundKey === 'pmf' ? 'pmf' : 'prf';
   if (perfChartsBuilt[fund]) return;
   perfChartsBuilt[fund] = true;
   const pts = H.filter(d => d[fundKey] != null);
@@ -1184,10 +1334,11 @@ function buildPerfChart(canvasId, fundKey, spyKey, fundColor, fundLabel) {
 function buildPerfCharts() {
   buildPerfChart('apf-perf', 'apf', 'spy_apf', '#ffd60a', 'Pofmuis AI Power Fund');
   buildPerfChart('prf-perf', 'prf', 'spy_prf', '#30d158', 'Pofmuis Robotics Fund');
+  buildPerfChart('pmf-perf', 'pmf', 'spy_pmf', '#bf5af2', 'Pofmuis Memory Fund');
 }
 
 /* ── TABS + iOS SWIPE ── */
-const TABS = ['ov', 'apf', 'prf'];
+const TABS = ['ov', 'apf', 'prf', 'pmf'];
 let _tabIdx = 0;
 const wrap = document.getElementById('pane-wrap');
 

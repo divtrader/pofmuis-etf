@@ -100,6 +100,39 @@ FUNDS = {
             "IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.",
         ],
     },
+    "pmf": {
+        "name": "Pofmuis Memory Fund",
+        "ticker": "PMF",
+        "inception": "2026-05-26",
+        "base": 100.0,
+        "spy_inc": 751.41,
+        "holdings": [
+            {"ticker": "MU",   "name": "Micron Technology",            "weight": 35, "bucket": "HBM/DRAM",             "inc": 881.76},
+            {"ticker": "SNDK", "name": "SanDisk",                      "weight": 20, "bucket": "NAND Flash",           "inc": 1596.46},
+            {"ticker": "WDC",  "name": "Western Digital",              "weight": 15, "bucket": "Storage Systems",      "inc": 532.275},
+            {"ticker": "STX",  "name": "Seagate Technology",           "weight": 10, "bucket": "Mass Storage",         "inc": 845.00},
+            {"ticker": "RMBS", "name": "Rambus",                       "weight": 10, "bucket": "Memory IP",            "inc": 158.23},
+            {"ticker": "NTAP", "name": "NetApp",                       "weight": 5,  "bucket": "Hybrid Cloud Storage", "inc": 137.98},
+            {"ticker": "DELL", "name": "Dell Technologies",            "weight": 3,  "bucket": "Enterprise Solutions", "inc": 303.34},
+            {"ticker": "HPE",  "name": "Hewlett Packard Enterprise",   "weight": 2,  "bucket": "Enterprise Storage",   "inc": 37.95},
+        ],
+        "news": [
+            {"ticker": "MU",   "headline": "Micron HBM4 Production Ramps — Sold Out Through 2027",   "summary": "Micron confirmed HBM4 production ramping at Boise. Capacity sold out through 2027 with hyperscaler reservation contracts. Mix shift expected to drive gross margin to 50%+.", "sentiment": "positive", "date": "2026-05-22"},
+            {"ticker": "SNDK", "headline": "SanDisk QLC Wins Meta Datacenter SSD Contract",          "summary": "SanDisk QLC enterprise SSDs selected for Meta's next-gen AI training clusters. ASP uplift and multi-year volume commitment.",                                            "sentiment": "positive", "date": "2026-05-18"},
+            {"ticker": "WDC",  "headline": "WD HAMR Drives Hit 40TB — Hyperscaler Qualification Complete", "summary": "Western Digital's 40TB HAMR drives passed final qualification at two major hyperscalers. Mass production ramps Q3 2026.",                                          "sentiment": "positive", "date": "2026-05-15"},
+            {"ticker": "STX",  "headline": "Seagate Mozaic 3+ Generation Launches — 50TB Roadmap",   "summary": "Seagate announced Mozaic 3+ HAMR platform with 50TB roadmap. AI dataset storage demand pulling forward HDD ASPs.",                                                   "sentiment": "positive", "date": "2026-05-20"},
+            {"ticker": "RMBS", "headline": "Rambus DDR5 Royalties Up 41% YoY",                       "summary": "Rambus reported DDR5 royalty revenue up 41% YoY. Memory interface IP attached to every server DRAM shipment.",                                                         "sentiment": "positive", "date": "2026-05-12"},
+            {"ticker": "NTAP", "headline": "NetApp Q4 In-line; FY27 Guide Below Street",             "summary": "NetApp Q4 met expectations but FY27 guide came in slightly below consensus. Cloud transition optics cited.",                                                            "sentiment": "mixed",    "date": "2026-05-08"},
+            {"ticker": "DELL", "headline": "Dell PowerStore AI Hits $2B ARR",                        "summary": "Dell PowerStore AI storage line crossed $2B annual run-rate. Hyperscaler-adjacent enterprise winning AI infrastructure refresh.",                                    "sentiment": "positive", "date": "2026-05-21"},
+            {"ticker": "HPE",  "headline": "HPE Alletra Storage Wins UK Government Cloud",           "summary": "HPE Alletra MP storage selected for UK G-Cloud framework. Sovereign AI compute demand driving enterprise storage growth.",                                           "sentiment": "positive", "date": "2026-05-14"},
+        ],
+        "changes": [
+            "MU 35%: Pure-play HBM leader — biggest AI memory cycle beneficiary",
+            "SNDK 20%: Post-spinoff pure-play NAND leader, hyperscaler SSD wins",
+            "RMBS 10%: Royalty IP model — every DDR5/HBM stack pays Rambus",
+            "DELL/HPE 5% combined: Enterprise storage refresh cycle exposure, not pure memory",
+        ],
+    },
 }
 
 # ── FETCH PRICES VIA STOOQ ──────────────────────────────────────────────────
@@ -196,11 +229,12 @@ def main():
         "spy_price":  prices.get("SPY", {}).get("close"),
         "apf": compute_fund(FUNDS["apf"], prices),
         "prf": compute_fund(FUNDS["prf"], prices),
+        "pmf": compute_fund(FUNDS["pmf"], prices),
     }
 
     path = ROOT / "data.json"
     path.write_text(json.dumps(out, indent=2))
-    print(f"Wrote {path}  —  APF NAV {out['apf']['nav']:.4f} ({out['apf']['nav_change']:+.2f}%)  PRF NAV {out['prf']['nav']:.4f} ({out['prf']['nav_change']:+.2f}%)")
+    print(f"Wrote {path}  —  APF NAV {out['apf']['nav']:.4f} ({out['apf']['nav_change']:+.2f}%)  PRF NAV {out['prf']['nav']:.4f} ({out['prf']['nav_change']:+.2f}%)  PMF NAV {out['pmf']['nav']:.4f} ({out['pmf']['nav_change']:+.2f}%)")
     update_history(out, ROOT)
 
 
@@ -216,8 +250,10 @@ def update_history(out, root):
         "ts": out["generated"],
         "apf": out["apf"]["nav_change"],
         "prf": out["prf"]["nav_change"],
+        "pmf": out["pmf"]["nav_change"],
         "spy_apf": out["apf"]["spy_ret"],
         "spy_prf": out["prf"]["spy_ret"],
+        "spy_pmf": out["pmf"]["spy_ret"],
     }
 
     # Update existing entry if same hour, else append
