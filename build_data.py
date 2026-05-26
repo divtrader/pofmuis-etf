@@ -133,6 +133,40 @@ FUNDS = {
             "DELL/HPE 5% combined: Enterprise storage refresh cycle exposure, not pure memory",
         ],
     },
+    "psf": {
+        "name": "Pofmuis Space Fund",
+        "ticker": "PSF",
+        "inception": "2026-05-26",
+        "base": 100.0,
+        "spy_inc": 751.41,
+        "holdings": [
+            {"ticker": "RKLB", "name": "Rocket Lab",            "weight": 25, "bucket": "Launch & Systems",  "inc": 144.475},
+            {"ticker": "ASTS", "name": "AST SpaceMobile",       "weight": 20, "bucket": "Direct-to-Cell",    "inc": 126.60},
+            {"ticker": "PL",   "name": "Planet Labs",           "weight": 12, "bucket": "Earth Observation", "inc": 50.638835},
+            {"ticker": "VSAT", "name": "Viasat",                "weight": 10, "bucket": "SatComms",          "inc": 81.66},
+            {"ticker": "IRDM", "name": "Iridium Communications","weight": 10, "bucket": "SatComms",          "inc": 50.25},
+            {"ticker": "BKSY", "name": "BlackSky Technology",   "weight": 8,  "bucket": "Earth Observation", "inc": 51.64},
+            {"ticker": "SPIR", "name": "Spire Global",          "weight": 8,  "bucket": "Space Data",        "inc": 24.74},
+            {"ticker": "MNTS", "name": "Momentus",              "weight": 7,  "bucket": "In-Space Logistics","inc": 12.8899},
+        ],
+        "news": [
+            {"ticker": "RKLB", "headline": "Rocket Lab Neutron First Stage Completes Hot Fire Test",      "summary": "Rocket Lab confirmed Archimedes engines reached full thrust on Neutron's first stage. First orbital flight on track for Q4 2026. SpaceX Falcon 9 alternative narrative gaining traction.", "sentiment": "positive", "date": "2026-05-23"},
+            {"ticker": "ASTS", "headline": "AST SpaceMobile Commercial Service Launches with Vodafone",   "summary": "First commercial direct-to-cellphone satellite calls completed over Europe via Vodafone partnership. AST commenced revenue generation; Verizon/AT&T US rollout expected H2 2026.",       "sentiment": "positive", "date": "2026-05-20"},
+            {"ticker": "PL",   "headline": "Planet Labs Wins $230M NRO Contract Extension",                "summary": "National Reconnaissance Office extended Planet's commercial imagery contract for five years. Annual recurring revenue stepped up 18%.",                                                  "sentiment": "positive", "date": "2026-05-18"},
+            {"ticker": "VSAT", "headline": "Viasat-3 Flight 2 Recovers; Inmarsat Synergies On Track",     "summary": "Replacement Viasat-3 F2 satellite reached operational orbit after F1 antenna failure last year. Inmarsat cost synergies tracking ahead of plan but stock still discounted vs SOTP.",      "sentiment": "mixed",    "date": "2026-05-15"},
+            {"ticker": "IRDM", "headline": "Iridium Q1 Beat — Apple Royalty Stream Visible",              "summary": "Iridium beat consensus on revenue and FCF. Apple Emergency SOS royalty contribution now disclosed at ~$60M annually. Buyback accelerated.",                                                "sentiment": "positive", "date": "2026-05-12"},
+            {"ticker": "BKSY", "headline": "BlackSky Gen-3 Satellites Hit Sub-50cm Resolution",            "summary": "First Gen-3 satellites achieved sub-50cm resolution imagery — putting BlackSky in same tier as Maxar for tactical intelligence customers.",                                               "sentiment": "positive", "date": "2026-05-08"},
+            {"ticker": "SPIR", "headline": "Spire Global Wins NOAA Weather Data Contract",                "summary": "NOAA awarded Spire a five-year radio occultation weather data contract worth $74M. Maritime AIS revenue also growing on shipping intel demand.",                                       "sentiment": "positive", "date": "2026-05-22"},
+            {"ticker": "MNTS", "headline": "Momentus Vigoride 7 Mission Successful — Cash Runway Tightening", "summary": "Vigoride-7 orbital tug mission completed all customer deployments. However, cash position requires capital raise within 12 months. Execution risk remains elevated.",                "sentiment": "mixed",    "date": "2026-05-21"},
+        ],
+        "changes": [
+            "RKLB 25%: Closest SpaceX comp — vertically integrated launch + space systems. Neutron rocket due late 2026.",
+            "ASTS 20%: Disruptive direct-to-cell satcom with locked AT&T/Verizon/Vodafone/Rakuten partnerships.",
+            "PL + BKSY 20%: Earth observation duopoly capturing defence/intel SaaS contracts.",
+            "IRDM 10%: Only profitable, cash-positive satcom name — defensive anchor.",
+            "MNTS 7%: Speculative orbital tug optionality, sized for asymmetric upside.",
+        ],
+    },
 }
 
 # ── FETCH PRICES VIA STOOQ ──────────────────────────────────────────────────
@@ -230,11 +264,12 @@ def main():
         "apf": compute_fund(FUNDS["apf"], prices),
         "prf": compute_fund(FUNDS["prf"], prices),
         "pmf": compute_fund(FUNDS["pmf"], prices),
+        "psf": compute_fund(FUNDS["psf"], prices),
     }
 
     path = ROOT / "data.json"
     path.write_text(json.dumps(out, indent=2))
-    print(f"Wrote {path}  —  APF NAV {out['apf']['nav']:.4f} ({out['apf']['nav_change']:+.2f}%)  PRF NAV {out['prf']['nav']:.4f} ({out['prf']['nav_change']:+.2f}%)  PMF NAV {out['pmf']['nav']:.4f} ({out['pmf']['nav_change']:+.2f}%)")
+    print(f"Wrote {path}  —  APF NAV {out['apf']['nav']:.4f} ({out['apf']['nav_change']:+.2f}%)  PRF NAV {out['prf']['nav']:.4f} ({out['prf']['nav_change']:+.2f}%)  PMF NAV {out['pmf']['nav']:.4f} ({out['pmf']['nav_change']:+.2f}%)  PSF NAV {out['psf']['nav']:.4f} ({out['psf']['nav_change']:+.2f}%)")
     update_history(out, ROOT)
 
 
@@ -251,9 +286,11 @@ def update_history(out, root):
         "apf": out["apf"]["nav_change"],
         "prf": out["prf"]["nav_change"],
         "pmf": out["pmf"]["nav_change"],
+        "psf": out["psf"]["nav_change"],
         "spy_apf": out["apf"]["spy_ret"],
         "spy_prf": out["prf"]["spy_ret"],
         "spy_pmf": out["pmf"]["spy_ret"],
+        "spy_psf": out["psf"]["spy_ret"],
     }
 
     # Update existing entry if same hour, else append

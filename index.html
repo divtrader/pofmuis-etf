@@ -55,6 +55,9 @@
   --pmf: #bf5af2;
   --pmf-dim: rgba(191,90,242,0.12);
   --pmf-border: rgba(191,90,242,0.22);
+  --psf: #5ac8fa;
+  --psf-dim: rgba(90,200,250,0.12);
+  --psf-border: rgba(90,200,250,0.22);
 
   /* Blur */
   --blur-sm: blur(12px) saturate(1.6);
@@ -101,6 +104,7 @@ html, body {
 .glow-apf { width: 400px; height: 400px; background: var(--apf); top: -100px; left: -50px; }
 .glow-prf { width: 350px; height: 350px; background: var(--prf); top: 200px; right: -80px; }
 .glow-pmf { width: 320px; height: 320px; background: var(--pmf); bottom: 200px; left: -60px; }
+.glow-psf { width: 340px; height: 340px; background: var(--psf); top: 50%; right: -50px; }
 .glow-blue { width: 300px; height: 300px; background: var(--blue); bottom: 100px; left: 50%; transform: translateX(-50%); }
 
 /* ── APP SHELL ── */
@@ -204,6 +208,7 @@ html, body {
 .tab-pill[data-p="apf"].on { color: var(--apf); border-color: var(--apf-border); background: var(--apf-dim); }
 .tab-pill[data-p="prf"].on { color: var(--prf); border-color: var(--prf-border); background: var(--prf-dim); }
 .tab-pill[data-p="pmf"].on { color: var(--pmf); border-color: var(--pmf-border); background: var(--pmf-dim); }
+.tab-pill[data-p="psf"].on { color: var(--psf); border-color: var(--psf-border); background: var(--psf-dim); }
 .tab-pill:active { transform: scale(0.95); }
 .tab-icon { font-size: 16px; line-height: 1; }
 .tab-label { font-size: 11px; font-weight: 700; }
@@ -212,7 +217,7 @@ html, body {
 /* ── SLIDING PANE LAYOUT ── */
 #pane-wrap {
   display: flex;
-  width: 400vw;
+  width: 500vw;
   will-change: transform;
   transition: transform 0.42s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -246,7 +251,10 @@ html, body {
 /* ── FUND HERO CARDS (Overview) ── */
 .hero-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
 @media (min-width: 600px) {
-  .hero-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 960px) {
+  .hero-grid { grid-template-columns: repeat(2, 1fr); }
 }
 .hero-card {
   border-radius: var(--r-xl);
@@ -272,11 +280,17 @@ html, body {
   border: 1px solid var(--pmf-border);
   box-shadow: 0 0 40px rgba(191,90,242,0.08), inset 0 1px 0 rgba(255,255,255,0.1);
 }
+.hero-psf {
+  background: linear-gradient(145deg, rgba(90,200,250,0.15) 0%, rgba(90,200,250,0.05) 100%);
+  border: 1px solid var(--psf-border);
+  box-shadow: 0 0 40px rgba(90,200,250,0.08), inset 0 1px 0 rgba(255,255,255,0.1);
+}
 .hero-topbar { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
 .hero-ticker { font-size: 14px; font-weight: 800; letter-spacing: .04em; }
 .hero-apf .hero-ticker { color: var(--apf); }
 .hero-prf .hero-ticker { color: var(--prf); }
 .hero-pmf .hero-ticker { color: var(--pmf); }
+.hero-psf .hero-ticker { color: var(--psf); }
 .hero-subtitle { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--t3); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hero-nav {
   font-size: clamp(15px, 4.8vw, 32px); font-weight: 800; letter-spacing: -.03em; line-height: 1;
@@ -470,7 +484,7 @@ html, body {
   .scroll-content { max-width: 1200px; padding: 24px 36px 40px; }
   .kpi-grid { grid-template-columns: repeat(6, 1fr); }
   .kpi-card.kpi-hero { grid-column: span 2; }
-  .hero-grid { grid-template-columns: repeat(3, 1fr); max-width: 1100px; }
+  .hero-grid { grid-template-columns: repeat(2, 1fr); max-width: 1100px; }
   .hold-list { display: grid; grid-template-columns: 1fr 1fr; }
   .hold-item { border-right: 1px solid var(--glass-border); }
 }
@@ -482,6 +496,7 @@ html, body {
   <div class="glow-orb glow-apf"></div>
   <div class="glow-orb glow-prf"></div>
   <div class="glow-orb glow-pmf"></div>
+  <div class="glow-orb glow-psf"></div>
   <div class="glow-orb glow-blue"></div>
 </div>
 
@@ -565,6 +580,23 @@ html, body {
           <div class="hero-spark"><canvas id="ov-pmf-spark"></canvas></div>
           <div class="hero-days" id="ov-pmf-days"></div>
         </div>
+        <!-- PSF Hero -->
+        <div class="hero-card hero-psf" onclick="switchTab('psf')">
+          <div class="hero-card-shine"></div>
+          <div class="hero-topbar">
+            <span class="hero-ticker">PSF</span>
+            <span class="hero-subtitle">Pofmuis Space Fund</span>
+          </div>
+          <div class="hero-nav"><span class="currency">USD</span><span id="ov-psf-nav">—</span></div>
+          <div class="hero-ret" id="ov-psf-ret">—</div>
+          <div class="hero-rows">
+            <div class="hero-row"><span class="rl">Day</span><span class="rv" id="ov-psf-day">—</span></div>
+            <div class="hero-row"><span class="rl">S&amp;P 500 Return</span><span class="rv" id="ov-psf-spy">—</span></div>
+            <div class="hero-row"><span class="rl">vs S&amp;P</span><span class="rv" id="ov-psf-alpha">—</span></div>
+          </div>
+          <div class="hero-spark"><canvas id="ov-psf-spark"></canvas></div>
+          <div class="hero-days" id="ov-psf-days"></div>
+        </div>
       </div>
 
 
@@ -576,6 +608,9 @@ html, body {
 
       <div class="sec-head"><span class="sec-accent" style="background:var(--pmf)"></span>PMF · Holdings</div>
       <div class="hold-list glass-card" id="ov-pmf-hl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--psf)"></span>PSF · Holdings</div>
+      <div class="hold-list glass-card" id="ov-psf-hl"></div>
 
       <div class="footer-note">Prices updated every 30 min · <span id="ft-ts">—</span><br>
         Illustrative only · Not a registered fund · Not investment advice</div>
@@ -800,6 +835,79 @@ html, body {
     </div>
   </div>
 
+  <!-- ══ PSF ══ -->
+  <div class="pane" id="ppsf">
+    <div class="scroll-content">
+      <div class="page-header">
+        <div class="page-header-icon" style="background:var(--psf-dim);border-color:var(--psf-border)">🛰️</div>
+        <div class="page-header-text">
+          <div class="page-header-title" style="color:var(--psf)">Pofmuis Space Fund</div>
+          <div class="page-header-sub">PSF · Inception 2026-05-26</div>
+        </div>
+      </div>
+      <div class="kpi-grid">
+        <div class="glass-card kpi-card kpi-hero">
+          <div class="kpi-label">Net Asset Value</div>
+          <div class="kpi-val"><span class="kpi-currency">USD</span><span id="psf-nav">—</span></div>
+          <div class="kpi-sub">$100,000 initial · Inception 2026-05-26</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Since Inception</div>
+          <div class="kpi-val" id="psf-since">—</div>
+          <div class="kpi-sub" id="psf-days">—</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">S&amp;P 500 Return</div>
+          <div class="kpi-val" id="psf-spy">—</div>
+          <div class="kpi-sub">What S&amp;P 500 returned</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">vs S&amp;P 500</div>
+          <div class="kpi-val" id="psf-alpha">—</div>
+          <div class="kpi-sub">Fund outperformance vs S&amp;P</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Day Change</div>
+          <div class="kpi-val" id="psf-day">—</div>
+          <div class="kpi-sub">vs. prior close</div>
+        </div>
+        <div class="glass-card kpi-card">
+          <div class="kpi-label">Holdings</div>
+          <div class="kpi-val">8</div>
+          <div class="kpi-sub">6 buckets</div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--psf)"></span>Performance vs S&amp;P 500</div>
+      <div class="glass-card perf-chart-card">
+        <canvas id="psf-perf" height="180"></canvas>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--psf)"></span>Holdings</div>
+      <div class="hold-list glass-card" id="psf-hl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--psf)"></span>Contributors &amp; Detractors</div>
+      <div class="contrib-list glass-card" id="psf-cl"></div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--psf)"></span>Sector Allocation</div>
+      <div class="sector-wrap glass-card">
+        <div class="chart-box">
+          <div class="chart-canvas-wrap"><canvas id="psfChart"></canvas></div>
+          <div class="sleg" id="psf-sleg"></div>
+        </div>
+      </div>
+
+      <div class="sec-head"><span class="sec-accent" style="background:var(--psf)"></span>Market Intelligence</div>
+      <div class="news-stack" id="psf-nl"></div>
+
+      <div class="glass-card thesis-card" style="margin-top:14px">
+        <h4>Investment Thesis</h4>
+        <p>The SpaceX IPO opens the floodgates on a $1T space economy by 2035. Reusable launch costs are collapsing, satellite broadband is going mainstream via direct-to-cellphone, and Earth-observation AI is unlocking real-time intelligence. The space supply chain — launch, satellites, ground stations, data — is in the early innings of a structural growth cycle.</p>
+        <ul id="psf-chg"></ul>
+      </div>
+    </div>
+  </div>
+
   </div><!-- /pane-wrap -->
 
 </div><!-- /app -->
@@ -810,6 +918,7 @@ html, body {
   <div class="tab-pill" data-p="apf"><span class="tab-icon">⚡</span><span class="tab-label">APF</span></div>
   <div class="tab-pill" data-p="prf"><span class="tab-icon">🤖</span><span class="tab-label">PRF</span></div>
   <div class="tab-pill" data-p="pmf"><span class="tab-icon">🧠</span><span class="tab-label">PMF</span></div>
+  <div class="tab-pill" data-p="psf"><span class="tab-icon">🛰️</span><span class="tab-label">PSF</span></div>
 </div>
 
 <script>
@@ -822,7 +931,9 @@ const SC = {
   'Renewables':'#30d158','Grid Infra':'#ff6961',
   'HBM/DRAM':'#bf5af2','NAND Flash':'#5e5ce6','Storage Systems':'#0a84ff',
   'Mass Storage':'#5ac8fa','Memory IP':'#ff375f','Hybrid Cloud Storage':'#30d158',
-  'Enterprise Solutions':'#ffd60a','Enterprise Storage':'#ff6961'
+  'Enterprise Solutions':'#ffd60a','Enterprise Storage':'#ff6961',
+  'Launch & Systems':'#5ac8fa','Direct-to-Cell':'#bf5af2','Earth Observation':'#30d158',
+  'SatComms':'#0a84ff','Space Data':'#ffd60a','In-Space Logistics':'#ff375f'
 };
 
 /* ── STATIC CONTENT ── */
@@ -853,12 +964,23 @@ const NEWS = {
     {ticker:'NTAP', headline:'NetApp Q4 In-line; FY27 Guide Below Street', summary:'NetApp Q4 met expectations but FY27 guide came in slightly below consensus. Cloud transition optics cited.', sentiment:'mixed', date:'2026-05-08'},
     {ticker:'DELL', headline:'Dell PowerStore AI Hits $2B ARR', summary:'Dell PowerStore AI storage line crossed $2B annual run-rate. Hyperscaler-adjacent enterprise winning AI infrastructure refresh.', sentiment:'positive', date:'2026-05-21'},
     {ticker:'HPE',  headline:'HPE Alletra Storage Wins UK Government Cloud', summary:'HPE Alletra MP storage selected for UK G-Cloud framework. Sovereign AI compute demand driving enterprise storage growth.', sentiment:'positive', date:'2026-05-14'},
+  ],
+  psf: [
+    {ticker:'RKLB', headline:'Rocket Lab Neutron First Stage Completes Hot Fire Test', summary:'Rocket Lab confirmed Archimedes engines reached full thrust on Neutron\'s first stage. First orbital flight on track for Q4 2026. SpaceX Falcon 9 alternative narrative gaining traction.', sentiment:'positive', date:'2026-05-23'},
+    {ticker:'ASTS', headline:'AST SpaceMobile Commercial Service Launches with Vodafone', summary:'First commercial direct-to-cellphone satellite calls completed over Europe via Vodafone partnership. AST commenced revenue generation; Verizon/AT&T US rollout expected H2 2026.', sentiment:'positive', date:'2026-05-20'},
+    {ticker:'PL',   headline:'Planet Labs Wins $230M NRO Contract Extension', summary:'National Reconnaissance Office extended Planet\'s commercial imagery contract for five years. Annual recurring revenue stepped up 18%.', sentiment:'positive', date:'2026-05-18'},
+    {ticker:'VSAT', headline:'Viasat-3 Flight 2 Recovers; Inmarsat Synergies On Track', summary:'Replacement Viasat-3 F2 satellite reached operational orbit after F1 antenna failure last year. Inmarsat cost synergies tracking ahead of plan but stock still discounted vs SOTP.', sentiment:'mixed', date:'2026-05-15'},
+    {ticker:'IRDM', headline:'Iridium Q1 Beat — Apple Royalty Stream Visible', summary:'Iridium beat consensus on revenue and FCF. Apple Emergency SOS royalty contribution now disclosed at ~$60M annually. Buyback accelerated.', sentiment:'positive', date:'2026-05-12'},
+    {ticker:'BKSY', headline:'BlackSky Gen-3 Satellites Hit Sub-50cm Resolution', summary:'First Gen-3 satellites achieved sub-50cm resolution imagery — putting BlackSky in same tier as Maxar for tactical intelligence customers.', sentiment:'positive', date:'2026-05-08'},
+    {ticker:'SPIR', headline:'Spire Global Wins NOAA Weather Data Contract', summary:'NOAA awarded Spire a five-year radio occultation weather data contract worth $74M. Maritime AIS revenue also growing on shipping intel demand.', sentiment:'positive', date:'2026-05-22'},
+    {ticker:'MNTS', headline:'Momentus Vigoride 7 Mission Successful — Cash Runway Tightening', summary:'Vigoride-7 orbital tug mission completed all customer deployments. However, cash position requires capital raise within 12 months. Execution risk remains elevated.', sentiment:'mixed', date:'2026-05-21'},
   ]
 };
 const CHANGES = {
   apf: ['VST 30%: PEG 0.36x deeply underpriced relative to earnings growth.','TLN 20%: High conviction but levered — capped to manage leverage risk.','GEV 10%: Grid infrastructure pure-play but expensive (FWD P/E 55-69x, priced in).','NEE 15%: Premium valuation (PEG 3.10x) limits upside vs. other positions.'],
   prf: ['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.'],
-  pmf: ['MU 35%: Pure-play HBM leader — biggest AI memory cycle beneficiary','SNDK 20%: Post-spinoff pure-play NAND leader, hyperscaler SSD wins','RMBS 10%: Royalty IP model — every DDR5/HBM stack pays Rambus','DELL/HPE 5% combined: Enterprise storage refresh cycle exposure, not pure memory']
+  pmf: ['MU 35%: Pure-play HBM leader — biggest AI memory cycle beneficiary','SNDK 20%: Post-spinoff pure-play NAND leader, hyperscaler SSD wins','RMBS 10%: Royalty IP model — every DDR5/HBM stack pays Rambus','DELL/HPE 5% combined: Enterprise storage refresh cycle exposure, not pure memory'],
+  psf: ['RKLB 25%: Closest SpaceX comp — vertically integrated launch + space systems. Neutron rocket due late 2026.','ASTS 20%: Disruptive direct-to-cell satcom with locked AT&T/Verizon/Vodafone/Rakuten partnerships.','PL + BKSY 20%: Earth observation duopoly capturing defence/intel SaaS contracts.','IRDM 10%: Only profitable, cash-positive satcom name — defensive anchor.','MNTS 7%: Speculative orbital tug optionality, sized for asymmetric upside.']
 };
 
 /* ── HELPERS ── */
@@ -1023,16 +1145,17 @@ function renderAll(D) {
 }
 
 /* ── RENDER ── */
-let chartsBuilt = { apf: false, prf: false, pmf: false };
-let staticBuilt = { apf: false, prf: false, pmf: false };
+let chartsBuilt = { apf: false, prf: false, pmf: false, psf: false };
+let staticBuilt = { apf: false, prf: false, pmf: false, psf: false };
 
 function render(D) {
   const A = D.apf;
   const P = D.prf;
   const M = D.pmf;
-  if (!A || !P || !M) throw new Error('data.json missing apf/prf/pmf keys');
+  const S = D.psf;
+  if (!A || !P || !M || !S) throw new Error('data.json missing apf/prf/pmf/psf keys');
 
-  const dA = days('2026-05-22'), dP = days('2026-05-12'), dM = days('2026-05-26');
+  const dA = days('2026-05-22'), dP = days('2026-05-12'), dM = days('2026-05-26'), dS = days('2026-05-26');
 
   /* OVERVIEW HEROES */
   set('ov-apf-nav', navToPortfolio(A.nav));
@@ -1059,6 +1182,14 @@ function render(D) {
   const pmfDEl = document.getElementById('ov-pmf-days');
   if (pmfDEl) pmfDEl.textContent = dM + ' day' + (dM !== 1 ? 's' : '') + ' live · since 26 May 2026';
 
+  set('ov-psf-nav', navToPortfolio(S.nav));
+  set('ov-psf-ret', ps(S.nav_change), cls(S.nav_change));
+  set('ov-psf-day', ps(S.day_change), cls(S.day_change));
+  set('ov-psf-spy', S.spy_ret != null ? ps(S.spy_ret) : '—', cls(S.spy_ret));
+  set('ov-psf-alpha', S.alpha != null ? ps(S.alpha) : '—', cls(S.alpha));
+  const psfDEl = document.getElementById('ov-psf-days');
+  if (psfDEl) psfDEl.textContent = dS + ' day' + (dS !== 1 ? 's' : '') + ' live · since 26 May 2026';
+
   /* BENCHMARK STRIP */
   set('bm-apf', ps(A.nav_change), cls(A.nav_change));
   set('bm-prf', ps(P.nav_change), cls(P.nav_change));
@@ -1070,7 +1201,8 @@ function render(D) {
   /* OV HOLD LISTS */
   renderHolds('ov-apf-hl', A.rows || [], true, 'apf');
   renderHolds('ov-prf-hl', [...(P.rows || [])].sort((a,b) => b.weight - a.weight).slice(0, 10), true, 'prf');
-  renderHolds('ov-pmf-hl', M.rows || [], true, 'pmf');
+  renderHolds('ov-pmf-hl', [...(M.rows || [])].sort((a,b) => b.weight - a.weight), true, 'pmf');
+  renderHolds('ov-psf-hl', [...(S.rows || [])].sort((a,b) => b.weight - a.weight), true, 'psf');
 
   /* APF PANE KPIs */
   set('apf-nav', navToPortfolio(A.nav));
@@ -1110,6 +1242,19 @@ function render(D) {
   renderContribs('pmf-cl', M.rows || []);
   if (!chartsBuilt.pmf) { buildChart('pmfChart', 'pmf-sleg', M.rows || []); chartsBuilt.pmf = true; }
   if (!staticBuilt.pmf) { renderNews('pmf-nl', NEWS.pmf); renderList('pmf-chg', CHANGES.pmf); staticBuilt.pmf = true; }
+
+  /* PSF PANE KPIs */
+  set('psf-nav', navToPortfolio(S.nav));
+  set('psf-since', ps(S.nav_change), cls(S.nav_change));
+  const psfDays = document.getElementById('psf-days');
+  if (psfDays) psfDays.textContent = dS + ' day' + (dS !== 1 ? 's' : '') + ' live · since 26 May 2026';
+  set('psf-spy', S.spy_ret != null ? ps(S.spy_ret) : '—', cls(S.spy_ret));
+  set('psf-alpha', S.alpha != null ? ps(S.alpha) : '—', cls(S.alpha));
+  set('psf-day', ps(S.day_change), cls(S.day_change));
+  renderHolds('psf-hl', [...(S.rows || [])].sort((a,b) => b.weight - a.weight), false, 'psf');
+  renderContribs('psf-cl', S.rows || []);
+  if (!chartsBuilt.psf) { buildChart('psfChart', 'psf-sleg', S.rows || []); chartsBuilt.psf = true; }
+  if (!staticBuilt.psf) { renderNews('psf-nl', NEWS.psf); renderList('psf-chg', CHANGES.psf); staticBuilt.psf = true; }
 }
 
 function setAlphaChip(id, v) {
@@ -1125,6 +1270,7 @@ function renderHolds(id, rows, compact, fund) {
   if (!el || !rows.length) return;
   const g = fund === 'apf' ? '#c08000,#ffd60a'
           : fund === 'prf' ? '#1a7a30,#30d158'
+          : fund === 'psf' ? '#2a7ba8,#5ac8fa'
           : '#7c2db5,#bf5af2';
   const mx = Math.max(...rows.map(r => num(r.weight)));
   el.innerHTML = rows.map(r => {
@@ -1207,8 +1353,8 @@ function renderList(id, items) {
 
 /* ── HISTORY / PERFORMANCE CHARTS ── */
 let H = null; // history data
-let perfChartsBuilt = { apf: false, prf: false, pmf: false };
-let sparkBuilt = { apf: false, prf: false, pmf: false };
+let perfChartsBuilt = { apf: false, prf: false, pmf: false, psf: false };
+let sparkBuilt = { apf: false, prf: false, pmf: false, psf: false };
 
 async function loadHistory() {
   const urls = [
@@ -1240,7 +1386,10 @@ function fmtTs(ts) {
 function buildSparkline(canvasId, points, color) {
   const el = document.getElementById(canvasId);
   if (!el || !points || points.length < 2) return;
-  const fund = canvasId.includes('apf') ? 'apf' : canvasId.includes('pmf') ? 'pmf' : 'prf';
+  const fund = canvasId.includes('apf') ? 'apf'
+             : canvasId.includes('psf') ? 'psf'
+             : canvasId.includes('pmf') ? 'pmf'
+             : 'prf';
   if (sparkBuilt[fund]) return;
   sparkBuilt[fund] = true;
   new Chart(el, {
@@ -1269,15 +1418,20 @@ function buildSparklines() {
   const apfPts = H.filter(d => d.apf != null).map(d => ({ ts: d.ts, val: d.apf }));
   const prfPts = H.filter(d => d.prf != null).map(d => ({ ts: d.ts, val: d.prf }));
   const pmfPts = H.filter(d => d.pmf != null).map(d => ({ ts: d.ts, val: d.pmf }));
+  const psfPts = H.filter(d => d.psf != null).map(d => ({ ts: d.ts, val: d.psf }));
   buildSparkline('ov-apf-spark', apfPts, 'rgb(255,214,10)');
   buildSparkline('ov-prf-spark', prfPts, 'rgb(48,209,88)');
   buildSparkline('ov-pmf-spark', pmfPts, 'rgb(191,90,242)');
+  buildSparkline('ov-psf-spark', psfPts, 'rgb(90,200,250)');
 }
 
 function buildPerfChart(canvasId, fundKey, spyKey, fundColor, fundLabel) {
   const el = document.getElementById(canvasId);
   if (!el || !H) return;
-  const fund = fundKey === 'apf' ? 'apf' : fundKey === 'pmf' ? 'pmf' : 'prf';
+  const fund = fundKey === 'apf' ? 'apf'
+             : fundKey === 'pmf' ? 'pmf'
+             : fundKey === 'psf' ? 'psf'
+             : 'prf';
   if (perfChartsBuilt[fund]) return;
   perfChartsBuilt[fund] = true;
   const pts = H.filter(d => d[fundKey] != null);
@@ -1335,10 +1489,11 @@ function buildPerfCharts() {
   buildPerfChart('apf-perf', 'apf', 'spy_apf', '#ffd60a', 'Pofmuis AI Power Fund');
   buildPerfChart('prf-perf', 'prf', 'spy_prf', '#30d158', 'Pofmuis Robotics Fund');
   buildPerfChart('pmf-perf', 'pmf', 'spy_pmf', '#bf5af2', 'Pofmuis Memory Fund');
+  buildPerfChart('psf-perf', 'psf', 'spy_psf', '#5ac8fa', 'Pofmuis Space Fund');
 }
 
 /* ── TABS + iOS SWIPE ── */
-const TABS = ['ov', 'apf', 'prf', 'pmf'];
+const TABS = ['ov', 'apf', 'prf', 'pmf', 'psf'];
 let _tabIdx = 0;
 const wrap = document.getElementById('pane-wrap');
 
