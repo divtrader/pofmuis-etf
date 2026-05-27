@@ -873,8 +873,8 @@ html, body {
         </div>
         <div class="glass-card kpi-card">
           <div class="kpi-label">Holdings</div>
-          <div class="kpi-val">8</div>
-          <div class="kpi-sub">6 buckets</div>
+          <div class="kpi-val">12</div>
+          <div class="kpi-sub">10 buckets</div>
         </div>
       </div>
 
@@ -902,7 +902,7 @@ html, body {
 
       <div class="glass-card thesis-card" style="margin-top:14px">
         <h4>Investment Thesis</h4>
-        <p>The SpaceX IPO opens the floodgates on a $1T space economy by 2035. Reusable launch costs are collapsing, satellite broadband is going mainstream via direct-to-cellphone, and Earth-observation AI is unlocking real-time intelligence. The space supply chain — launch, satellites, ground stations, data — is in the early innings of a structural growth cycle.</p>
+        <p>The SpaceX IPO opens the floodgates on a $1T space economy by 2035. Reusable launch costs are collapsing, satellite broadband is going mainstream via direct-to-cellphone, and Earth-observation AI is unlocking real-time intelligence. The fund balances pure-play satellite/launch operators with supply chain compounders (HEICO, Howmet) that win regardless of which launch provider takes share — every rocket and satellite needs their parts.</p>
         <ul id="psf-chg"></ul>
       </div>
     </div>
@@ -933,7 +933,8 @@ const SC = {
   'Mass Storage':'#5ac8fa','Memory IP':'#ff375f','Hybrid Cloud Storage':'#30d158',
   'Enterprise Solutions':'#ffd60a','Enterprise Storage':'#ff6961',
   'Launch & Systems':'#5ac8fa','Direct-to-Cell':'#bf5af2','Earth Observation':'#30d158',
-  'SatComms':'#0a84ff','Space Data':'#ffd60a','In-Space Logistics':'#ff375f'
+  'SatComms':'#0a84ff','Space Data':'#ffd60a','In-Space Logistics':'#ff375f',
+  'Aerospace Components':'#ff6961','Aerostructures':'#5e5ce6','Composite Materials':'#98989d','Space Electronics':'#ff9f0a'
 };
 
 /* ── STATIC CONTENT ── */
@@ -974,13 +975,17 @@ const NEWS = {
     {ticker:'BKSY', headline:'BlackSky Gen-3 Satellites Hit Sub-50cm Resolution', summary:'First Gen-3 satellites achieved sub-50cm resolution imagery — putting BlackSky in same tier as Maxar for tactical intelligence customers.', sentiment:'positive', date:'2026-05-08'},
     {ticker:'SPIR', headline:'Spire Global Wins NOAA Weather Data Contract', summary:'NOAA awarded Spire a five-year radio occultation weather data contract worth $74M. Maritime AIS revenue also growing on shipping intel demand.', sentiment:'positive', date:'2026-05-22'},
     {ticker:'MNTS', headline:'Momentus Vigoride 7 Mission Successful — Cash Runway Tightening', summary:'Vigoride-7 orbital tug mission completed all customer deployments. However, cash position requires capital raise within 12 months. Execution risk remains elevated.', sentiment:'mixed', date:'2026-05-21'},
+    {ticker:'HEI',  headline:'HEICO Closes Acquisition #98 — Specialty Connector Bolt-On', summary:'HEICO completed its 98th acquisition under the Mendelson family — a specialty aerospace connector business. Maintains 20+ year compounding playbook with high ROIC discipline.', sentiment:'positive', date:'2026-05-19'},
+    {ticker:'HWM',  headline:'Howmet Reports Record Fastener Backlog — SpaceX Volume Up 3x', summary:'Howmet disclosed record fastener backlog driven by commercial aerospace recovery and a 3x jump in SpaceX titanium part volumes year-over-year.', sentiment:'positive', date:'2026-05-16'},
+    {ticker:'HXL',  headline:'Hexcel Secures Multi-Year Composite Supply for Starship Program', summary:'Hexcel signed a multi-year supply agreement for carbon composite materials used in Starship secondary structures and heat-shield substrate.', sentiment:'positive', date:'2026-05-13'},
+    {ticker:'MRCY', headline:'Mercury Wins $145M Rad-Hard Space Processor Contract', summary:'Mercury Systems awarded a $145M Space Force contract for radiation-hardened processing modules. Sub-systems will fly on next-gen GPS and missile-warning satellites.', sentiment:'positive', date:'2026-05-09'},
   ]
 };
 const CHANGES = {
   apf: ['VST 30%: PEG 0.36x deeply underpriced relative to earnings growth.','TLN 20%: High conviction but levered — capped to manage leverage risk.','GEV 10%: Grid infrastructure pure-play but expensive (FWD P/E 55-69x, priced in).','NEE 15%: Premium valuation (PEG 3.10x) limits upside vs. other positions.'],
   prf: ['ABBNY (ABB ADR) added — source used "ABB" but only ABBNY trades as ADR. Downgraded 6%→3% after SoftBank robotics acquisition.','FANUY (Fanuc ADR) added — not in source list; only mega-cap pure-play left after ABB divestiture.','FARO Technologies → AME (Ametek) — FARO delisted Jul 2025 after $920M Ametek acquisition.','IRBT (iRobot) removed — filed Chapter 11 Jan 2026, delisted.'],
   pmf: ['MU 35%: Pure-play HBM leader — biggest AI memory cycle beneficiary','SNDK 20%: Post-spinoff pure-play NAND leader, hyperscaler SSD wins','RMBS 10%: Royalty IP model — every DDR5/HBM stack pays Rambus','DELL/HPE 5% combined: Enterprise storage refresh cycle exposure, not pure memory'],
-  psf: ['RKLB 25%: Closest SpaceX comp — vertically integrated launch + space systems. Neutron rocket due late 2026.','ASTS 20%: Disruptive direct-to-cell satcom with locked AT&T/Verizon/Vodafone/Rakuten partnerships.','PL + BKSY 20%: Earth observation duopoly capturing defence/intel SaaS contracts.','IRDM 10%: Only profitable, cash-positive satcom name — defensive anchor.','MNTS 7%: Speculative orbital tug optionality, sized for asymmetric upside.']
+  psf: ['Rebalanced 2026-05-26: added supply chain (HEI, HWM, HXL, MRCY) to reduce pre-revenue concentration.','RKLB 22%: Pure-play SpaceX comp — vertically integrated launch + space systems. Neutron rocket due late 2026.','ASTS 16%: Direct-to-cellphone satellite with AT&T/Verizon/Vodafone/Rakuten partnerships.','HEI 8%: \'Picks and shovels\' anchor — dominant in aerospace PMA parts. Used in every space program.','HWM 6%: Documented SpaceX supplier — titanium aerostructures and fasteners. Direct cadence beneficiary.','Pre-revenue names (ASTS, BKSY, MNTS, SPIR) trimmed from 43% to 30% total to reduce blowup risk.']
 };
 
 /* ── HELPERS ── */
