@@ -436,6 +436,30 @@ html, body {
 .nc-body { font-size: 12px; color: var(--t2); line-height: 1.55; }
 
 /* ── THESIS ── */
+/* ── ABOUT THIS FUND CARD ── */
+.about-card {
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-left: 3px solid var(--t4);
+}
+.about-card.apf { border-left-color: var(--apf); }
+.about-card.prf { border-left-color: var(--prf); }
+.about-card.pmf { border-left-color: var(--pmf); }
+.about-card.psf { border-left-color: var(--psf); }
+.about-head {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .15em; color: var(--t3); margin-bottom: 8px;
+}
+.about-desc { font-size: 13px; color: var(--t2); line-height: 1.55; margin: 0 0 12px; }
+.about-themes { display: flex; flex-wrap: wrap; gap: 6px; }
+.theme-chip {
+  font-size: 10px; font-weight: 600; padding: 4px 10px;
+  border-radius: 12px; background: var(--glass-1);
+  border: 1px solid var(--glass-border); color: var(--t2);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+
 .thesis-card { border-radius: var(--r-md); padding: 16px; margin-top: 10px; }
 .thesis-card h4 { font-size: 10px; text-transform: uppercase; letter-spacing: .15em; color: var(--t3); font-weight: 700; margin: 0 0 10px; }
 .thesis-card p { font-size: 12px; color: var(--t2); line-height: 1.6; margin: 0 0 10px; }
@@ -627,6 +651,17 @@ html, body {
           <div class="page-header-sub">APF · Inception 2026-05-22</div>
         </div>
       </div>
+      <div class="glass-card about-card apf">
+        <div class="about-head">About This Fund</div>
+        <p class="about-desc">Energy infrastructure powering the AI revolution. APF invests in the companies building the electricity supply that makes AI data centers possible — nuclear baseload, gas peakers, grid hardware, and renewable firm capacity. The thesis is simple: AI is the largest new electricity demand source of our generation, and power is the binding constraint.</p>
+        <div class="about-themes">
+          <span class="theme-chip">Nuclear</span>
+          <span class="theme-chip">Natural Gas</span>
+          <span class="theme-chip">Grid Infra</span>
+          <span class="theme-chip">Renewables</span>
+          <span class="theme-chip">5 Holdings</span>
+        </div>
+      </div>
       <div class="kpi-grid">
         <div class="glass-card kpi-card kpi-hero">
           <div class="kpi-label">Net Asset Value</div>
@@ -698,6 +733,18 @@ html, body {
         <div class="page-header-text">
           <div class="page-header-title" style="color:var(--prf)">Pofmuis Robotics Fund</div>
           <div class="page-header-sub">PRF · Inception 2026-05-12</div>
+        </div>
+      </div>
+      <div class="glass-card about-card prf">
+        <div class="about-head">About This Fund</div>
+        <p class="about-desc">A diversified play on robotics, automation, and the convergence of AI software with the physical world. PRF spans surgical robots, warehouse logistics, industrial automation, autonomous defense systems, and the software platforms that make them intelligent. Broadly held across 38 names to capture sector beta while avoiding single-name risk.</p>
+        <div class="about-themes">
+          <span class="theme-chip">Medical Robotics</span>
+          <span class="theme-chip">Industrial Automation</span>
+          <span class="theme-chip">Defense</span>
+          <span class="theme-chip">Logistics</span>
+          <span class="theme-chip">Software / AI</span>
+          <span class="theme-chip">38 Holdings</span>
         </div>
       </div>
       <div class="kpi-grid">
@@ -772,6 +819,17 @@ html, body {
           <div class="page-header-sub">PMF · Inception 2026-05-26</div>
         </div>
       </div>
+      <div class="glass-card about-card pmf">
+        <div class="about-head">About This Fund</div>
+        <p class="about-desc">Memory is the new oil. PMF concentrates on the memory and storage supply chain — HBM stacks for AI training (sold out through 2027), NAND flash recovering from cyclical lows, and enterprise storage in a structural refresh cycle. Bit-demand is growing 25-30% per year against constrained wafer capacity, giving the entire memory complex sustained pricing power.</p>
+        <div class="about-themes">
+          <span class="theme-chip">HBM / DRAM</span>
+          <span class="theme-chip">NAND Flash</span>
+          <span class="theme-chip">Enterprise Storage</span>
+          <span class="theme-chip">Memory IP</span>
+          <span class="theme-chip">8 Holdings</span>
+        </div>
+      </div>
       <div class="kpi-grid">
         <div class="glass-card kpi-card kpi-hero">
           <div class="kpi-label">Net Asset Value</div>
@@ -843,6 +901,17 @@ html, body {
         <div class="page-header-text">
           <div class="page-header-title" style="color:var(--psf)">Pofmuis Space Fund</div>
           <div class="page-header-sub">PSF · Inception 2026-05-26</div>
+        </div>
+      </div>
+      <div class="glass-card about-card psf">
+        <div class="about-head">About This Fund</div>
+        <p class="about-desc">The SpaceX IPO opens the floodgates on a $1T space economy by 2035. PSF balances pure-play satellite and launch operators (Rocket Lab, AST SpaceMobile, Planet Labs) with aerospace supply chain compounders (HEICO, Howmet, Hexcel) that win regardless of which launch provider takes share. Every rocket and satellite needs their parts — that's the picks-and-shovels thesis.</p>
+        <div class="about-themes">
+          <span class="theme-chip">Launch & Systems</span>
+          <span class="theme-chip">Satellite Comms</span>
+          <span class="theme-chip">Earth Observation</span>
+          <span class="theme-chip">Supply Chain</span>
+          <span class="theme-chip">12 Holdings</span>
         </div>
       </div>
       <div class="kpi-grid">
