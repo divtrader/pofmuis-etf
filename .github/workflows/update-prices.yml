@@ -25,3 +25,9 @@ jobs:
           git add data.json history.json
           git diff --cached --quiet || git commit -m "chore: update prices $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
+
+      - name: Trigger BDC Space Fund price update
+        run: |
+          gh workflow run "Update prices" --repo divtrader/bdc-space-fund
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
