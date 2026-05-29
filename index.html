@@ -452,6 +452,16 @@ html, body {
   letter-spacing: .15em; color: var(--t3); margin-bottom: 8px;
 }
 .about-desc { font-size: 13px; color: var(--t2); line-height: 1.55; margin: 0 0 12px; }
+.about-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  margin: 0 0 12px; padding: 10px 12px;
+  background: var(--glass-1); border-radius: var(--r-sm);
+  border: 1px solid var(--glass-border);
+}
+.about-meta-block { min-width: 0; }
+.about-meta-lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--t4); margin-bottom: 3px; }
+.about-meta-val { font-size: 12px; font-weight: 600; color: var(--t1); line-height: 1.3; }
+.about-meta-sub { font-size: 10px; color: var(--t3); margin-top: 2px; }
 .about-themes { display: flex; flex-wrap: wrap; gap: 6px; }
 .theme-chip {
   font-size: 10px; font-weight: 600; padding: 4px 10px;
@@ -654,6 +664,17 @@ html, body {
       <div class="glass-card about-card apf">
         <div class="about-head">About This Fund</div>
         <p class="about-desc">Energy infrastructure powering the AI revolution. APF invests in the companies building the electricity supply that makes AI data centers possible — nuclear baseload, gas peakers, grid hardware, and renewable firm capacity. The thesis is simple: AI is the largest new electricity demand source of our generation, and power is the binding constraint.</p>
+        <div class="about-meta">
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Fund Managers</div>
+            <div class="about-meta-val">E. Carstens · B. de Clerk</div>
+          </div>
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Next Rebalance</div>
+            <div class="about-meta-val" id="apf-rebal-date">—</div>
+            <div class="about-meta-sub" id="apf-rebal-days">—</div>
+          </div>
+        </div>
         <div class="about-themes">
           <span class="theme-chip">Nuclear</span>
           <span class="theme-chip">Natural Gas</span>
@@ -738,6 +759,17 @@ html, body {
       <div class="glass-card about-card prf">
         <div class="about-head">About This Fund</div>
         <p class="about-desc">A diversified play on robotics, automation, and the convergence of AI software with the physical world. PRF spans surgical robots, warehouse logistics, industrial automation, autonomous defense systems, and the software platforms that make them intelligent. Broadly held across 38 names to capture sector beta while avoiding single-name risk.</p>
+        <div class="about-meta">
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Fund Managers</div>
+            <div class="about-meta-val">E. Carstens · B. de Clerk</div>
+          </div>
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Next Rebalance</div>
+            <div class="about-meta-val" id="prf-rebal-date">—</div>
+            <div class="about-meta-sub" id="prf-rebal-days">—</div>
+          </div>
+        </div>
         <div class="about-themes">
           <span class="theme-chip">Medical Robotics</span>
           <span class="theme-chip">Industrial Automation</span>
@@ -822,6 +854,17 @@ html, body {
       <div class="glass-card about-card pmf">
         <div class="about-head">About This Fund</div>
         <p class="about-desc">Memory is the new oil. PMF concentrates on the memory and storage supply chain — HBM stacks for AI training (sold out through 2027), NAND flash recovering from cyclical lows, and enterprise storage in a structural refresh cycle. Bit-demand is growing 25-30% per year against constrained wafer capacity, giving the entire memory complex sustained pricing power.</p>
+        <div class="about-meta">
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Fund Managers</div>
+            <div class="about-meta-val">E. Carstens · B. de Clerk</div>
+          </div>
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Next Rebalance</div>
+            <div class="about-meta-val" id="pmf-rebal-date">—</div>
+            <div class="about-meta-sub" id="pmf-rebal-days">—</div>
+          </div>
+        </div>
         <div class="about-themes">
           <span class="theme-chip">HBM / DRAM</span>
           <span class="theme-chip">NAND Flash</span>
@@ -906,6 +949,17 @@ html, body {
       <div class="glass-card about-card psf">
         <div class="about-head">About This Fund</div>
         <p class="about-desc">The SpaceX IPO opens the floodgates on a $1T space economy by 2035. PSF balances pure-play satellite and launch operators (Rocket Lab, AST SpaceMobile, Planet Labs) with aerospace supply chain compounders (HEICO, Howmet, Hexcel) that win regardless of which launch provider takes share. Every rocket and satellite needs their parts — that's the picks-and-shovels thesis.</p>
+        <div class="about-meta">
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Fund Managers</div>
+            <div class="about-meta-val">E. Carstens · B. de Clerk</div>
+          </div>
+          <div class="about-meta-block">
+            <div class="about-meta-lbl">Next Rebalance</div>
+            <div class="about-meta-val" id="psf-rebal-date">—</div>
+            <div class="about-meta-sub" id="psf-rebal-days">—</div>
+          </div>
+        </div>
         <div class="about-themes">
           <span class="theme-chip">Launch & Systems</span>
           <span class="theme-chip">Satellite Comms</span>
@@ -1641,6 +1695,34 @@ wrap.addEventListener('touchend', e => {
 const style = document.createElement('style');
 style.textContent = '@keyframes spin { from { display:inline-block; transform: rotate(0deg); } to { transform: rotate(360deg); } }';
 document.head.appendChild(style);
+
+/* ── REBALANCE DATES (quarterly: Jan 1, Apr 1, Jul 1, Oct 1) ── */
+function nextRebalance() {
+  const now = new Date();
+  const yr = now.getFullYear();
+  const candidates = [
+    new Date(yr, 0, 1), new Date(yr, 3, 1),
+    new Date(yr, 6, 1), new Date(yr, 9, 1),
+    new Date(yr + 1, 0, 1),
+  ];
+  const next = candidates.find(d => d > now);
+  const daysLeft = Math.ceil((next - now) / 86400000);
+  const dateStr = next.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  return { dateStr, daysLeft };
+}
+
+function renderRebalance() {
+  const { dateStr, daysLeft } = nextRebalance();
+  ['apf','prf','pmf','psf'].forEach(f => {
+    const dEl = document.getElementById(f + '-rebal-date');
+    const sEl = document.getElementById(f + '-rebal-days');
+    if (dEl) dEl.textContent = dateStr;
+    if (sEl) sEl.textContent = daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' to go';
+  });
+}
+renderRebalance();
+// Re-compute daily so the countdown stays current on long-lived tabs
+setInterval(renderRebalance, 6 * 60 * 60 * 1000);
 
 /* ── BOOT ── */
 loadData();
