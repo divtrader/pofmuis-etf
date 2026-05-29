@@ -27,7 +27,7 @@ jobs:
           git push
 
       - name: Trigger BDC Space Fund price update
-        run: |
-          gh workflow run "Update prices" --repo divtrader/bdc-space-fund
+        if: ${{ secrets.BDC_TOKEN != '' }}
+        run: gh workflow run "Update prices" --repo divtrader/bdc-space-fund
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BDC_TOKEN }}
