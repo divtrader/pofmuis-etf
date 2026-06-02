@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-02 20:52 UTC",
+  "generated": "2026-06-02 23:04 UTC",
   "as_of": "2026-06-02",
   "spy_price": 759.57,
   "apf": {
@@ -115,11 +115,11 @@
     ]
   },
   "prf": {
-    "nav": 101.9713,
-    "nav_change": 1.9713,
-    "day_change": 0.0739,
+    "nav": 101.7915,
+    "nav_change": 1.7915,
+    "day_change": -0.1566,
     "spy_ret": 2.7418,
-    "alpha": -0.7705,
+    "alpha": -0.9503,
     "rows": [
       {
         "ticker": "ISRG",
@@ -175,11 +175,11 @@
         "weight": 5.0,
         "bucket": "Industrial",
         "inc": 24.17,
-        "cur": 25.3,
-        "ret": 4.6752,
-        "day": 1.3216,
-        "contrib": 0.2338,
-        "date": "2026-06-01"
+        "cur": 24.14,
+        "ret": -0.1241,
+        "day": -4.585,
+        "contrib": -0.0062,
+        "date": "2026-06-02"
       },
       {
         "ticker": "TER",
@@ -235,11 +235,11 @@
         "weight": 3.0,
         "bucket": "Industrial",
         "inc": 107.73,
-        "cur": 106.96,
-        "ret": -0.7147,
-        "day": -0.14,
-        "contrib": -0.0214,
-        "date": "2026-06-01"
+        "cur": 109.12,
+        "ret": 1.2903,
+        "day": 2.0194,
+        "contrib": 0.0387,
+        "date": "2026-06-02"
       },
       {
         "ticker": "MDT",
