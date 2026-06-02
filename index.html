@@ -1343,7 +1343,8 @@ function render(D) {
   renderHolds('apf-hl', A.rows || [], false, 'apf');
   renderContribs('apf-cl', A.rows || []);
   if (!chartsBuilt.apf) { buildChart('apfChart', 'apf-sleg', A.rows || []); chartsBuilt.apf = true; }
-  if (!staticBuilt.apf) { renderNews('apf-nl', NEWS.apf); renderList('apf-chg', CHANGES.apf); staticBuilt.apf = true; }
+  renderNews('apf-nl', (A.news && A.news.length) ? A.news : NEWS.apf);
+  if (!staticBuilt.apf) { renderList('apf-chg', CHANGES.apf); staticBuilt.apf = true; }
 
   /* PRF PANE KPIs */
   set('prf-nav', navToPortfolio(P.nav));
@@ -1356,7 +1357,8 @@ function render(D) {
   renderHolds('prf-hl', [...(P.rows || [])].sort((a,b) => b.weight - a.weight), false, 'prf');
   renderContribs('prf-cl', P.rows || []);
   if (!chartsBuilt.prf) { buildChart('prfChart', 'prf-sleg', P.rows || []); chartsBuilt.prf = true; }
-  if (!staticBuilt.prf) { renderNews('prf-nl', NEWS.prf); renderList('prf-chg', CHANGES.prf); staticBuilt.prf = true; }
+  renderNews('prf-nl', (P.news && P.news.length) ? P.news : NEWS.prf);
+  if (!staticBuilt.prf) { renderList('prf-chg', CHANGES.prf); staticBuilt.prf = true; }
 
   /* PMF PANE KPIs */
   set('pmf-nav', navToPortfolio(M.nav));
@@ -1369,7 +1371,8 @@ function render(D) {
   renderHolds('pmf-hl', [...(M.rows || [])].sort((a,b) => b.weight - a.weight), false, 'pmf');
   renderContribs('pmf-cl', M.rows || []);
   if (!chartsBuilt.pmf) { buildChart('pmfChart', 'pmf-sleg', M.rows || []); chartsBuilt.pmf = true; }
-  if (!staticBuilt.pmf) { renderNews('pmf-nl', NEWS.pmf); renderList('pmf-chg', CHANGES.pmf); staticBuilt.pmf = true; }
+  renderNews('pmf-nl', (M.news && M.news.length) ? M.news : NEWS.pmf);
+  if (!staticBuilt.pmf) { renderList('pmf-chg', CHANGES.pmf); staticBuilt.pmf = true; }
 
   /* PSF PANE KPIs */
   set('psf-nav', navToPortfolio(S.nav));
@@ -1382,7 +1385,8 @@ function render(D) {
   renderHolds('psf-hl', [...(S.rows || [])].sort((a,b) => b.weight - a.weight), false, 'psf');
   renderContribs('psf-cl', S.rows || []);
   if (!chartsBuilt.psf) { buildChart('psfChart', 'psf-sleg', S.rows || []); chartsBuilt.psf = true; }
-  if (!staticBuilt.psf) { renderNews('psf-nl', NEWS.psf); renderList('psf-chg', CHANGES.psf); staticBuilt.psf = true; }
+  renderNews('psf-nl', (S.news && S.news.length) ? S.news : NEWS.psf);
+  if (!staticBuilt.psf) { renderList('psf-chg', CHANGES.psf); staticBuilt.psf = true; }
 }
 
 function setAlphaChip(id, v) {
@@ -1466,11 +1470,16 @@ function buildChart(cid, lid, rows) {
 function renderNews(id, news) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.innerHTML = news.map(n => `<div class="news-card glass-card ${esc(n.sentiment || '')}">
-    <div class="nc-header"><span class="nc-tk">${esc(n.ticker)}</span><span class="nc-date">${esc(n.date)}</span></div>
-    <div class="nc-hl">${esc(n.headline)}</div>
-    <div class="nc-body">${esc(n.summary)}</div>
-  </div>`).join('');
+  el.innerHTML = news.map(n => {
+    const inner = `<div class="news-card glass-card ${esc(n.sentiment || '')}">
+      <div class="nc-header"><span class="nc-tk">${esc(n.ticker)}</span><span class="nc-date">${esc(n.date)}</span></div>
+      <div class="nc-hl">${esc(n.headline)}</div>
+      <div class="nc-body">${esc(n.summary)}</div>
+    </div>`;
+    return n.url
+      ? `<a href="${esc(n.url)}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit;display:block">${inner}</a>`
+      : inner;
+  }).join('');
 }
 
 function renderList(id, items) {

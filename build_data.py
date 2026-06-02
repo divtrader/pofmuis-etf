@@ -4,7 +4,7 @@
 Run locally:   python3 build_data.py
 Run in CI:     same command — no dependencies beyond stdlib
 """
-import csv, json, pathlib, subprocess, datetime, io
+import csv, json, pathlib, subprocess, datetime, io, os, time, urllib.request, urllib.parse
 
 ROOT = pathlib.Path(__file__).parent
 
@@ -214,8 +214,91 @@ def fetch_stooq(tickers: list[str]) -> dict:
             print(f"  Warning: {t} — {e}")
     return prices
 
+# ── LIVE NEWS VIA FINNHUB ────────────────────────────────────────────────────
+POS_WORDS = {"beat","beats","record","wins","win","surge","surges","soar","soars","jump","jumps",
+             "rally","rallies","raise","raised","raises","upgrade","upgraded","strong","growth",
+             "approval","approved","expands","expansion","profit","milestone","breakthrough",
+             "secures","secured","awarded","awards","contract","partnership","success","successful",
+             "outperform","gains","gain","boost","boosts","tops","launch","launches","deal"}
+NEG_WORDS = {"miss","misses","missed","falls","fall","fell","drop","drops","plunge","plunges","cut",
+             "cuts","delay","delays","delayed","recall","recalls","lawsuit","probe","investigation",
+             "downgrade","downgraded","weak","loss","losses","bankrupt","bankruptcy","warning","warns",
+             "halt","halts","decline","declines","slump","layoff","layoffs","slashes","sinks","tumble"}
+
+def classify_sentiment(text: str) -> str:
+    t = text.lower()
+    pos = any(w in t for w in POS_WORDS)
+    neg = any(w in t for w in NEG_WORDS)
+    if pos and not neg: return "positive"
+    if neg and not pos: return "negative"
+    if pos and neg:     return "mixed"
+    return ""
+
+def fetch_finnhub_news(ticker: str, token: str, days_back: int = 14) -> list:
+    """Fetch recent company news for one ticker from Finnhub."""
+    today = datetime.date.today()
+    frm   = today - datetime.timedelta(days=days_back)
+    qs = urllib.parse.urlencode({
+        "symbol": ticker, "from": frm.isoformat(), "to": today.isoformat(), "token": token,
+    })
+    url = f"https://finnhub.io/api/v1/company-news?{qs}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=12) as r:
+            data = json.loads(r.read().decode())
+        items = []
+        for n in data:
+            headline = (n.get("headline") or "").strip()
+            summary  = (n.get("summary") or "").strip()
+            if not headline:
+                continue
+            dt = datetime.datetime.utcfromtimestamp(n.get("datetime", 0))
+            if len(summary) > 200:
+                summary = summary[:197].rsplit(" ", 1)[0] + "…"
+            items.append({
+                "ticker":   ticker,
+                "headline": headline,
+                "summary":  summary or headline,
+                "sentiment": classify_sentiment(headline + " " + summary),
+                "date":     dt.strftime("%Y-%m-%d"),
+                "_ts":      n.get("datetime", 0),
+                "url":      n.get("url", ""),
+            })
+        return items
+    except Exception as e:
+        print(f"  News warning: {ticker} — {e}")
+        return []
+
+def build_live_news(fd: dict, token: str, top_n: int = 6, max_items: int = 8) -> list:
+    """Fetch live news for a fund's top holdings; fall back to curated news on failure."""
+    if not token:
+        return fd["news"]
+    holdings = sorted(fd["holdings"], key=lambda h: h["weight"], reverse=True)[:top_n]
+    collected = []
+    for h in holdings:
+        items = fetch_finnhub_news(h["ticker"], token)
+        # keep the 2 most recent per ticker to keep variety
+        items.sort(key=lambda x: x["_ts"], reverse=True)
+        collected.extend(items[:2])
+        time.sleep(0.4)  # stay within 60 req/min free tier
+    if not collected:
+        print(f"  No live news for {fd['ticker']} — using curated fallback")
+        return fd["news"]
+    collected.sort(key=lambda x: x["_ts"], reverse=True)
+    # de-duplicate by headline
+    seen, deduped = set(), []
+    for n in collected:
+        key = n["headline"].lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append({k: v for k, v in n.items() if k != "_ts"})
+        if len(deduped) >= max_items:
+            break
+    return deduped
+
 # ── COMPUTE ONE FUND ────────────────────────────────────────────────────────
-def compute_fund(fd: dict, prices: dict) -> dict:
+def compute_fund(fd: dict, prices: dict, news=None) -> dict:
     rows, nav_change, day_change = [], 0.0, 0.0
     for h in fd["holdings"]:
         t   = h["ticker"]
@@ -246,7 +329,7 @@ def compute_fund(fd: dict, prices: dict) -> dict:
         "spy_ret":   spy_ret,
         "alpha":     alpha,
         "rows":      rows,
-        "news":      fd["news"],
+        "news":      news if news is not None else fd["news"],
         "changes":   fd["changes"],
     }
 
@@ -266,14 +349,22 @@ def main():
     as_of = next(iter(prices.values()))["date"] if prices else "—"
     now   = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
+    # Live news (Finnhub). Falls back to curated news if no token / fetch fails.
+    news_token = os.environ.get("FINNHUB_TOKEN", "").strip()
+    if news_token:
+        print("Fetching live news from Finnhub…")
+    else:
+        print("No FINNHUB_TOKEN set — using curated news.")
+    news = {k: build_live_news(FUNDS[k], news_token) for k in ("apf", "prf", "pmf", "psf")}
+
     out = {
         "generated":  now,
         "as_of":      as_of,
         "spy_price":  prices.get("SPY", {}).get("close"),
-        "apf": compute_fund(FUNDS["apf"], prices),
-        "prf": compute_fund(FUNDS["prf"], prices),
-        "pmf": compute_fund(FUNDS["pmf"], prices),
-        "psf": compute_fund(FUNDS["psf"], prices),
+        "apf": compute_fund(FUNDS["apf"], prices, news["apf"]),
+        "prf": compute_fund(FUNDS["prf"], prices, news["prf"]),
+        "pmf": compute_fund(FUNDS["pmf"], prices, news["pmf"]),
+        "psf": compute_fund(FUNDS["psf"], prices, news["psf"]),
     }
 
     path = ROOT / "data.json"

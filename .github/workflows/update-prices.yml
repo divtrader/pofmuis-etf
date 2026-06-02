@@ -17,6 +17,8 @@ jobs:
 
       - name: Fetch prices & build data.json
         run: python3 build_data.py
+        env:
+          FINNHUB_TOKEN: ${{ secrets.FINNHUB_TOKEN }}
 
       - name: Commit & push data.json
         run: |
