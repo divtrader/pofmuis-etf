@@ -179,8 +179,34 @@ FUNDS = {
 }
 
 # ── FETCH PRICES VIA STOOQ ──────────────────────────────────────────────────
+def _fetch_one(t: str, header: str):
+    """Fetch a single ticker from Stooq; return price dict or None."""
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "-A", "Mozilla/5.0",
+             f"https://stooq.com/q/l/?s={t.lower()}.us&f=sd2t2ohlcv&e=csv"],
+            capture_output=True, text=True, timeout=12
+        )
+        raw = result.stdout.strip()
+        if not raw or "N/D" in raw.split(",")[4:]:
+            return None
+        reader = csv.DictReader(io.StringIO(header + raw))
+        for row in reader:
+            close_val = row.get("Close", "")
+            open_val  = row.get("Open", "")
+            if close_val not in ("N/D", "", None):
+                return {
+                    "close": float(close_val),
+                    "open":  float(open_val) if open_val not in ("N/D", "") else float(close_val),
+                    "date":  row["Date"],
+                }
+    except Exception as e:
+        print(f"  Warning: {t} — {e}")
+    return None
+
+
 def fetch_stooq(tickers: list[str]) -> dict:
-    """Fetch Stooq EOD CSV one ticker at a time.
+    """Fetch Stooq EOD CSV one ticker at a time, with one retry on miss.
     Stooq returns bare data rows with no header:
       SYMBOL.US,DATE,TIME,OPEN,HIGH,LOW,CLOSE,VOLUME
     """
@@ -190,28 +216,12 @@ def fetch_stooq(tickers: list[str]) -> dict:
     for i, t in enumerate(tickers):
         if i > 0 and i % 10 == 0:
             time.sleep(1)  # brief pause every 10 requests
-        try:
-            result = subprocess.run(
-                ["curl", "-s", "-A", "Mozilla/5.0",
-                 f"https://stooq.com/q/l/?s={t.lower()}.us&f=sd2t2ohlcv&e=csv"],
-                capture_output=True, text=True, timeout=12
-            )
-            raw = result.stdout.strip()
-            if not raw or "N/D" in raw.split(",")[4:]:
-                continue
-            reader = csv.DictReader(io.StringIO(HEADER + raw))
-            for row in reader:
-                sym = row["Symbol"].replace(".US", "")
-                close_val = row.get("Close", "")
-                open_val  = row.get("Open", "")
-                if close_val not in ("N/D", "", None):
-                    prices[sym] = {
-                        "close": float(close_val),
-                        "open":  float(open_val) if open_val not in ("N/D", "") else float(close_val),
-                        "date":  row["Date"],
-                    }
-        except Exception as e:
-            print(f"  Warning: {t} — {e}")
+        p = _fetch_one(t, HEADER)
+        if p is None:
+            time.sleep(1.5)          # back off, then retry once (handles rate-limiting)
+            p = _fetch_one(t, HEADER)
+        if p is not None:
+            prices[t] = p
     return prices
 
 # ── LIVE NEWS VIA FINNHUB ────────────────────────────────────────────────────
@@ -345,6 +355,14 @@ def main():
     print(f"Fetching {len(all_tickers)} tickers from Stooq…")
     prices = fetch_stooq(all_tickers)
     print(f"  Got prices for: {sorted(prices.keys())}")
+
+    # ── SAFETY GUARD: never overwrite good data with a broken/empty fetch ──
+    need = max(1, int(len(all_tickers) * 0.6))
+    if "SPY" not in prices or len(prices) < need:
+        print(f"  ⚠ Insufficient prices ({len(prices)}/{len(all_tickers)}, "
+              f"SPY={'ok' if 'SPY' in prices else 'MISSING'}). "
+              f"Keeping existing data.json — NOT overwriting.")
+        return
 
     as_of = next(iter(prices.values()))["date"] if prices else "—"
     now   = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
