@@ -1,13 +1,13 @@
 {
-  "generated": "2026-06-04 20:15 UTC",
-  "as_of": "2026-06-03",
-  "spy_price": 757.03,
+  "generated": "2026-06-04 21:43 UTC",
+  "as_of": "2026-06-04",
+  "spy_price": 757.16,
   "apf": {
-    "nav": 97.2418,
-    "nav_change": -2.7582,
-    "day_change": -0.1176,
-    "spy_ret": 1.2356,
-    "alpha": -3.9938,
+    "nav": 97.2417,
+    "nav_change": -2.7583,
+    "day_change": -0.1177,
+    "spy_ret": 1.253,
+    "alpha": -4.0113,
     "rows": [
       {
         "ticker": "VST",
@@ -63,10 +63,10 @@
         "weight": 10,
         "bucket": "Grid Infra",
         "inc": 1044.3601,
-        "cur": 963.18,
-        "ret": -7.7732,
-        "day": 0.3982,
-        "contrib": -0.7773,
+        "cur": 963.17,
+        "ret": -7.7741,
+        "day": 0.3971,
+        "contrib": -0.7774,
         "date": "2026-06-04"
       }
     ],
@@ -115,11 +115,11 @@
     ]
   },
   "prf": {
-    "nav": 101.7974,
-    "nav_change": 1.7974,
-    "day_change": 1.3141,
-    "spy_ret": 2.3982,
-    "alpha": -0.6008,
+    "nav": 101.7917,
+    "nav_change": 1.7917,
+    "day_change": 1.3095,
+    "spy_ret": 2.4158,
+    "alpha": -0.6241,
     "rows": [
       {
         "ticker": "ISRG",
@@ -163,10 +163,10 @@
         "weight": 5.0,
         "bucket": "Logistics",
         "inc": 51.71,
-        "cur": 47.405,
-        "ret": -8.3253,
-        "day": 0.413,
-        "contrib": -0.4163,
+        "cur": 47.41,
+        "ret": -8.3156,
+        "day": 0.4236,
+        "contrib": -0.4158,
         "date": "2026-06-04"
       },
       {
@@ -187,10 +187,10 @@
         "weight": 4.5,
         "bucket": "Industrial",
         "inc": 366.64,
-        "cur": 407.48,
-        "ret": 11.139,
-        "day": -0.5346,
-        "contrib": 0.5013,
+        "cur": 406.86,
+        "ret": 10.9699,
+        "day": -0.6859,
+        "contrib": 0.4936,
         "date": "2026-06-04"
       },
       {
@@ -283,10 +283,10 @@
         "weight": 3.0,
         "bucket": "Logistics",
         "inc": 34.25,
-        "cur": 28.24,
-        "ret": -17.5474,
-        "day": -2.1144,
-        "contrib": -0.5264,
+        "cur": 28.26,
+        "ret": -17.4891,
+        "day": -2.0451,
+        "contrib": -0.5247,
         "date": "2026-06-04"
       },
       {
@@ -391,10 +391,10 @@
         "weight": 2.0,
         "bucket": "Professional",
         "inc": 232.16,
-        "cur": 228.64,
-        "ret": -1.5162,
-        "day": 0.1796,
-        "contrib": -0.0303,
+        "cur": 228.76,
+        "ret": -1.4645,
+        "day": 0.2322,
+        "contrib": -0.0293,
         "date": "2026-06-04"
       },
       {
@@ -403,10 +403,10 @@
         "weight": 2.0,
         "bucket": "Professional",
         "inc": 37.93,
-        "cur": 39.81,
-        "ret": 4.9565,
-        "day": 4.7907,
-        "contrib": 0.0991,
+        "cur": 39.79,
+        "ret": 4.9038,
+        "day": 4.7381,
+        "contrib": 0.0981,
         "date": "2026-06-04"
       },
       {
@@ -415,10 +415,10 @@
         "weight": 2.0,
         "bucket": "Defense",
         "inc": 548.21,
-        "cur": 545.2,
-        "ret": -0.5491,
-        "day": 3.6384,
-        "contrib": -0.011,
+        "cur": 545.07,
+        "ret": -0.5728,
+        "day": 3.6137,
+        "contrib": -0.0115,
         "date": "2026-06-04"
       },
       {
@@ -451,10 +451,10 @@
         "weight": 1.5,
         "bucket": "Logistics",
         "inc": 268.99,
-        "cur": 253.92,
-        "ret": -5.6024,
-        "day": 1.5599,
-        "contrib": -0.084,
+        "cur": 253.79,
+        "ret": -5.6508,
+        "day": 1.5079,
+        "contrib": -0.0848,
         "date": "2026-06-04"
       },
       {
@@ -499,10 +499,10 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 178.61,
-        "cur": 179.44,
-        "ret": 0.4647,
-        "day": 3.993,
-        "contrib": 0.0046,
+        "cur": 179.42,
+        "ret": 0.4535,
+        "day": 3.9815,
+        "contrib": 0.0045,
         "date": "2026-06-04"
       },
       {
@@ -511,10 +511,10 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 302.35,
-        "cur": 309.79,
-        "ret": 2.4607,
-        "day": 2.0994,
-        "contrib": 0.0246,
+        "cur": 309.83,
+        "ret": 2.474,
+        "day": 2.1126,
+        "contrib": 0.0247,
         "date": "2026-06-04"
       },
       {
@@ -571,10 +571,10 @@
         "weight": 0.5,
         "bucket": "Service",
         "inc": 2.75,
-        "cur": 2.725,
-        "ret": -0.9091,
-        "day": 1.1132,
-        "contrib": -0.0045,
+        "cur": 2.73,
+        "ret": -0.7273,
+        "day": 1.2987,
+        "contrib": -0.0036,
         "date": "2026-06-04"
       }
     ],
@@ -644,11 +644,11 @@
     ]
   },
   "pmf": {
-    "nav": 113.0246,
-    "nav_change": 13.0246,
-    "day_change": -4.2381,
-    "spy_ret": 0.7479,
-    "alpha": 12.2767,
+    "nav": 112.9869,
+    "nav_change": 12.9869,
+    "day_change": -4.2687,
+    "spy_ret": 0.7652,
+    "alpha": 12.2217,
     "rows": [
       {
         "ticker": "MU",
@@ -656,10 +656,10 @@
         "weight": 35,
         "bucket": "HBM/DRAM",
         "inc": 881.76,
-        "cur": 998.11,
-        "ret": 13.1952,
-        "day": -7.5456,
-        "contrib": 4.6183,
+        "cur": 997.17,
+        "ret": 13.0886,
+        "day": -7.6327,
+        "contrib": 4.581,
         "date": "2026-06-04"
       },
       {
@@ -728,10 +728,10 @@
         "weight": 3,
         "bucket": "Enterprise Solutions",
         "inc": 303.34,
-        "cur": 421.9,
-        "ret": 39.0849,
-        "day": 0.1947,
-        "contrib": 1.1725,
+        "cur": 422.05,
+        "ret": 39.1343,
+        "day": 0.2304,
+        "contrib": 1.174,
         "date": "2026-06-04"
       },
       {
@@ -740,10 +740,10 @@
         "weight": 2,
         "bucket": "Enterprise Storage",
         "inc": 37.95,
-        "cur": 53.725,
-        "ret": 41.5679,
-        "day": -2.5839,
-        "contrib": 0.8314,
+        "cur": 53.69,
+        "ret": 41.4756,
+        "day": -2.6473,
+        "contrib": 0.8295,
         "date": "2026-06-04"
       }
     ],
@@ -813,11 +813,11 @@
     ]
   },
   "psf": {
-    "nav": 91.9405,
-    "nav_change": -8.0595,
-    "day_change": 3.8275,
-    "spy_ret": 0.7479,
-    "alpha": -8.8074,
+    "nav": 91.8902,
+    "nav_change": -8.1098,
+    "day_change": 3.7754,
+    "spy_ret": 0.7652,
+    "alpha": -8.875,
     "rows": [
       {
         "ticker": "RKLB",
@@ -873,10 +873,10 @@
         "weight": 8,
         "bucket": "SatComms",
         "inc": 50.25,
-        "cur": 52.07,
-        "ret": 3.6219,
-        "day": 6.3304,
-        "contrib": 0.2898,
+        "cur": 52.06,
+        "ret": 3.602,
+        "day": 6.31,
+        "contrib": 0.2882,
         "date": "2026-06-04"
       },
       {
@@ -885,10 +885,10 @@
         "weight": 8,
         "bucket": "Aerospace Components",
         "inc": 308.86,
-        "cur": 333.085,
-        "ret": 7.8434,
-        "day": 1.2078,
-        "contrib": 0.6275,
+        "cur": 332.97,
+        "ret": 7.8061,
+        "day": 1.1729,
+        "contrib": 0.6245,
         "date": "2026-06-04"
       },
       {
@@ -897,10 +897,10 @@
         "weight": 6,
         "bucket": "Aerostructures",
         "inc": 261.89,
-        "cur": 249.33,
-        "ret": -4.7959,
-        "day": 0.2815,
-        "contrib": -0.2878,
+        "cur": 249.36,
+        "ret": -4.7845,
+        "day": 0.2936,
+        "contrib": -0.2871,
         "date": "2026-06-04"
       },
       {
@@ -909,10 +909,10 @@
         "weight": 5,
         "bucket": "Earth Observation",
         "inc": 51.64,
-        "cur": 39.69,
-        "ret": -23.141,
-        "day": 5.8965,
-        "contrib": -1.157,
+        "cur": 39.62,
+        "ret": -23.2765,
+        "day": 5.7097,
+        "contrib": -1.1638,
         "date": "2026-06-04"
       },
       {
@@ -933,10 +933,10 @@
         "weight": 4,
         "bucket": "Composite Materials",
         "inc": 87.96,
-        "cur": 89.59,
-        "ret": 1.8531,
-        "day": 1.7259,
-        "contrib": 0.0741,
+        "cur": 89.57,
+        "ret": 1.8304,
+        "day": 1.7032,
+        "contrib": 0.0732,
         "date": "2026-06-04"
       },
       {
@@ -945,10 +945,10 @@
         "weight": 4,
         "bucket": "Space Electronics",
         "inc": 99.32,
-        "cur": 117.78,
-        "ret": 18.5864,
-        "day": 5.5471,
-        "contrib": 0.7435,
+        "cur": 117.82,
+        "ret": 18.6267,
+        "day": 5.5829,
+        "contrib": 0.7451,
         "date": "2026-06-04"
       },
       {
@@ -957,10 +957,10 @@
         "weight": 4,
         "bucket": "In-Space Logistics",
         "inc": 12.8899,
-        "cur": 16.24,
-        "ret": 25.9901,
-        "day": 23.7805,
-        "contrib": 1.0396,
+        "cur": 16.11,
+        "ret": 24.9816,
+        "day": 22.7896,
+        "contrib": 0.9993,
         "date": "2026-06-04"
       }
     ],
