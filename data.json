@@ -1,13 +1,13 @@
 {
-  "generated": "2026-06-12 21:47 UTC",
-  "as_of": "2026-06-12",
-  "spy_price": 741.75,
+  "generated": "2026-06-15 15:21 UTC",
+  "as_of": "2026-06-15",
+  "spy_price": 754.94,
   "apf": {
-    "nav": 94.077,
-    "nav_change": -5.923,
-    "day_change": -0.3828,
-    "spy_ret": -0.8077,
-    "alpha": -5.1153,
+    "nav": 97.5276,
+    "nav_change": -2.4724,
+    "day_change": 4.3968,
+    "spy_ret": 0.9562,
+    "alpha": -3.4286,
     "rows": [
       {
         "ticker": "VST",
@@ -15,11 +15,11 @@
         "weight": 30,
         "bucket": "Nuclear & Gas",
         "inc": 153.165,
-        "cur": 148.02,
-        "ret": -3.3591,
-        "day": -0.4974,
-        "contrib": -1.0077,
-        "date": "2026-06-12"
+        "cur": 153.74,
+        "ret": 0.3754,
+        "day": 4.6562,
+        "contrib": 0.1126,
+        "date": "2026-06-15"
       },
       {
         "ticker": "CEG",
@@ -27,11 +27,11 @@
         "weight": 25,
         "bucket": "Nuclear Fleet",
         "inc": 290.39,
-        "cur": 253.76,
-        "ret": -12.6141,
-        "day": -0.4199,
-        "contrib": -3.1535,
-        "date": "2026-06-12"
+        "cur": 263.57,
+        "ret": -9.2359,
+        "day": 5.1462,
+        "contrib": -2.309,
+        "date": "2026-06-15"
       },
       {
         "ticker": "TLN",
@@ -39,11 +39,11 @@
         "weight": 20,
         "bucket": "Nucl. Colocation",
         "inc": 364.775,
-        "cur": 360.54,
-        "ret": -1.161,
-        "day": -1.1515,
-        "contrib": -0.2322,
-        "date": "2026-06-12"
+        "cur": 382.54,
+        "ret": 4.8701,
+        "day": 4.8687,
+        "contrib": 0.974,
+        "date": "2026-06-15"
       },
       {
         "ticker": "NEE",
@@ -51,11 +51,11 @@
         "weight": 15,
         "bucket": "Renewables",
         "inc": 89.18,
-        "cur": 85.99,
-        "ret": -3.577,
-        "day": 0.1747,
-        "contrib": -0.5366,
-        "date": "2026-06-12"
+        "cur": 85.915,
+        "ret": -3.6611,
+        "day": 2.2676,
+        "contrib": -0.5492,
+        "date": "2026-06-15"
       },
       {
         "ticker": "GEV",
@@ -63,11 +63,11 @@
         "weight": 10,
         "bucket": "Grid Infra",
         "inc": 1044.3601,
-        "cur": 940.66,
-        "ret": -9.9295,
-        "day": 0.7551,
-        "contrib": -0.993,
-        "date": "2026-06-12"
+        "cur": 971.155,
+        "ret": -7.0096,
+        "day": 3.9948,
+        "contrib": -0.701,
+        "date": "2026-06-15"
       }
     ],
     "news": [
@@ -115,11 +115,11 @@
     ]
   },
   "prf": {
-    "nav": 96.8797,
-    "nav_change": -3.1203,
-    "day_change": -0.7821,
-    "spy_ret": 0.3314,
-    "alpha": -3.4517,
+    "nav": 98.3613,
+    "nav_change": -1.6387,
+    "day_change": 0.1695,
+    "spy_ret": 2.1155,
+    "alpha": -3.7542,
     "rows": [
       {
         "ticker": "ISRG",
@@ -127,11 +127,11 @@
         "weight": 7.0,
         "bucket": "Medical",
         "inc": 420.06,
-        "cur": 411.06,
-        "ret": -2.1426,
-        "day": -2.6063,
-        "contrib": -0.15,
-        "date": "2026-06-12"
+        "cur": 416.16,
+        "ret": -0.9284,
+        "day": -0.5853,
+        "contrib": -0.065,
+        "date": "2026-06-15"
       },
       {
         "ticker": "ROK",
@@ -139,11 +139,11 @@
         "weight": 6.5,
         "bucket": "Automation",
         "inc": 456.66,
-        "cur": 459.34,
-        "ret": 0.5869,
-        "day": 2.8273,
-        "contrib": 0.0381,
-        "date": "2026-06-12"
+        "cur": 470.32,
+        "ret": 2.9913,
+        "day": 4.1314,
+        "contrib": 0.1944,
+        "date": "2026-06-15"
       },
       {
         "ticker": "NVDA",
@@ -151,11 +151,11 @@
         "weight": 6.0,
         "bucket": "Software/AI",
         "inc": 219.44,
-        "cur": 205.19,
-        "ret": -6.4938,
-        "day": 0.0439,
-        "contrib": -0.3896,
-        "date": "2026-06-12"
+        "cur": 211.277,
+        "ret": -3.7199,
+        "day": 1.2639,
+        "contrib": -0.2232,
+        "date": "2026-06-15"
       },
       {
         "ticker": "SYM",
@@ -163,11 +163,11 @@
         "weight": 5.0,
         "bucket": "Logistics",
         "inc": 51.71,
-        "cur": 41.63,
-        "ret": -19.4933,
-        "day": -5.4294,
-        "contrib": -0.9747,
-        "date": "2026-06-12"
+        "cur": 42.625,
+        "ret": -17.5691,
+        "day": -3.8462,
+        "contrib": -0.8785,
+        "date": "2026-06-15"
       },
       {
         "ticker": "FANUY",
@@ -175,10 +175,10 @@
         "weight": 5.0,
         "bucket": "Industrial",
         "inc": 24.17,
-        "cur": 21.93,
-        "ret": -9.2677,
-        "day": -3.1788,
-        "contrib": -0.4634,
+        "cur": 21.91,
+        "ret": -9.3504,
+        "day": -4.2395,
+        "contrib": -0.4675,
         "date": "2026-06-12"
       },
       {
@@ -187,11 +187,11 @@
         "weight": 4.5,
         "bucket": "Industrial",
         "inc": 366.64,
-        "cur": 403.2,
-        "ret": 9.9716,
-        "day": 12.6477,
-        "contrib": 0.4487,
-        "date": "2026-06-12"
+        "cur": 430.0,
+        "ret": 17.2813,
+        "day": 14.7615,
+        "contrib": 0.7777,
+        "date": "2026-06-15"
       },
       {
         "ticker": "ZBRA",
@@ -199,11 +199,11 @@
         "weight": 4.0,
         "bucket": "Automation",
         "inc": 216.96,
-        "cur": 228.42,
-        "ret": 5.2821,
-        "day": -1.5898,
-        "contrib": 0.2113,
-        "date": "2026-06-12"
+        "cur": 237.93,
+        "ret": 9.6654,
+        "day": 2.0984,
+        "contrib": 0.3866,
+        "date": "2026-06-15"
       },
       {
         "ticker": "CGNX",
@@ -211,11 +211,11 @@
         "weight": 4.0,
         "bucket": "Automation",
         "inc": 67.26,
-        "cur": 63.61,
-        "ret": -5.4267,
-        "day": 4.5873,
-        "contrib": -0.2171,
-        "date": "2026-06-12"
+        "cur": 66.28,
+        "ret": -1.457,
+        "day": 6.235,
+        "contrib": -0.0583,
+        "date": "2026-06-15"
       },
       {
         "ticker": "SYK",
@@ -223,11 +223,11 @@
         "weight": 4.0,
         "bucket": "Medical",
         "inc": 282.58,
-        "cur": 312.2,
-        "ret": 10.482,
-        "day": 2.1396,
-        "contrib": 0.4193,
-        "date": "2026-06-12"
+        "cur": 309.145,
+        "ret": 9.4009,
+        "day": 2.5255,
+        "contrib": 0.376,
+        "date": "2026-06-15"
       },
       {
         "ticker": "ABBNY",
@@ -235,11 +235,11 @@
         "weight": 3.0,
         "bucket": "Industrial",
         "inc": 107.73,
-        "cur": 102.17,
-        "ret": -5.1611,
-        "day": 0.6601,
-        "contrib": -0.1548,
-        "date": "2026-06-12"
+        "cur": 104.2,
+        "ret": -3.2767,
+        "day": 0.8127,
+        "contrib": -0.0983,
+        "date": "2026-06-15"
       },
       {
         "ticker": "MDT",
@@ -247,11 +247,11 @@
         "weight": 3.0,
         "bucket": "Medical",
         "inc": 74.54,
-        "cur": 80.2,
-        "ret": 7.5932,
-        "day": -1.7999,
-        "contrib": 0.2278,
-        "date": "2026-06-12"
+        "cur": 80.31,
+        "ret": 7.7408,
+        "day": -0.4709,
+        "contrib": 0.2322,
+        "date": "2026-06-15"
       },
       {
         "ticker": "AVAV",
@@ -259,11 +259,11 @@
         "weight": 3.0,
         "bucket": "Defense",
         "inc": 166.45,
-        "cur": 170.58,
-        "ret": 2.4812,
-        "day": -8.2509,
-        "contrib": 0.0744,
-        "date": "2026-06-12"
+        "cur": 170.25,
+        "ret": 2.283,
+        "day": -7.8135,
+        "contrib": 0.0685,
+        "date": "2026-06-15"
       },
       {
         "ticker": "KTOS",
@@ -271,11 +271,11 @@
         "weight": 3.0,
         "bucket": "Defense",
         "inc": 56.99,
-        "cur": 57.75,
-        "ret": 1.3336,
-        "day": -1.3158,
-        "contrib": 0.04,
-        "date": "2026-06-12"
+        "cur": 56.92,
+        "ret": -0.1228,
+        "day": -1.4031,
+        "contrib": -0.0037,
+        "date": "2026-06-15"
       },
       {
         "ticker": "ATS",
@@ -283,11 +283,11 @@
         "weight": 3.0,
         "bucket": "Logistics",
         "inc": 34.25,
-        "cur": 27.37,
-        "ret": -20.0876,
-        "day": 1.6716,
-        "contrib": -0.6026,
-        "date": "2026-06-12"
+        "cur": 27.816,
+        "ret": -18.7854,
+        "day": 1.8528,
+        "contrib": -0.5636,
+        "date": "2026-06-15"
       },
       {
         "ticker": "TDY",
@@ -295,11 +295,11 @@
         "weight": 3.0,
         "bucket": "Defense",
         "inc": 632.58,
-        "cur": 626.02,
-        "ret": -1.037,
-        "day": 3.9434,
-        "contrib": -0.0311,
-        "date": "2026-06-12"
+        "cur": 626.182,
+        "ret": -1.0114,
+        "day": 2.2538,
+        "contrib": -0.0303,
+        "date": "2026-06-15"
       },
       {
         "ticker": "PTC",
@@ -307,11 +307,11 @@
         "weight": 3.0,
         "bucket": "Software",
         "inc": 145.92,
-        "cur": 113.68,
-        "ret": -22.0943,
-        "day": -17.0219,
-        "contrib": -0.6628,
-        "date": "2026-06-12"
+        "cur": 116.88,
+        "ret": -19.9013,
+        "day": -14.103,
+        "contrib": -0.597,
+        "date": "2026-06-15"
       },
       {
         "ticker": "HON",
@@ -319,11 +319,11 @@
         "weight": 2.5,
         "bucket": "Industrial",
         "inc": 219.11,
-        "cur": 220.31,
-        "ret": 0.5477,
-        "day": 2.963,
-        "contrib": 0.0137,
-        "date": "2026-06-12"
+        "cur": 230.28,
+        "ret": 5.0979,
+        "day": 8.7252,
+        "contrib": 0.1274,
+        "date": "2026-06-15"
       },
       {
         "ticker": "PATH",
@@ -331,11 +331,11 @@
         "weight": 2.5,
         "bucket": "Software",
         "inc": 10.66,
-        "cur": 10.55,
-        "ret": -1.0319,
-        "day": -6.1388,
-        "contrib": -0.0258,
-        "date": "2026-06-12"
+        "cur": 10.96,
+        "ret": 2.8143,
+        "day": -1.88,
+        "contrib": 0.0704,
+        "date": "2026-06-15"
       },
       {
         "ticker": "LMT",
@@ -343,11 +343,11 @@
         "weight": 2.5,
         "bucket": "Defense",
         "inc": 512.25,
-        "cur": 540.33,
-        "ret": 5.4817,
-        "day": 3.1637,
-        "contrib": 0.137,
-        "date": "2026-06-12"
+        "cur": 528.965,
+        "ret": 3.2631,
+        "day": 1.7103,
+        "contrib": 0.0816,
+        "date": "2026-06-15"
       },
       {
         "ticker": "PEGA",
@@ -355,11 +355,11 @@
         "weight": 2.0,
         "bucket": "Software",
         "inc": 34.26,
-        "cur": 32.76,
-        "ret": -4.3783,
-        "day": -5.618,
-        "contrib": -0.0876,
-        "date": "2026-06-12"
+        "cur": 33.69,
+        "ret": -1.6637,
+        "day": -4.0444,
+        "contrib": -0.0333,
+        "date": "2026-06-15"
       },
       {
         "ticker": "LECO",
@@ -367,11 +367,11 @@
         "weight": 2.0,
         "bucket": "Industrial",
         "inc": 271.23,
-        "cur": 258.25,
-        "ret": -4.7856,
-        "day": -1.4802,
-        "contrib": -0.0957,
-        "date": "2026-06-12"
+        "cur": 265.55,
+        "ret": -2.0942,
+        "day": 1.7589,
+        "contrib": -0.0419,
+        "date": "2026-06-15"
       },
       {
         "ticker": "OMCL",
@@ -379,11 +379,11 @@
         "weight": 2.0,
         "bucket": "Medical",
         "inc": 43.3,
-        "cur": 37.83,
-        "ret": -12.6328,
-        "day": -12.0233,
-        "contrib": -0.2527,
-        "date": "2026-06-12"
+        "cur": 39.11,
+        "ret": -9.6767,
+        "day": -6.77,
+        "contrib": -0.1935,
+        "date": "2026-06-15"
       },
       {
         "ticker": "AME",
@@ -391,11 +391,11 @@
         "weight": 2.0,
         "bucket": "Professional",
         "inc": 232.16,
-        "cur": 227.12,
-        "ret": -2.1709,
-        "day": 0.2516,
-        "contrib": -0.0434,
-        "date": "2026-06-12"
+        "cur": 230.695,
+        "ret": -0.631,
+        "day": 2.1,
+        "contrib": -0.0126,
+        "date": "2026-06-15"
       },
       {
         "ticker": "OII",
@@ -403,11 +403,11 @@
         "weight": 2.0,
         "bucket": "Professional",
         "inc": 37.93,
-        "cur": 39.39,
-        "ret": 3.8492,
-        "day": 6.0296,
-        "contrib": 0.077,
-        "date": "2026-06-12"
+        "cur": 38.53,
+        "ret": 1.5819,
+        "day": -1.6841,
+        "contrib": 0.0316,
+        "date": "2026-06-15"
       },
       {
         "ticker": "NOC",
@@ -415,11 +415,11 @@
         "weight": 2.0,
         "bucket": "Defense",
         "inc": 548.21,
-        "cur": 550.33,
-        "ret": 0.3867,
-        "day": 1.0893,
-        "contrib": 0.0077,
-        "date": "2026-06-12"
+        "cur": 538.49,
+        "ret": -1.773,
+        "day": -0.429,
+        "contrib": -0.0355,
+        "date": "2026-06-15"
       },
       {
         "ticker": "PRCT",
@@ -427,11 +427,11 @@
         "weight": 2.0,
         "bucket": "Medical",
         "inc": 26.45,
-        "cur": 25.705,
-        "ret": -2.8166,
-        "day": -7.6356,
-        "contrib": -0.0563,
-        "date": "2026-06-12"
+        "cur": 23.675,
+        "ret": -10.4915,
+        "day": -16.4903,
+        "contrib": -0.2098,
+        "date": "2026-06-15"
       },
       {
         "ticker": "TSLA",
@@ -439,11 +439,11 @@
         "weight": 1.5,
         "bucket": "Industrial",
         "inc": 445.0,
-        "cur": 406.43,
-        "ret": -8.6674,
-        "day": 3.9463,
-        "contrib": -0.13,
-        "date": "2026-06-12"
+        "cur": 409.645,
+        "ret": -7.9449,
+        "day": 0.1699,
+        "contrib": -0.1192,
+        "date": "2026-06-15"
       },
       {
         "ticker": "AMZN",
@@ -451,11 +451,11 @@
         "weight": 1.5,
         "bucket": "Logistics",
         "inc": 268.99,
-        "cur": 238.55,
-        "ret": -11.3164,
-        "day": -3.0403,
-        "contrib": -0.1697,
-        "date": "2026-06-12"
+        "cur": 246.31,
+        "ret": -8.4315,
+        "day": 0.4445,
+        "contrib": -0.1265,
+        "date": "2026-06-15"
       },
       {
         "ticker": "ESLT",
@@ -463,11 +463,11 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 794.95,
-        "cur": 854.06,
-        "ret": 7.4357,
-        "day": 3.7286,
-        "contrib": 0.0744,
-        "date": "2026-06-12"
+        "cur": 814.52,
+        "ret": 2.4618,
+        "day": -1.884,
+        "contrib": 0.0246,
+        "date": "2026-06-15"
       },
       {
         "ticker": "TXT",
@@ -475,11 +475,11 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 91.66,
-        "cur": 92.82,
-        "ret": 1.2655,
-        "day": 1.9104,
-        "contrib": 0.0127,
-        "date": "2026-06-12"
+        "cur": 93.16,
+        "ret": 1.6365,
+        "day": 1.8922,
+        "contrib": 0.0164,
+        "date": "2026-06-15"
       },
       {
         "ticker": "GD",
@@ -487,11 +487,11 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 344.03,
-        "cur": 360.22,
-        "ret": 4.706,
-        "day": 3.9776,
-        "contrib": 0.0471,
-        "date": "2026-06-12"
+        "cur": 357.87,
+        "ret": 4.0229,
+        "day": 4.9903,
+        "contrib": 0.0402,
+        "date": "2026-06-15"
       },
       {
         "ticker": "RTX",
@@ -499,11 +499,11 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 178.61,
-        "cur": 183.53,
-        "ret": 2.7546,
-        "day": 1.4034,
-        "contrib": 0.0275,
-        "date": "2026-06-12"
+        "cur": 184.27,
+        "ret": 3.1689,
+        "day": 3.14,
+        "contrib": 0.0317,
+        "date": "2026-06-15"
       },
       {
         "ticker": "LHX",
@@ -511,11 +511,11 @@
         "weight": 1.0,
         "bucket": "Defense",
         "inc": 302.35,
-        "cur": 307.79,
-        "ret": 1.7992,
-        "day": -0.013,
-        "contrib": 0.018,
-        "date": "2026-06-12"
+        "cur": 301.73,
+        "ret": -0.2051,
+        "day": -0.1225,
+        "contrib": -0.0021,
+        "date": "2026-06-15"
       },
       {
         "ticker": "QCOM",
@@ -523,11 +523,11 @@
         "weight": 1.0,
         "bucket": "Software",
         "inc": 237.53,
-        "cur": 211.72,
-        "ret": -10.866,
-        "day": -1.9542,
-        "contrib": -0.1087,
-        "date": "2026-06-12"
+        "cur": 221.16,
+        "ret": -6.8918,
+        "day": 1.5567,
+        "contrib": -0.0689,
+        "date": "2026-06-15"
       },
       {
         "ticker": "SERV",
@@ -535,11 +535,11 @@
         "weight": 1.0,
         "bucket": "Logistics",
         "inc": 8.85,
-        "cur": 6.97,
-        "ret": -21.2429,
-        "day": -10.0645,
-        "contrib": -0.2124,
-        "date": "2026-06-12"
+        "cur": 7.505,
+        "ret": -15.1977,
+        "day": -1.3798,
+        "contrib": -0.152,
+        "date": "2026-06-15"
       },
       {
         "ticker": "BA",
@@ -547,11 +547,11 @@
         "weight": 0.5,
         "bucket": "Defense",
         "inc": 238.21,
-        "cur": 219.05,
-        "ret": -8.0433,
-        "day": 1.6709,
-        "contrib": -0.0402,
-        "date": "2026-06-12"
+        "cur": 229.465,
+        "ret": -3.6711,
+        "day": 6.2732,
+        "contrib": -0.0184,
+        "date": "2026-06-15"
       },
       {
         "ticker": "PDYN",
@@ -559,11 +559,11 @@
         "weight": 0.5,
         "bucket": "Software",
         "inc": 6.59,
-        "cur": 6.41,
-        "ret": -2.7314,
-        "day": -6.6958,
-        "contrib": -0.0137,
-        "date": "2026-06-12"
+        "cur": 6.565,
+        "ret": -0.3794,
+        "day": -8.4379,
+        "contrib": -0.0019,
+        "date": "2026-06-15"
       },
       {
         "ticker": "RR",
@@ -571,11 +571,11 @@
         "weight": 0.5,
         "bucket": "Service",
         "inc": 2.75,
-        "cur": 2.13,
-        "ret": -22.5455,
-        "day": -11.4345,
-        "contrib": -0.1127,
-        "date": "2026-06-12"
+        "cur": 2.215,
+        "ret": -19.4545,
+        "day": -9.0349,
+        "contrib": -0.0973,
+        "date": "2026-06-15"
       }
     ],
     "news": [
@@ -644,11 +644,11 @@
     ]
   },
   "pmf": {
-    "nav": 112.221,
-    "nav_change": 12.221,
-    "day_change": 12.5385,
-    "spy_ret": -1.2856,
-    "alpha": 13.5066,
+    "nav": 120.6531,
+    "nav_change": 20.6531,
+    "day_change": 14.3039,
+    "spy_ret": 0.4698,
+    "alpha": 20.1833,
     "rows": [
       {
         "ticker": "MU",
@@ -656,11 +656,11 @@
         "weight": 35,
         "bucket": "HBM/DRAM",
         "inc": 881.76,
-        "cur": 981.61,
-        "ret": 11.3239,
-        "day": 13.611,
-        "contrib": 3.9634,
-        "date": "2026-06-12"
+        "cur": 1073.685,
+        "ret": 21.7661,
+        "day": 13.1052,
+        "contrib": 7.6181,
+        "date": "2026-06-15"
       },
       {
         "ticker": "SNDK",
@@ -668,11 +668,11 @@
         "weight": 20,
         "bucket": "NAND Flash",
         "inc": 1596.46,
-        "cur": 1980.1,
-        "ret": 24.0307,
-        "day": 26.9848,
-        "contrib": 4.8061,
-        "date": "2026-06-12"
+        "cur": 2098.49,
+        "ret": 31.4465,
+        "day": 27.8009,
+        "contrib": 6.2893,
+        "date": "2026-06-15"
       },
       {
         "ticker": "WDC",
@@ -680,11 +680,11 @@
         "weight": 15,
         "bucket": "Storage Systems",
         "inc": 532.275,
-        "cur": 562.925,
-        "ret": 5.7583,
-        "day": 10.0064,
-        "contrib": 0.8637,
-        "date": "2026-06-12"
+        "cur": 646.61,
+        "ret": 21.4804,
+        "day": 22.7127,
+        "contrib": 3.2221,
+        "date": "2026-06-15"
       },
       {
         "ticker": "STX",
@@ -692,11 +692,11 @@
         "weight": 10,
         "bucket": "Mass Storage",
         "inc": 845.0,
-        "cur": 931.04,
-        "ret": 10.1822,
-        "day": 9.8611,
-        "contrib": 1.0182,
-        "date": "2026-06-12"
+        "cur": 1009.4,
+        "ret": 19.4556,
+        "day": 15.1271,
+        "contrib": 1.9456,
+        "date": "2026-06-15"
       },
       {
         "ticker": "RMBS",
@@ -704,11 +704,11 @@
         "weight": 10,
         "bucket": "Memory IP",
         "inc": 158.23,
-        "cur": 146.56,
-        "ret": -7.3753,
-        "day": 0.8602,
-        "contrib": -0.7375,
-        "date": "2026-06-12"
+        "cur": 144.0,
+        "ret": -8.9932,
+        "day": -5.2819,
+        "contrib": -0.8993,
+        "date": "2026-06-15"
       },
       {
         "ticker": "NTAP",
@@ -716,11 +716,11 @@
         "weight": 5,
         "bucket": "Hybrid Cloud Storage",
         "inc": 137.98,
-        "cur": 161.61,
-        "ret": 17.1257,
-        "day": -3.2507,
-        "contrib": 0.8563,
-        "date": "2026-06-12"
+        "cur": 161.08,
+        "ret": 16.7416,
+        "day": -5.4195,
+        "contrib": 0.8371,
+        "date": "2026-06-15"
       },
       {
         "ticker": "DELL",
@@ -728,11 +728,11 @@
         "weight": 3,
         "bucket": "Enterprise Solutions",
         "inc": 303.34,
-        "cur": 395.57,
-        "ret": 30.4048,
-        "day": 0.2992,
-        "contrib": 0.9121,
-        "date": "2026-06-12"
+        "cur": 412.63,
+        "ret": 36.0289,
+        "day": 2.9593,
+        "contrib": 1.0809,
+        "date": "2026-06-15"
       },
       {
         "ticker": "HPE",
@@ -740,11 +740,11 @@
         "weight": 2,
         "bucket": "Enterprise Storage",
         "inc": 37.95,
-        "cur": 48.17,
-        "ret": 26.9302,
-        "day": -2.0935,
-        "contrib": 0.5386,
-        "date": "2026-06-12"
+        "cur": 48.565,
+        "ret": 27.971,
+        "day": -2.6168,
+        "contrib": 0.5594,
+        "date": "2026-06-15"
       }
     ],
     "news": [
@@ -813,11 +813,11 @@
     ]
   },
   "psf": {
-    "nav": 81.0389,
-    "nav_change": -18.9611,
-    "day_change": -3.2347,
-    "spy_ret": -1.2856,
-    "alpha": -17.6755,
+    "nav": 80.7068,
+    "nav_change": -19.2932,
+    "day_change": -2.8164,
+    "spy_ret": 0.4698,
+    "alpha": -19.763,
     "rows": [
       {
         "ticker": "RKLB",
@@ -825,11 +825,11 @@
         "weight": 22,
         "bucket": "Launch & Systems",
         "inc": 144.475,
-        "cur": 102.39,
-        "ret": -29.1296,
-        "day": -6.9858,
-        "contrib": -6.4085,
-        "date": "2026-06-12"
+        "cur": 107.197,
+        "ret": -25.8024,
+        "day": -5.678,
+        "contrib": -5.6765,
+        "date": "2026-06-15"
       },
       {
         "ticker": "ASTS",
@@ -837,11 +837,11 @@
         "weight": 16,
         "bucket": "Direct-to-Cell",
         "inc": 126.6,
-        "cur": 82.41,
-        "ret": -34.9052,
-        "day": -11.9551,
-        "contrib": -5.5848,
-        "date": "2026-06-12"
+        "cur": 84.35,
+        "ret": -33.3728,
+        "day": -8.375,
+        "contrib": -5.3397,
+        "date": "2026-06-15"
       },
       {
         "ticker": "PL",
@@ -849,11 +849,11 @@
         "weight": 10,
         "bucket": "Earth Observation",
         "inc": 50.638835,
-        "cur": 31.15,
-        "ret": -38.4859,
-        "day": -3.3209,
-        "contrib": -3.8486,
-        "date": "2026-06-12"
+        "cur": 30.34,
+        "ret": -40.0855,
+        "day": -7.3305,
+        "contrib": -4.0086,
+        "date": "2026-06-15"
       },
       {
         "ticker": "VSAT",
@@ -861,11 +861,11 @@
         "weight": 8,
         "bucket": "SatComms",
         "inc": 81.66,
-        "cur": 70.17,
-        "ret": -14.0705,
-        "day": 4.4507,
-        "contrib": -1.1256,
-        "date": "2026-06-12"
+        "cur": 65.22,
+        "ret": -20.1323,
+        "day": -0.3971,
+        "contrib": -1.6106,
+        "date": "2026-06-15"
       },
       {
         "ticker": "IRDM",
@@ -873,11 +873,11 @@
         "weight": 8,
         "bucket": "SatComms",
         "inc": 50.25,
-        "cur": 47.32,
-        "ret": -5.8308,
-        "day": -0.0845,
-        "contrib": -0.4665,
-        "date": "2026-06-12"
+        "cur": 45.0,
+        "ret": -10.4478,
+        "day": -5.2233,
+        "contrib": -0.8358,
+        "date": "2026-06-15"
       },
       {
         "ticker": "HEI",
@@ -885,11 +885,11 @@
         "weight": 8,
         "bucket": "Aerospace Components",
         "inc": 308.86,
-        "cur": 331.61,
-        "ret": 7.3658,
-        "day": 0.0543,
-        "contrib": 0.5893,
-        "date": "2026-06-12"
+        "cur": 338.4,
+        "ret": 9.5642,
+        "day": 4.6059,
+        "contrib": 0.7651,
+        "date": "2026-06-15"
       },
       {
         "ticker": "HWM",
@@ -897,11 +897,11 @@
         "weight": 6,
         "bucket": "Aerostructures",
         "inc": 261.89,
-        "cur": 264.67,
-        "ret": 1.0615,
-        "day": 5.0695,
-        "contrib": 0.0637,
-        "date": "2026-06-12"
+        "cur": 270.5,
+        "ret": 3.2876,
+        "day": 9.7141,
+        "contrib": 0.1973,
+        "date": "2026-06-15"
       },
       {
         "ticker": "BKSY",
@@ -909,11 +909,11 @@
         "weight": 5,
         "bucket": "Earth Observation",
         "inc": 51.64,
-        "cur": 32.42,
-        "ret": -37.2192,
-        "day": -6.7319,
-        "contrib": -1.861,
-        "date": "2026-06-12"
+        "cur": 30.065,
+        "ret": -41.7796,
+        "day": -12.2958,
+        "contrib": -2.089,
+        "date": "2026-06-15"
       },
       {
         "ticker": "SPIR",
@@ -921,11 +921,11 @@
         "weight": 5,
         "bucket": "Space Data",
         "inc": 24.74,
-        "cur": 18.23,
-        "ret": -26.3137,
-        "day": 6.2354,
-        "contrib": -1.3157,
-        "date": "2026-06-12"
+        "cur": 18.54,
+        "ret": -25.0606,
+        "day": 8.9307,
+        "contrib": -1.253,
+        "date": "2026-06-15"
       },
       {
         "ticker": "HXL",
@@ -933,11 +933,11 @@
         "weight": 4,
         "bucket": "Composite Materials",
         "inc": 87.96,
-        "cur": 97.71,
-        "ret": 11.0846,
-        "day": 9.5895,
-        "contrib": 0.4434,
-        "date": "2026-06-12"
+        "cur": 98.335,
+        "ret": 11.7951,
+        "day": 10.2534,
+        "contrib": 0.4718,
+        "date": "2026-06-15"
       },
       {
         "ticker": "MRCY",
@@ -945,11 +945,11 @@
         "weight": 4,
         "bucket": "Space Electronics",
         "inc": 99.32,
-        "cur": 120.3,
-        "ret": 21.1236,
-        "day": 8.1154,
-        "contrib": 0.8449,
-        "date": "2026-06-12"
+        "cur": 119.325,
+        "ret": 20.142,
+        "day": 7.5581,
+        "contrib": 0.8057,
+        "date": "2026-06-15"
       },
       {
         "ticker": "MNTS",
@@ -957,11 +957,11 @@
         "weight": 4,
         "bucket": "In-Space Logistics",
         "inc": 12.8899,
-        "cur": 11.95,
-        "ret": -7.2918,
-        "day": -19.8524,
-        "contrib": -0.2917,
-        "date": "2026-06-12"
+        "cur": 10.57,
+        "ret": -17.9978,
+        "day": -13.5025,
+        "contrib": -0.7199,
+        "date": "2026-06-15"
       }
     ],
     "news": [
