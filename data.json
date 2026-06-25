@@ -1,13 +1,13 @@
 {
-  "generated": "2026-06-25 20:29 UTC",
+  "generated": "2026-06-25 22:05 UTC",
   "as_of": "2026-06-25",
-  "spy_price": 733.5,
+  "spy_price": 734.3,
   "apf": {
     "nav": 103.9896,
     "nav_change": 3.9896,
     "day_change": 2.8657,
-    "spy_ret": -1.911,
-    "alpha": 5.9006,
+    "spy_ret": -1.804,
+    "alpha": 5.7936,
     "rows": [
       {
         "ticker": "VST",
@@ -118,8 +118,8 @@
     "nav": 95.694,
     "nav_change": -4.306,
     "day_change": -0.7633,
-    "spy_ret": -0.7845,
-    "alpha": -3.5215,
+    "spy_ret": -0.6763,
+    "alpha": -3.6297,
     "rows": [
       {
         "ticker": "ISRG",
@@ -647,8 +647,8 @@
     "nav": 128.5206,
     "nav_change": 28.5206,
     "day_change": 7.7696,
-    "spy_ret": -2.3835,
-    "alpha": 30.9041,
+    "spy_ret": -2.2771,
+    "alpha": 30.7977,
     "rows": [
       {
         "ticker": "MU",
@@ -816,8 +816,8 @@
     "nav": 69.9514,
     "nav_change": -30.0486,
     "day_change": -14.1762,
-    "spy_ret": -2.3835,
-    "alpha": -27.6651,
+    "spy_ret": -2.2771,
+    "alpha": -27.7715,
     "rows": [
       {
         "ticker": "RKLB",
