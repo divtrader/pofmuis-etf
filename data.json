@@ -1,13 +1,13 @@
 {
-  "generated": "2026-07-02 20:16 UTC",
+  "generated": "2026-07-02 21:41 UTC",
   "as_of": "2026-07-02",
-  "spy_price": 744.8,
+  "spy_price": 744.78,
   "apf": {
     "nav": 95.6943,
     "nav_change": -4.3057,
     "day_change": -7.8664,
-    "spy_ret": -0.3998,
-    "alpha": -3.9059,
+    "spy_ret": -0.4025,
+    "alpha": -3.9032,
     "rows": [
       {
         "ticker": "VST",
@@ -115,11 +115,11 @@
     ]
   },
   "prf": {
-    "nav": 98.7171,
-    "nav_change": -1.2829,
-    "day_change": 3.8386,
-    "spy_ret": 0.7439,
-    "alpha": -2.0268,
+    "nav": 98.7193,
+    "nav_change": -1.2807,
+    "day_change": 3.8407,
+    "spy_ret": 0.7412,
+    "alpha": -2.0219,
     "rows": [
       {
         "ticker": "ISRG",
@@ -223,10 +223,10 @@
         "weight": 4.0,
         "bucket": "Medical",
         "inc": 282.58,
-        "cur": 326.46,
-        "ret": 15.5283,
-        "day": 3.2742,
-        "contrib": 0.6211,
+        "cur": 326.54,
+        "ret": 15.5567,
+        "day": 3.2995,
+        "contrib": 0.6223,
         "date": "2026-07-02"
       },
       {
@@ -343,10 +343,10 @@
         "weight": 2.5,
         "bucket": "Defense",
         "inc": 512.25,
-        "cur": 545.7,
-        "ret": 6.53,
-        "day": 8.0551,
-        "contrib": 0.1633,
+        "cur": 545.91,
+        "ret": 6.571,
+        "day": 8.0967,
+        "contrib": 0.1643,
         "date": "2026-07-02"
       },
       {
@@ -644,11 +644,11 @@
     ]
   },
   "pmf": {
-    "nav": 104.276,
-    "nav_change": 4.276,
-    "day_change": -18.1779,
-    "spy_ret": -0.8797,
-    "alpha": 5.1557,
+    "nav": 104.2754,
+    "nav_change": 4.2754,
+    "day_change": -18.1782,
+    "spy_ret": -0.8823,
+    "alpha": 5.1577,
     "rows": [
       {
         "ticker": "MU",
@@ -728,10 +728,10 @@
         "weight": 3,
         "bucket": "Enterprise Solutions",
         "inc": 303.34,
-        "cur": 394.48,
-        "ret": 30.0455,
-        "day": -3.6561,
-        "contrib": 0.9014,
+        "cur": 394.32,
+        "ret": 29.9927,
+        "day": -3.6952,
+        "contrib": 0.8998,
         "date": "2026-07-02"
       },
       {
@@ -740,10 +740,10 @@
         "weight": 2,
         "bucket": "Enterprise Storage",
         "inc": 37.95,
-        "cur": 41.21,
-        "ret": 8.5903,
-        "day": -11.7937,
-        "contrib": 0.1718,
+        "cur": 41.23,
+        "ret": 8.643,
+        "day": -11.7509,
+        "contrib": 0.1729,
         "date": "2026-07-02"
       }
     ],
@@ -816,8 +816,8 @@
     "nav": 82.381,
     "nav_change": -17.619,
     "day_change": 19.3932,
-    "spy_ret": -0.8797,
-    "alpha": -16.7393,
+    "spy_ret": -0.8823,
+    "alpha": -16.7367,
     "rows": [
       {
         "ticker": "RKLB",
