@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-02 21:41 UTC",
+  "generated": "2026-07-03 15:05 UTC",
   "as_of": "2026-07-02",
   "spy_price": 744.78,
   "apf": {
@@ -115,11 +115,11 @@
     ]
   },
   "prf": {
-    "nav": 98.7193,
-    "nav_change": -1.2807,
-    "day_change": 3.8407,
+    "nav": 98.7257,
+    "nav_change": -1.2743,
+    "day_change": 3.8471,
     "spy_ret": 0.7412,
-    "alpha": -2.0219,
+    "alpha": -2.0155,
     "rows": [
       {
         "ticker": "ISRG",
@@ -235,10 +235,10 @@
         "weight": 3.0,
         "bucket": "Industrial",
         "inc": 107.73,
-        "cur": 105.68,
-        "ret": -1.9029,
-        "day": -1.1597,
-        "contrib": -0.0571,
+        "cur": 105.91,
+        "ret": -1.6894,
+        "day": -0.9446,
+        "contrib": -0.0507,
         "date": "2026-07-02"
       },
       {
